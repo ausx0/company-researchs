@@ -38,6 +38,75 @@ import ResearchIcon from "@/public/icons/researchIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const sidebarItems = [
+  {
+    icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
+    title: "Consultation",
+    subItems: [
+      { text: "Add Consultation", link: "/consultation" },
+      { text: "All Consultations", link: "/allConsultation" },
+    ],
+  },
+  {
+    icon: <Microscope className="w-6 opacity-50 mr-2" />,
+    title: "Researches",
+    subItems: [
+      { text: "Add Research", link: "/addResearch" },
+      { text: "All Researches", link: "/allResearches" },
+    ],
+  },
+  {
+    icon: <TestTubes className="w-6 opacity-50 mr-2" />,
+    title: "Tests & Devices",
+    subItems: [
+      { text: "Tests", link: "/tests" },
+      // Add more subItems as needed
+    ],
+  },
+  {
+    icon: <Users className="w-6 opacity-50 mr-2" />,
+    title: "Clients",
+    subItems: [
+      // Add subItems for Clients
+    ],
+  },
+  {
+    icon: <ArchiveIcon className="w-6 opacity-50 mr-2" />,
+    title: "Inventory",
+    subItems: [
+      // Add subItems for Inventory
+    ],
+  },
+  {
+    icon: <BadgeDollarSign className="w-6 opacity-50 mr-2" />,
+    title: "Finance",
+    subItems: [
+      // Add subItems for Finance
+    ],
+  },
+  {
+    icon: <MessageCircleWarning className="w-6 opacity-50 mr-2" />,
+    title: "Reports",
+    subItems: [
+      // Add subItems for Reports
+    ],
+  },
+  {
+    icon: <MailCheck className="w-6 opacity-50 mr-2" />,
+    title: "Messaging",
+    subItems: [
+      // Add subItems for Messaging
+    ],
+  },
+  {
+    icon: <Settings className="w-6 opacity-50 mr-2" />,
+    title: "Settings",
+    subItems: [
+      // Add subItems for Settings
+    ],
+  },
+];
+
 const SideBar = () => {
   const pathname = usePathname();
 
@@ -88,307 +157,55 @@ const SideBar = () => {
           </div>
           <div className="flex flex-col items-start mt-2">
             <Accordion type="single" collapsible className={collapseMenuIcon}>
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <MessageSquareText className="w-6 mx-1 opacity-50 " />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-1"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div className="flex">
-                      <MessageSquareText className="w-6 mx-1 opacity-50 " />
-                    </div>
-                    {!toggleCollapse && <>Consultation</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* Researches */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <Microscope className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-2"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <Microscope className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Researches</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <TestTubes className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-3"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div className="flex">
-                      <TestTubes className="w-6 opacity-50 mr-2" />
-
-                      {!toggleCollapse && (
-                        <div className="w-ful">Tests & Devices</div>
-                      )}
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px] flex items-center ml-2 ">
-                    <Link
-                      href="/tests"
-                      className={
-                        pathname == "/tests"
-                          ? "opacity-100 text-cyan-400 flex w-full items-center "
-                          : "opacity-50 flex items-center w-full  hover:opacity-100"
-                      }
-                    >
-                      <ArrowRight className="w-4 mr-2" />
-                      Tests
-                    </Link>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <Users className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-4"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <Users className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Clients</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <ArchiveIcon className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-5"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <ArchiveIcon className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Inventory</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <BadgeDollarSign className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-6"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <BadgeDollarSign className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Finance</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <MessageCircleWarning className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-7"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <MessageCircleWarning className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Reports</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <MailCheck className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-8"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <MailCheck className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Messaging</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-              {/* conultatiton */}
-              {toggleCollapse ? (
-                <Dropdown>
-                  <DropdownTrigger className="cursor-pointer">
-                    <Settings className="w-6 opacity-50" />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                    <DropdownItem key="new">New file</DropdownItem>
-                    <DropdownItem key="copy">Copy link</DropdownItem>
-                    <DropdownItem key="edit">Edit file</DropdownItem>
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : (
-                <AccordionItem value={"item-9"}>
-                  <AccordionTrigger className="text-[14px]">
-                    <div>
-                      <Settings className="w-6 opacity-50" />
-                    </div>
-                    {!toggleCollapse && <>Settings</>}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-[12px]">
-                    dsfsdfsdgsdg
-                  </AccordionContent>
-                </AccordionItem>
-              )}
+              {sidebarItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  {toggleCollapse ? (
+                    // Render dropdown menu for collapsed view
+                    <Dropdown>
+                      {/* Dropdown trigger */}
+                      <DropdownTrigger className="cursor-pointer">
+                        {item.icon}
+                      </DropdownTrigger>
+                      {/* Dropdown menu content */}
+                      <DropdownMenu aria-label="Static Actions">
+                        {item.subItems.map((subItem, subIndex) => (
+                          <DropdownItem key={subIndex} className="flex">
+                            <div className="flex">
+                              <ArrowRight className="mr-2" /> {subItem.text}
+                            </div>
+                          </DropdownItem>
+                        ))}
+                      </DropdownMenu>
+                    </Dropdown>
+                  ) : (
+                    // Render accordion item for expanded view
+                    <AccordionItem value={`item-${index}`}>
+                      <AccordionTrigger className="text-[14px]">
+                        <div className="flex">
+                          {item.icon}
+                          {!toggleCollapse && <>{item.title}</>}
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-[12px] flex flex-col gap-2">
+                        {item.subItems.map((subItem, subIndex) => (
+                          <Link
+                            key={subIndex}
+                            href={subItem.link}
+                            className={
+                              pathname == subItem.link
+                                ? "opacity-100 text-cyan-400 flex w-full items-center "
+                                : "opacity-50 flex items-center w-full  hover:opacity-100"
+                            }
+                          >
+                            <ArrowRight className="w-4 mr-2" />
+                            {subItem.text}
+                          </Link>
+                        ))}
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
+                </React.Fragment>
+              ))}
             </Accordion>
           </div>
         </div>
