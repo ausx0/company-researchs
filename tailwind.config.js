@@ -76,6 +76,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-  plugins: [nextui()],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar"),
+    nextui(),
+  ],
 };
