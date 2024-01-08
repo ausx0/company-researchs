@@ -43,16 +43,16 @@ const sidebarItems = [
     icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
     title: "Consultation",
     subItems: [
-      { text: "Add Consultation", link: "/consultation" },
-      { text: "All Consultations", link: "/allConsultation" },
+      { text: "Add Consultation", link: "/consultation/add" },
+      { text: "All Consultations", link: "/consultation" },
     ],
   },
   {
     icon: <Microscope className="w-6 opacity-50 mr-2" />,
     title: "Researches",
     subItems: [
-      { text: "Add Research", link: "/addResearch" },
-      { text: "All Researches", link: "/allResearches" },
+      { text: "Add Research", link: "/researches/add" },
+      { text: "All Researches", link: "/researches" },
     ],
   },
   {
