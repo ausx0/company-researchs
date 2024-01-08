@@ -1,5 +1,5 @@
 import React from "react";
-import ConsultationDataTable from "./components/client";
+import ResearchesDataTable from "./components/client";
 import { Payment } from "./components/columns";
 
 async function getData(): Promise<Payment[]> {
@@ -92,13 +92,13 @@ async function getData(): Promise<Payment[]> {
   ];
 }
 
-const ConsultationPage = async () => {
+const ResearchesPage = async () => {
   const dataSet = await getData();
 
   return (
     <>
-      <ConsultationDataTable data={dataSet} />
+      <ResearchesDataTable data={dataSet} />
     </>
   );
 };
-export default ConsultationPage;
+export default ResearchesPage;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const addResearch = () => {
+const addResearch = ({ params }: any) => {
   return <div>addResearch</div>;
 };
 
