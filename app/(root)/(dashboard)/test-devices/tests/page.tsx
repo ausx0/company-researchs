@@ -2,8 +2,8 @@ import { DataTable } from "@/components/ui/data-table";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
-import AddTestModal from "../components/addTestModal";
-import TestsDataTable from "../components/client";
+import TestsDataTable from "./components/client";
+import AddTestModal from "./components/addTestModal";
 
 const TestsPage = () => {
   return (

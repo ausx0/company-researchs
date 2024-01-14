@@ -16,7 +16,7 @@ const AddTestModal = () => {
   return (
     <>
       <Button onPress={onOpen} radius="sm" size="sm" variant="flat">
-        Add Test <Plus />
+        Add Sample <Plus />
       </Button>
 
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
@@ -24,7 +24,7 @@ const AddTestModal = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Test
+                Add Sample
               </ModalHeader>
               <ModalBody></ModalBody>
               <ModalFooter>

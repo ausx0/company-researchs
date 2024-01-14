@@ -24,6 +24,7 @@ import {
   BadgeDollarSign,
   BookText,
   FileSearch,
+  HomeIcon,
   MailCheck,
   MessageCircleWarning,
   MessageSquareText,
@@ -39,6 +40,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const sidebarItems = [
+  {
+    icon: <HomeIcon className="w-6 opacity-50 mr-2" />,
+    title: "Home",
+    subItems: [{ text: "Dashboard", link: "/home" }],
+  },
   {
     icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
     title: "Consultation",
@@ -59,7 +65,10 @@ const sidebarItems = [
     icon: <TestTubes className="w-6 opacity-50 mr-2" />,
     title: "Tests & Devices",
     subItems: [
-      { text: "Tests", link: "/tests" },
+      { text: "Tests", link: "/test-devices/tests" },
+      { text: "Samples", link: "/test-devices/samples" },
+      { text: "Devices", link: "/test-devices/devices" },
+
       // Add more subItems as needed
     ],
   },
@@ -67,7 +76,9 @@ const sidebarItems = [
     icon: <Users className="w-6 opacity-50 mr-2" />,
     title: "Clients",
     subItems: [
-      // Add subItems for Clients
+      { text: "Researchers", link: "/clients/researchers" },
+      { text: "Journals", link: "/clients/journals" },
+      { text: "Suppliers", link: "/clients/suppliers" },
     ],
   },
   {
@@ -75,6 +86,7 @@ const sidebarItems = [
     title: "Inventory",
     subItems: [
       // Add subItems for Inventory
+      { text: "Items", link: "/inventory/items" },
     ],
   },
   {
@@ -82,6 +94,13 @@ const sidebarItems = [
     title: "Finance",
     subItems: [
       // Add subItems for Finance
+      { text: "Purchases", link: "/finance/purchases" },
+      { text: "Add Purchase", link: "/finance/purchases/add" },
+      { text: "Expenses", link: "/finance/expenses" },
+      { text: "Inbound", link: "/finance/inbound" },
+      { text: "Outbound", link: "/finance/outbound" },
+      { text: "Prices", link: "/finance/prices" },
+      { text: "Categories", link: "/finance/categories" },
     ],
   },
   {
@@ -89,6 +108,8 @@ const sidebarItems = [
     title: "Reports",
     subItems: [
       // Add subItems for Reports
+      { text: "Daily Report", link: "/reports/daily-reports" },
+      { text: "Generate Reports", link: "/finance/generate-reports" },
     ],
   },
   {
@@ -96,6 +117,8 @@ const sidebarItems = [
     title: "Messaging",
     subItems: [
       // Add subItems for Messaging
+      { text: "All Messages", link: "/messaging/all-messages" },
+      { text: "New Message", link: "/messaging/new-message" },
     ],
   },
   {
@@ -103,6 +126,8 @@ const sidebarItems = [
     title: "Settings",
     subItems: [
       // Add subItems for Settings
+      { text: "User Log", link: "/settings/user-log" },
+      { text: "Users", link: "/settings/users" },
     ],
   },
 ];
@@ -170,9 +195,11 @@ const SideBar = () => {
                       <DropdownMenu aria-label="Static Actions">
                         {item.subItems.map((subItem, subIndex) => (
                           <DropdownItem key={subIndex} className="flex">
-                            <div className="flex">
-                              <ArrowRight className="mr-2" /> {subItem.text}
-                            </div>
+                            <Link href={subItem.link}>
+                              <div className="flex">
+                                <ArrowRight className="mr-2" /> {subItem.text}
+                              </div>
+                            </Link>
                           </DropdownItem>
                         ))}
                       </DropdownMenu>
