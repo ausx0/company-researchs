@@ -1,6 +1,7 @@
 import React from "react";
-import { Payment, columns } from "./columns";
-import { DataTable } from "@/components/ui/data-table";
+import { Payment } from "./components/columns";
+import SubTestsDataTable from "./components/client";
+
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
   return [
@@ -9,82 +10,95 @@ async function getData(): Promise<Payment[]> {
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
     {
       id: "728ed52f",
       amount: 100,
       status: "pending",
       email: "m@example.com",
+      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
     },
   ];
 }
 
-export default async function TestsDataTable() {
-  const data = await getData();
+const SubTestsPage = async () => {
+  const dataSet = await getData();
 
   return (
-    <div className="container mx-auto ">
-      <DataTable searchKey="email" columns={columns} data={data} />
-    </div>
+    <>
+      <SubTestsDataTable data={dataSet} />
+    </>
   );
-}
+};
+export default SubTestsPage;

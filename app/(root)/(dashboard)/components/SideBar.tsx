@@ -29,6 +29,7 @@ import {
   MessageCircleWarning,
   MessageSquareText,
   Microscope,
+  SendToBack,
   Settings,
   TestTubes,
   Users,
@@ -45,29 +46,40 @@ const sidebarItems = [
     title: "Home",
     subItems: [{ text: "Dashboard", link: "/home" }],
   },
+
   {
-    icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
-    title: "Consultation",
+    icon: <SendToBack className="w-6 opacity-50 mr-2" />,
+    title: "Orders",
     subItems: [
-      { text: "Add Consultation", link: "/consultation/add" },
-      { text: "All Consultations", link: "/consultation" },
+      { text: "Add Order", link: "/consultation/add" },
+      { text: "All Orders", link: "/consultation" },
     ],
   },
-  {
-    icon: <Microscope className="w-6 opacity-50 mr-2" />,
-    title: "Researches",
-    subItems: [
-      { text: "Add Research", link: "/researches/add" },
-      { text: "All Researches", link: "/researches" },
-    ],
-  },
+  // {
+  //   icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
+  //   title: "Consultation",
+  //   subItems: [
+  //     { text: "Add Consultation", link: "/consultation/add" },
+  //     { text: "All Consultations", link: "/consultation" },
+  //   ],
+  // },
+  // {
+  //   icon: <Microscope className="w-6 opacity-50 mr-2" />,
+  //   title: "Researches",
+  //   subItems: [
+  //     { text: "Add Research", link: "/researches/add" },
+  //     { text: "All Researches", link: "/researches" },
+  //   ],
+  // },
   {
     icon: <TestTubes className="w-6 opacity-50 mr-2" />,
-    title: "Tests & Devices",
+    title: "Samples & Tests",
     subItems: [
       { text: "Tests", link: "/test-devices/tests" },
       { text: "Samples", link: "/test-devices/samples" },
-      { text: "Devices", link: "/test-devices/devices" },
+      { text: "Sub Tests", link: "/test-devices/subTests" },
+
+      // { text: "Devices", link: "/test-devices/devices" },
 
       // Add more subItems as needed
     ],

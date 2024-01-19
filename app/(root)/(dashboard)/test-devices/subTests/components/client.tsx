@@ -7,13 +7,12 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import AddTestModal from "./addSampleModal";
 
 interface PaymentClientProps {
   data: Payment[];
 }
 
-const SamplesDataTable: React.FC<PaymentClientProps> = ({ data }) => {
+const SubTestsDataTable: React.FC<PaymentClientProps> = ({ data }) => {
   const router = useRouter();
 
   const AddNewButton = () => {
@@ -22,8 +21,10 @@ const SamplesDataTable: React.FC<PaymentClientProps> = ({ data }) => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title={`Samples (${data.length})`} description="" />
-        <AddTestModal />
+        <Heading title={`Sub Tests (${data.length})`} description="" />
+        <Button onClick={() => router.push("subTests/add")}>
+          Add New <Plus />
+        </Button>
       </div>
       <Separator className="m-2" />
       <DataTable searchKey="title" columns={columns} data={data} />
@@ -31,4 +32,4 @@ const SamplesDataTable: React.FC<PaymentClientProps> = ({ data }) => {
   );
 };
 
-export default SamplesDataTable;
+export default SubTestsDataTable;
