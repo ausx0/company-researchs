@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { ReactQueryProvider } from "./Providers/ReacrQueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} scrollbar-none overflow-hidden`}>
-        {children}
-      </body>
-    </html>
+    <ReactQueryProvider>
+      <html lang="en">
+        <body className={`${inter.className} scrollbar-none overflow-hidden`}>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </body>
+      </html>
+    </ReactQueryProvider>
   );
 }

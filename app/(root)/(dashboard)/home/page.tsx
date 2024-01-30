@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 const HoemPage = () => {
   return (
     <>
-      <div className="grid gap-4 grid-cols-4 grid-rows-8">
+      <div className="grid gap-4 grid-cols-4 grid-rows-8  bg-slate-100 p-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.1.0",
+    "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.3.4",
     "@nextui-org/react": "^2.2.9",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -24,11 +25,14 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@reduxjs/toolkit": "^2.0.1",
     "@tanstack/react-query": "^5.17.0",
+    "@tanstack/react-query-devtools": "^5.17.21",
     "@tanstack/react-table": "^8.11.3",
+    "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
-    "framer-motion": "^10.17.0",
+    "framer-motion": "^10.18.0",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.303.0",
     "next": "14.0.4",
     "react": "^18",
@@ -41,6 +45,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
