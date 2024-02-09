@@ -25,16 +25,31 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiPostSample } from "@/app/services/api/Samples";
+import toast from "react-hot-toast";
 
 const AddSampleModal = () => {
-  const router = useRouter();
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof SampleSchema>>({
     resolver: zodResolver(SampleSchema),
     defaultValues: {
-      Name: "",
-      Price: "",
+      Sample: "",
+      // Price: "",
+    },
+  });
+  const queryClient = useQueryClient();
+
+  const SampleMutation = useMutation({
+    mutationKey: ["Sample"],
+    mutationFn: apiPostSample,
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["LabSamples"],
+      }); // Invalidate the 'Samples' query
+    },
+    onSuccess: () => {
+      toast.success("Sample added successfully");
     },
   });
 
@@ -43,6 +58,7 @@ const AddSampleModal = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    SampleMutation.mutate(values);
 
     // 3. Clear the form after submission.
     form.reset();
@@ -74,7 +90,7 @@ const AddSampleModal = () => {
                   <ModalBody>
                     <FormField
                       control={form.control}
-                      name="Name"
+                      name="Sample"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Name</FormLabel>
@@ -91,7 +107,7 @@ const AddSampleModal = () => {
                       )}
                     />
 
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="Price"
                       render={({ field }) => (
@@ -116,7 +132,7 @@ const AddSampleModal = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </ModalBody>
                   <ModalFooter>
                     <Button color="danger" variant="light" onPress={onClose}>

@@ -18,6 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { login } from "../../../services/auth";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
 
 const formSchema = z.object({
   Username: z.string().min(2, {
@@ -29,9 +32,20 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
-  const logiMutation = useMutation({
+  const router = useRouter(); // ✅ Now we have type-safety and autocompletion
+
+  const [loading, setLoading] = useState(false);
+  const loginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: () => {
+      toast.success("Login Success");
+      router.push("/home");
+      setLoading(true);
+    },
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,13 +58,13 @@ const LoginPage = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // logiMutation.mutate(values);
-    try {
-      login(values);
-      console.log(values);
-    } catch (error) {
-      console.log(error);
-    }
+    loginMutation.mutate(values);
+    // try {
+    //   login(values);
+    //   console.log(values);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   return (
@@ -104,9 +118,14 @@ const LoginPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
+                disabled={loading}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Sign in
+                {loading ? (
+                  <Spinner /> // Replace with your spinner component
+                ) : (
+                  "Sign in"
+                )}
               </motion.button>
             </div>
           </form>

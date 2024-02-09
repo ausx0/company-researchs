@@ -8,8 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryProvider } from "./Providers/ReacrQueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const queryClient = new QueryClient();
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +28,7 @@ export default function RootLayout({
         <body className={`${inter.className} scrollbar-none overflow-hidden`}>
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
+          <Toaster />
         </body>
       </html>
     </ReactQueryProvider>

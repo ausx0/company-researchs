@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="bg-white">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>

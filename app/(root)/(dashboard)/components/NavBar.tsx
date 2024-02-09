@@ -1,4 +1,5 @@
 "use client";
+import { logout } from "@/app/services/auth";
 import {
   Avatar,
   Dropdown,
@@ -8,9 +9,18 @@ import {
   User,
 } from "@nextui-org/react";
 import { BellRingIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
-const navBar = () => {
+const NavBar = () => {
+  // Rename the function to NavBar
+  const router = useRouter(); // Use the useRouter hook
+
+  const onLogout = () => {
+    // Cookies.remove("token");
+    logout();
+    router.push("/login");
+  };
   return (
     <>
       <div className="flex justify-end p-4 gap-8 items-center">
@@ -40,7 +50,7 @@ const navBar = () => {
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
               </DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={onLogout}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -51,4 +61,4 @@ const navBar = () => {
   );
 };
 
-export default navBar;
+export default NavBar;

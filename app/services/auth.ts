@@ -1,9 +1,7 @@
-import React from "react";
-import api from "./Endpoints";
-import axios from "axios";
+import { axiosInstance } from "@/lib";
 import Cookies from "js-cookie";
 
-const url = api + "Login";
+const url = axiosInstance + "Login";
 
 export async function login(data: any) {
   const formData = new FormData();
@@ -20,7 +18,7 @@ export async function login(data: any) {
   };
 
   try {
-    const response = await api.post("/Login", formData, options);
+    const response = await axiosInstance.post("/Login", formData, options);
     if (response.data.Session_key) {
       Cookies.set("token", response.data.Session_key);
       console.log(response.data);

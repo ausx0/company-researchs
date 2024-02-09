@@ -14,7 +14,7 @@ const AddSubTest = () => {
               <FlaskRound className="mx-2" /> Sub Tests
             </CardTitle>
           </CardHeader>
-          <CardContent className=" flex flex-1">
+          <CardContent className="">
             <SubTestForm />
           </CardContent>
         </Card>

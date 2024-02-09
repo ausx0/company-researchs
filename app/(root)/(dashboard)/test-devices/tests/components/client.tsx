@@ -1,25 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Payment, columns } from "./columns";
+import { TestsData, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
-import Tests from "@/app/services/api/Tests";
+import { apiGetTests } from "@/app/services/api/Tests";
+import { useQuery } from "@tanstack/react-query";
 
 export default function TestsDataTable() {
-  const [data, setData] = useState<Payment[]>([]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["LabTests"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetTests,
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await Tests.get();
-      console.log(result);
-      setData(result);
-    };
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
 
-    fetchData();
-  }, []);
+  if (error) {
+    return <span>Error: {error.message}</span>;
+  }
 
   return (
     <div className="container mx-auto ">
-      <DataTable searchKey="email" columns={columns} data={data} />
+      <DataTable searchKey="ID" columns={columns} data={data} />
     </div>
   );
 }

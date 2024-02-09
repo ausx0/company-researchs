@@ -1,104 +1,26 @@
+import { DataTable } from "@/components/ui/data-table";
 import React from "react";
-import { Payment } from "./components/columns";
+import { Separator } from "@/components/ui/separator";
+import { Heading } from "@/components/ui/heading";
+import AddSampleModal from "./components/addSampleModal";
 import SamplesDataTable from "./components/client";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      title: "ahmed dsaxfdasgfasngfasjnfasbfasbfashbfasbdhasgvbgvfghabvhebas",
-    },
-  ];
-}
-
-const ResearchesPage = async () => {
-  const dataSet = await getData();
-
+const TestsPage = () => {
   return (
-    <>
-      <SamplesDataTable data={dataSet} />
-    </>
+    <div className="container mx-auto py-2">
+      <div className="flex justify-between py-2">
+        <Heading title="Tests" description="" />
+        <div>
+          <AddSampleModal />
+        </div>
+      </div>
+
+      <Separator />
+      <div className="py-4">
+        <SamplesDataTable />
+      </div>
+    </div>
   );
 };
-export default ResearchesPage;
+
+export default TestsPage;

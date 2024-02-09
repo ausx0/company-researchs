@@ -1,34 +1,30 @@
 "use client";
 import React from "react";
-import { Payment, columns } from "./columns";
+import { SamplesData, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@nextui-org/react";
-import { Plus } from "lucide-react";
+import { apiGetSamples } from "@/app/services/api/Samples";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import AddTestModal from "./addSampleModal";
 
-interface PaymentClientProps {
-  data: Payment[];
-}
-
-const SamplesDataTable: React.FC<PaymentClientProps> = ({ data }) => {
+export default function SamplesDataTable() {
   const router = useRouter();
 
-  const AddNewButton = () => {
-    router.push("/samples/add");
-  };
-  return (
-    <>
-      <div className="flex items-center justify-between">
-        <Heading title={`Samples (${data.length})`} description="" />
-        <AddTestModal />
-      </div>
-      <Separator className="m-2" />
-      <DataTable searchKey="title" columns={columns} data={data} />
-    </>
-  );
-};
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["LabSamples"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetSamples,
+  });
 
-export default SamplesDataTable;
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  if (error) {
+    return <span>Error: {error.message}</span>;
+  }
+
+  return (
+    <div className="container mx-auto ">
+      <DataTable searchKey="ID" columns={columns} data={data} />
+    </div>
+  );
+}
