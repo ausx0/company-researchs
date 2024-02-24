@@ -3,11 +3,12 @@
 import * as z from "zod";
 
 export const SubTestSchema = z.object({
-  Test: z.string().min(2).max(50),
+  Test_id: z.string().min(2).max(50),
   SubTest: z.string().min(0),
-  Reference: z.string().min(0),
-  SubTestType: z.string().min(0),
-  Cost: z.number().min(0),
-  SellPrice: z.number().min(0),
-  ListItem: z.array(z.string()),
+  Unit: z.string().min(0),
+  Cost: z.coerce.number().min(0),
+  Price: z.coerce.number().min(0),
+  RFrom: z.coerce.number().min(0),
+  Result: z.coerce.number().min(0),
+  RTo: z.coerce.number().min(0),
 });

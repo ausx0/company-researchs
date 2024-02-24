@@ -5,7 +5,7 @@ export const apiGetTests = () => {
 };
 
 export const apiGetTest = (id: string) => {
-  return apiService.getData(`/LabTests/${id}`);
+  return apiService.getData(`/LabTests`, { params: { Test_id: id } });
 };
 
 export const apiPostTest = (data: any) => {

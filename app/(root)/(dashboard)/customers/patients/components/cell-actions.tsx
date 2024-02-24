@@ -14,15 +14,15 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SamplesData } from "./columns";
+import { PatientsData } from "./columns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiDeleteSample } from "@/app/services/api/Samples";
-import SampleModal from "./SampleModalForm";
+import PatientModal from "./PatientModalForm";
 import { useDisclosure } from "@nextui-org/react";
-import SampleModalForm from "./SampleModalForm";
+import PatientModalForm from "./PatientModalForm";
+import { apiDeletePatient } from "@/app/services/api/Customers/Patients";
 
 export interface cellActionProps {
-  data: SamplesData;
+  data: PatientsData;
 }
 
 export const CellAction: React.FC<cellActionProps> = ({ data }) => {
@@ -44,19 +44,19 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeleteSampleMutation = useMutation({
-    mutationKey: ["DeleteSample"],
-    mutationFn: apiDeleteSample,
+  const DeletePatientMutation = useMutation({
+    mutationKey: ["Delete-Patient"],
+    mutationFn: apiDeletePatient,
     onSuccess: () => {
-      toast.success("Sample Delete successfully");
+      toast.success("Patient Delete successfully");
       queryClient.invalidateQueries({
-        queryKey: ["LabSamples"],
-      }); // Invalidate the 'Samples' query
+        queryKey: ["Lab-Patients"],
+      }); // Invalidate the 'Patients' query
     },
   });
   const onDelete = async () => {
-    console.log(`Sample_id = ${data.ID}`);
-    DeleteSampleMutation.mutate({ Sample_id: data.ID });
+    console.log(`Patient_id = ${data.ID}`);
+    DeletePatientMutation.mutate({ Patient_id: data.ID });
     setOpen(false);
   };
 
@@ -69,7 +69,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         loading={loading}
       />
 
-      <SampleModalForm isOpen={isOpen} onClose={onClose} />
+      <PatientModalForm isOpen={isOpen} onClose={onClose} />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

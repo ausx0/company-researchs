@@ -43,7 +43,7 @@ const LoginPage = () => {
     },
     onSuccess: () => {
       toast.success("Login Success");
-      router.push("/home");
+      // router.push("/home");
       setLoading(true);
     },
   });

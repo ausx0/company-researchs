@@ -29,7 +29,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiPostSample } from "@/app/services/api/Samples";
 import toast from "react-hot-toast";
 
-const AddSampleModal = () => {
+type cellActionProps = {
+  onClose: () => void;
+  isOpen: boolean;
+};
+
+const SampleModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof SampleSchema>>({
     resolver: zodResolver(SampleSchema),
@@ -64,8 +69,6 @@ const AddSampleModal = () => {
     form.reset();
   }
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       onClose();
@@ -74,10 +77,6 @@ const AddSampleModal = () => {
 
   return (
     <>
-      <Button onPress={onOpen} radius="sm" size="sm" variant="flat">
-        Add Sample <Plus />
-      </Button>
-
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -106,33 +105,6 @@ const AddSampleModal = () => {
                         </FormItem>
                       )}
                     />
-
-                    {/* <FormField
-                      control={form.control}
-                      name="Price"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Price</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              variant="underlined"
-                              type="number"
-                              placeholder="100"
-                              endContent={
-                                <div className="pointer-events-none flex items-center">
-                                  <span className="text-default-400 text-small">
-                                    IQD
-                                  </span>
-                                </div>
-                              }
-                            />
-                          </FormControl>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /> */}
                   </ModalBody>
                   <ModalFooter>
                     <Button color="danger" variant="light" onPress={onClose}>
@@ -152,4 +124,4 @@ const AddSampleModal = () => {
   );
 };
 
-export default AddSampleModal;
+export default SampleModalForm;

@@ -51,8 +51,8 @@ const sidebarItems = [
     icon: <SendToBack className="w-6 opacity-50 mr-2" />,
     title: "Orders",
     subItems: [
-      { text: "Add Order", link: "/consultation/add" },
-      { text: "All Orders", link: "/consultation" },
+      { text: "Add Order", link: "/orders/add" },
+      { text: "All Orders", link: "/orders" },
     ],
   },
   // {
@@ -86,11 +86,11 @@ const sidebarItems = [
   },
   {
     icon: <Users className="w-6 opacity-50 mr-2" />,
-    title: "Clients",
+    title: "Customers",
     subItems: [
-      { text: "Researchers", link: "/clients/researchers" },
-      { text: "Journals", link: "/clients/journals" },
-      { text: "Suppliers", link: "/clients/suppliers" },
+      { text: "Patients", link: "/customers/patients" },
+      { text: "Clients", link: "/customers/clients" },
+      // { text: "Suppliers", link: "/clients/suppliers" },
     ],
   },
   {

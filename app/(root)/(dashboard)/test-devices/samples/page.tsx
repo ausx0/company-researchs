@@ -2,8 +2,9 @@ import { DataTable } from "@/components/ui/data-table";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
-import AddSampleModal from "./components/addSampleModal";
+import SampleModal from "./components/SampleModalForm";
 import SamplesDataTable from "./components/client";
+import AddNewSample from "./components/AddNewSample";
 
 const TestsPage = () => {
   return (
@@ -11,7 +12,7 @@ const TestsPage = () => {
       <div className="flex justify-between py-2">
         <Heading title="Tests" description="" />
         <div>
-          <AddSampleModal />
+          <AddNewSample />
         </div>
       </div>
 

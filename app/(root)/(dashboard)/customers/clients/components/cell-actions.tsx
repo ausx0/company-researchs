@@ -14,15 +14,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SamplesData } from "./columns";
+import { ClientsData } from "./columns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiDeleteSample } from "@/app/services/api/Samples";
-import SampleModal from "./SampleModalForm";
 import { useDisclosure } from "@nextui-org/react";
-import SampleModalForm from "./SampleModalForm";
+import ClientModalForm from "./ClientModalForm";
+import { apiDeleteClient } from "@/app/services/api/Customers/Clients";
 
 export interface cellActionProps {
-  data: SamplesData;
+  data: ClientsData;
 }
 
 export const CellAction: React.FC<cellActionProps> = ({ data }) => {
@@ -44,19 +43,19 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeleteSampleMutation = useMutation({
-    mutationKey: ["DeleteSample"],
-    mutationFn: apiDeleteSample,
+  const DeleteClientMutation = useMutation({
+    mutationKey: ["Delete-Client"],
+    mutationFn: apiDeleteClient,
     onSuccess: () => {
-      toast.success("Sample Delete successfully");
+      toast.success("Client Delete successfully");
       queryClient.invalidateQueries({
-        queryKey: ["LabSamples"],
-      }); // Invalidate the 'Samples' query
+        queryKey: ["Lab-Clients"],
+      }); // Invalidate the 'Clients' query
     },
   });
   const onDelete = async () => {
-    console.log(`Sample_id = ${data.ID}`);
-    DeleteSampleMutation.mutate({ Sample_id: data.ID });
+    console.log(`Client_id = ${data.ID}`);
+    DeleteClientMutation.mutate({ Client_id: data.ID });
     setOpen(false);
   };
 
@@ -69,7 +68,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         loading={loading}
       />
 
-      <SampleModalForm isOpen={isOpen} onClose={onClose} />
+      <ClientModalForm isOpen={isOpen} onClose={onClose} />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

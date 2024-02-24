@@ -9,7 +9,7 @@ interface ISelectField {
   label: string;
   errors: any;
   options: { value: string; label: string }[]; // Add this prop for the options
-  isLoading: boolean; // Add this prop for the loading state
+  isLoading?: boolean; // Add this prop for the loading state
 }
 
 const SelectField: React.FC<ISelectField> = ({
@@ -22,7 +22,9 @@ const SelectField: React.FC<ISelectField> = ({
 }) => {
   return (
     <>
-      <Label>{label}</Label>
+      <div className="mb-2">
+        <Label>{label}</Label>
+      </div>
       <Controller
         name={name}
         control={control}
@@ -31,11 +33,15 @@ const SelectField: React.FC<ISelectField> = ({
             options={isLoading ? [] : options} // pass an empty array as options when data is being loaded
             value={options?.find((option) => option.value === field.value)} // set the selected option
             onChange={(option) => field.onChange((option as any).value)} // update the field value when an option is selected
-            isLoading={isLoading} // pass the isLoading prop to the Select component
+            isLoading={isLoading} // pass the isLoading prop to the Select component\
+            // className="z-50"
+            styles={{
+              menu: (base) => ({ ...base, zIndex: 9999, overflow: "auto" }),
+            }}
           />
         )}
       />
-      {errors[name] && <p>{errors[name].message}</p>}
+      {errors[name] && <p className="text-danger">{errors[name].message}</p>}
     </>
   );
 };

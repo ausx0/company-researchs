@@ -6,40 +6,57 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-  title: string;
+export type SubTestsData = {
+  ID: number;
+  SubTest: string;
+  Test: string;
+  Unit: string;
+  Cost: number;
+  Price: number;
+  RFrom: number;
+  RTo: number;
+  Result: number;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<SubTestsData>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "ID",
+    header: "ID",
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Samples
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "SubTest",
+    header: "Sub Test",
   },
   {
-    accessorKey: "title",
-    header: "Title",
+    accessorKey: "Test",
+    header: "Test",
   },
-
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "Unit",
+    header: "Unit",
+  },
+  {
+    accessorKey: "Cost",
+    header: "Cost",
+  },
+  {
+    accessorKey: "Price",
+    header: "Price",
+  },
+  {
+    accessorKey: "RFrom",
+    header: "RFrom",
+  },
+  {
+    accessorKey: "RTo",
+    header: "RTo",
+  },
+  {
+    accessorKey: "Result",
+    header: "Result",
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
   },
 ];

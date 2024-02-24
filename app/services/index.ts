@@ -14,16 +14,15 @@ const DeleteOptions = {
   },
 };
 
-const getData = async (path: string) => {
+const getData = async (path: string, params?: any) => {
   try {
-    const response = await axiosInstance.get(path);
+    const response = await axiosInstance.get(path, { params });
     return response.data;
   } catch (error: any) {
     console.error({ error });
     throw new Error(error.message);
   }
 };
-
 const getResponse = async (path: string) => {
   try {
     const response = await axiosInstance.get(path);
