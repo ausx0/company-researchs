@@ -14,15 +14,15 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SamplesData } from "./columns";
+import { TestsData } from "./columns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiDeleteSample, apiGetSample } from "@/app/services/api/Samples";
-import SampleModal, { Sample } from "./SampleModalForm";
+import { apiDeleteTest, apiGetTest } from "@/app/services/api/Tests";
+import TestModal, { Test } from "./TestModalForm";
 import { useDisclosure } from "@nextui-org/react";
-import SampleModalForm from "./SampleModalForm";
+import TestModalForm from "./TestModalForm";
 
 export interface cellActionProps {
-  data: SamplesData;
+  data: TestsData;
 }
 
 export const CellAction: React.FC<cellActionProps> = ({ data }) => {
@@ -30,10 +30,11 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [editingSample, setEditingSample] = useState<Sample | null>(null);
+  const [editingTest, setEditingTest] = useState<Test | null>(null);
+
   const handleEdit = async () => {
-    const sample = await apiGetSample(data.ID); // Fetch the sample data
-    setEditingSample(sample); // Set the sample being edited
+    const Test = await apiGetTest(data.ID); // Fetch the Test data
+    setEditingTest(Test); // Set the Test being edited
     onOpen();
   };
 
@@ -43,19 +44,19 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeleteSampleMutation = useMutation({
-    mutationKey: ["DeleteSample"],
-    mutationFn: apiDeleteSample,
+  const DeleteTestMutation = useMutation({
+    mutationKey: ["DeleteTest"],
+    mutationFn: apiDeleteTest,
     onSuccess: () => {
-      toast.success("Sample Delete successfully");
+      toast.success("Test Delete successfully");
       queryClient.invalidateQueries({
-        queryKey: ["LabSamples"],
-      }); // Invalidate the 'Samples' query
+        queryKey: ["LabTests"],
+      }); // Invalidate the 'Tests' query
     },
   });
   const onDelete = async () => {
-    console.log(`Sample_id = ${data.ID}`);
-    DeleteSampleMutation.mutate({ Sample_id: data.ID });
+    console.log(`Test_id = ${data.ID}`);
+    DeleteTestMutation.mutate({ Test_id: data.ID });
     setOpen(false);
   };
 
@@ -67,11 +68,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         onConfirm={onDelete}
         loading={loading}
       />
-      <SampleModalForm
-        isOpen={isOpen}
-        onClose={onClose}
-        sample={editingSample}
-      />
+      <TestModalForm isOpen={isOpen} onClose={onClose} test={editingTest} />{" "}
       {/* Pass the ID as a prop */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

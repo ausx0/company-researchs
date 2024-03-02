@@ -14,27 +14,28 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { SamplesData } from "./columns";
+import { ExpensesData } from "./columns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiDeleteSample, apiGetSample } from "@/app/services/api/Samples";
-import SampleModal, { Sample } from "./SampleModalForm";
+import ExpenseModal from "./ExpenseModalForm";
 import { useDisclosure } from "@nextui-org/react";
-import SampleModalForm from "./SampleModalForm";
+import ExpenseModalForm from "./ExpenseModalForm";
+import { apiDeleteExpense } from "@/app/services/api/Finance/Expenses";
 
 export interface cellActionProps {
-  data: SamplesData;
+  data: ExpensesData;
 }
 
 export const CellAction: React.FC<cellActionProps> = ({ data }) => {
+  const router = useRouter();
+  const params = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [editingSample, setEditingSample] = useState<Sample | null>(null);
-  const handleEdit = async () => {
-    const sample = await apiGetSample(data.ID); // Fetch the sample data
-    setEditingSample(sample); // Set the sample being edited
+
+  const handleEdit = () => {
     onOpen();
+    // onEdit(data.ID);
   };
 
   const onCopy = (id: string) => {
@@ -43,19 +44,19 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeleteSampleMutation = useMutation({
-    mutationKey: ["DeleteSample"],
-    mutationFn: apiDeleteSample,
+  const DeleteExpenseMutation = useMutation({
+    mutationKey: ["Delete-Expense"],
+    mutationFn: apiDeleteExpense,
     onSuccess: () => {
-      toast.success("Sample Delete successfully");
+      toast.success("Expense Delete successfully");
       queryClient.invalidateQueries({
-        queryKey: ["LabSamples"],
-      }); // Invalidate the 'Samples' query
+        queryKey: ["Lab-Expenses"],
+      }); // Invalidate the 'Expenses' query
     },
   });
   const onDelete = async () => {
-    console.log(`Sample_id = ${data.ID}`);
-    DeleteSampleMutation.mutate({ Sample_id: data.ID });
+    console.log(`Expense_id = ${data.ID}`);
+    DeleteExpenseMutation.mutate({ Expense_id: data.ID });
     setOpen(false);
   };
 
@@ -67,12 +68,9 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         onConfirm={onDelete}
         loading={loading}
       />
-      <SampleModalForm
-        isOpen={isOpen}
-        onClose={onClose}
-        sample={editingSample}
-      />
-      {/* Pass the ID as a prop */}
+
+      <ExpenseModalForm isOpen={isOpen} onClose={onClose} />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={"ghost"} className="h-8 w-8 p-0">
@@ -83,7 +81,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions Menu</DropdownMenuLabel>
 
-          <DropdownMenuItem onClick={handleEdit}>
+          <DropdownMenuItem>
             <Edit className="mr-2 h-4 w-4" />
             Update
           </DropdownMenuItem>

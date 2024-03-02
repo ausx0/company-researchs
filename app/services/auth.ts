@@ -22,8 +22,10 @@ export async function login(data: any) {
     if (response.data.Session_key) {
       Cookies.set("token", response.data.Session_key);
       console.log(response.data);
+      return response.data;
+    } else {
+      throw new Error("Login failed");
     }
-    return response.data;
   } catch (error) {
     console.error(error);
   }

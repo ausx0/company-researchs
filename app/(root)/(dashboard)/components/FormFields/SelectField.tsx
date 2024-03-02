@@ -35,8 +35,20 @@ const SelectField: React.FC<ISelectField> = ({
             onChange={(option) => field.onChange((option as any).value)} // update the field value when an option is selected
             isLoading={isLoading} // pass the isLoading prop to the Select component\
             // className="z-50"
+            menuPosition="fixed"
+            menuPlacement="auto"
             styles={{
-              menu: (base) => ({ ...base, zIndex: 9999, overflow: "auto" }),
+              menu: (base) => ({ ...base, zIndex: 9999 }),
+              menuList: (base) => ({
+                ...base,
+                // Hide scrollbar for Chrome, Safari and Opera
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                // Hide scrollbar for IE, Edge and Firefox
+                msOverflowStyle: "none" /* IE and Edge */,
+                scrollbarWidth: "none" /* Firefox */,
+              }),
             }}
           />
         )}

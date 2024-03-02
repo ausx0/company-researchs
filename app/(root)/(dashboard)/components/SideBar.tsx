@@ -201,13 +201,30 @@ const SideBar = () => {
                     <Dropdown>
                       {/* Dropdown trigger */}
                       <DropdownTrigger className="cursor-pointer">
-                        {item.icon}
+                        <div
+                          className={
+                            item.subItems.some(
+                              (subItem) => pathname === subItem.link
+                            )
+                              ? "text-cyan-400" // Highlight color
+                              : ""
+                          }
+                        >
+                          {item.icon}
+                        </div>
                       </DropdownTrigger>
                       {/* Dropdown menu content */}
                       <DropdownMenu aria-label="Static Actions">
                         {item.subItems.map((subItem, subIndex) => (
                           <DropdownItem key={subIndex} className="flex">
-                            <Link href={subItem.link}>
+                            <Link
+                              href={subItem.link}
+                              className={
+                                pathname == subItem.link
+                                  ? "opacity-100 text-cyan-400 flex w-full items-center "
+                                  : "opacity-50 flex items-center w-full  hover:opacity-100"
+                              }
+                            >
                               <div className="flex">
                                 <ArrowRight className="mr-2" /> {subItem.text}
                               </div>
@@ -221,8 +238,33 @@ const SideBar = () => {
                     <AccordionItem value={`item-${index}`}>
                       <AccordionTrigger className="text-[14px]">
                         <div className="flex">
-                          {item.icon}
-                          {!toggleCollapse && <>{item.title}</>}
+                          <span
+                            className={
+                              item.subItems.some(
+                                (subItem) => pathname === subItem.link
+                              )
+                                ? "text-cyan-400" // Highlight color
+                                : ""
+                            }
+                          >
+                            {item.icon}
+                          </span>
+                          {!toggleCollapse && (
+                            <>
+                              {" "}
+                              <span
+                                className={
+                                  item.subItems.some(
+                                    (subItem) => pathname === subItem.link
+                                  )
+                                    ? "text-cyan-400" // Highlight color
+                                    : ""
+                                }
+                              >
+                                {item.title}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="text-[12px] flex flex-col gap-2">

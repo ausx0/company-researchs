@@ -1,14 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { TestsData, columns } from "./columns";
+import React from "react";
+import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
-import { apiGetTests } from "@/app/services/api/Tests";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { apiGetExpenses } from "@/app/services/api/Finance/Expenses";
 
-export default function TestsDataTable() {
+export default function ExpensesDataTable() {
+  const router = useRouter();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["LabTests"], // Fix: Pass the queryKey as an array
-    queryFn: apiGetTests,
+    queryKey: ["Lab-Expenses"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetExpenses,
   });
 
   if (isLoading) {

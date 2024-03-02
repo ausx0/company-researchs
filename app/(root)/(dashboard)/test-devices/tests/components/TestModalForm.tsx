@@ -33,18 +33,31 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiGetSamples } from "@/app/services/api/Samples";
 import { Input } from "@/components/ui/input";
 import TextField from "@/app/components/FormFields/TextField";
-import { apiPostTest } from "@/app/services/api/Tests";
+import { apiPostTest, apiSaveTest } from "@/app/services/api/Tests";
 import toast from "react-hot-toast";
+import SelectField from "../../../components/FormFields/SelectField";
 
-interface IFormInput {
+export type Test = {
+  ID?: string | undefined;
+
   Test: string;
   Sample_id: { label: string; value: string };
   OnePrice: boolean;
   Price: string;
-}
+};
 
-const AddTestModal = () => {
-  const router = useRouter();
+type cellActionProps = {
+  onClose: () => void;
+  isOpen: boolean;
+  test?: Test | null; // Allow null as a possible value
+};
+
+const TestModalForm: React.FC<cellActionProps> = ({
+  onClose,
+  isOpen,
+  test,
+}) => {
+  const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -69,44 +82,52 @@ const AddTestModal = () => {
   } = useForm({
     resolver: zodResolver(SampleSchema),
     defaultValues: {
-      Test: "",
-      Sample_id: { label: "", value: "" }, // Provide default values for label and value
-      OnePrice: false,
-      Price: "",
+      Test: test?.Test || "",
+      Sample_id: test?.Sample_id || { label: "", value: "" },
+      OnePrice: test?.OnePrice || false,
+      Price: test?.Price || "",
     },
   });
 
   const TestMutation = useMutation({
     mutationKey: ["Test"],
-    mutationFn: apiPostTest,
+    mutationFn: apiSaveTest,
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["LabTests"],
-      });
+        queryKey: ["LabTest"],
+      }); // Invalidate the 'Test' query
+    },
+    onMutate: () => {
+      setLoading(true);
     },
     onSuccess: () => {
-      toast.success("Test added successfully");
+      setLoading(false);
+      onClose();
+      reset();
+      toast.success(
+        test ? "Test updated successfully" : "Test added successfully"
+      );
+    },
+    onError: (error) => {
+      setLoading(false);
+      toast.error(error.message);
     },
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-    TestMutation.mutate(data);
-    reset();
-  };
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   useEffect(() => {
-    if (isSubmitSuccessful) {
-      onClose();
+    // Reset form with the new test when test prop changes
+    if (test) {
+      reset({
+        Test: test.Test,
+        Sample_id: test.Sample_id,
+        OnePrice: test.OnePrice,
+        Price: test.Price,
+      });
     }
-  }, [isSubmitSuccessful, onClose]);
+  }, [test, reset]);
+
   return (
     <>
-      <Button size="sm" onClick={onOpen}>
-        Add Test <Plus />
-      </Button>
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Add Test</ModalHeader>
@@ -123,24 +144,13 @@ const AddTestModal = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-4">
-                  <label htmlFor="sample">Sample</label>
-                  <Controller
+                  <SelectField
+                    options={SampleValues}
                     control={control}
                     name="Sample_id"
-                    render={({ field }) => (
-                      <div>
-                        <Select
-                          options={SampleValues}
-                          onChange={(option) => field.onChange(option.value)} // pass the selected option's value
-                          onBlur={field.onBlur}
-                          value={SampleValues.find(
-                            (option: any) => option.value === field.value
-                          )} // set the selected option
-                        />
-                      </div>
-                    )}
+                    label={"Sample"}
+                    errors={errors}
                   />
-                  {errors.Sample_id && <span>{errors.Sample_id.message}</span>}
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -188,4 +198,4 @@ const AddTestModal = () => {
   );
 };
 
-export default AddTestModal;
+export default TestModalForm;

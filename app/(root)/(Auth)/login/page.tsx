@@ -41,10 +41,18 @@ const LoginPage = () => {
     onMutate: () => {
       setLoading(true);
     },
-    onSuccess: () => {
-      toast.success("Login Success");
-      // router.push("/home");
+    onSuccess: (data) => {
+      if (data.Session_key) {
+        toast.success("Login Success");
+        // router.push("/home");
+      } else {
+        throw new Error("Login failed");
+      }
       setLoading(true);
+    },
+    onError: (error) => {
+      toast.error("Username or Password is incorrect");
+      setLoading(false);
     },
   });
 

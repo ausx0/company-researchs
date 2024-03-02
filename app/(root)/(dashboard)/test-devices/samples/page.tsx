@@ -8,9 +8,9 @@ import AddNewSample from "./components/AddNewSample";
 
 const TestsPage = () => {
   return (
-    <div className="container mx-auto py-2">
+    <div className=" mx-auto py-2">
       <div className="flex justify-between py-2">
-        <Heading title="Tests" description="" />
+        <Heading title="Samples" description="" />
         <div>
           <AddNewSample />
         </div>

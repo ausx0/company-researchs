@@ -42,7 +42,7 @@ export default function SubTestsDataTable() {
         </div>
       </div>
       <Separator />
-      <div className=" mx-auto ">
+      <div className="container mx-auto">
         <DataTable searchKey="ID" columns={columns} data={data} />
       </div>
     </>

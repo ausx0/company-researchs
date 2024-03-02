@@ -7,6 +7,13 @@ const PostOptions = {
   },
 };
 
+const PutOptions = {
+  method: "PUT",
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+};
+
 const DeleteOptions = {
   method: "DELETE",
   headers: {
@@ -45,7 +52,7 @@ const postData = async (path: string, data: any) => {
 
 const putData = async (path: string, data: any) => {
   try {
-    const response = await axiosInstance.put(path, data);
+    const response = await axiosInstance.put(path, data, PutOptions);
     return response.data;
   } catch (error: any) {
     console.error({ error });

@@ -1,14 +1,17 @@
 "use client";
 import React from "react";
-import { columns } from "./columns";
+import { PurchasesData, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 import { useQuery } from "@tanstack/react-query";
-import { apiGetClients } from "@/app/services/api/Customers/Clients";
+import { useRouter } from "next/navigation";
+import { apiGetPurchases } from "@/app/services/api/Finance/Purchases";
 
-export default function ClientsDataTable() {
+export default function PurchasesDataTable() {
+  const router = useRouter();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["Lab-Clients"], // Fix: Pass the queryKey as an array
-    queryFn: apiGetClients,
+    queryKey: ["LabPurchases"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetPurchases,
   });
 
   if (isLoading) {
@@ -20,7 +23,7 @@ export default function ClientsDataTable() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto ">
       <DataTable searchKey="ID" columns={columns} data={data} />
     </div>
   );

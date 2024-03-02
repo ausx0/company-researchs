@@ -9,13 +9,15 @@ export default function DashboardLayout({
   return (
     <section className="h-screen flex flex-row justify-start overflow-hidden">
       {/* Include shared UI here e.g. a header or sidebar */}
-      <section className="overflow-auto  scrollbar-thumb-gray-200 scrollbar-none hover:scrollbar-thumb-gray-300 ">
+      <section className="overflow-auto px-4  scrollbar-thumb-gray-200 scrollbar-none hover:scrollbar-thumb-gray-300 bg-slate-100 ">
         <SideBar />
       </section>
       <div className="flex flex-col  flex-1">
-        <NavBar />
+        <div className="flex   justify-end">
+          <NavBar />
+        </div>
 
-        <div className=" flex-1 p-4 m-2 overflow-auto scrollbar-none rounded-lg ">
+        <div className=" flex-1 p-4 m-2 overflow-auto scrollbar-none rounded-lg px-8 ">
           {children}
         </div>
       </div>

@@ -7,45 +7,30 @@ import { CellAction } from "./cell-actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type TestsData = {
+export type PurchasesData = {
   ID: string;
-  OnePrice: string;
-  Price: number;
-  Sample: string;
-  Tests: string;
   State: number;
+  Purchase: string;
 };
 
-export const columns: ColumnDef<TestsData>[] = [
+export const columns: ColumnDef<PurchasesData>[] = [
   {
     accessorKey: "ID",
     header: "ID",
   },
   {
-    accessorKey: "OnePrice",
-    header: "One Price",
-  },
-  {
-    accessorKey: "Price",
-    header: "Price",
-  },
-  {
-    accessorKey: "Sample",
+    accessorKey: "Purchase",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Sample
+          Purchases
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "Test",
-    header: "Test",
   },
   {
     accessorKey: "State",

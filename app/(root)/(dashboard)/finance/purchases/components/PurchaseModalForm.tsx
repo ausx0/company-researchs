@@ -15,7 +15,7 @@ import {
 import { Plus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { SampleSchema } from "../validation/SampleSchema";
+import { PurchaseSchema } from "../validation/PurchaseSchema";
 import { z } from "zod";
 import {
   Form,
@@ -29,45 +29,47 @@ import {
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  apiPostSample,
-  apiPutSample,
-  apiSaveSample,
-} from "@/app/services/api/Samples";
+  apiPostPurchase,
+  apiPutPurchase,
+  apiSavePurchase,
+} from "@/app/services/api/Finance/Purchases";
 import toast from "react-hot-toast";
 
-export type Sample = {
+export type Purchase = {
   ID?: string | undefined;
-  Sample: string;
-  // include other properties of a sample here
+  Purchase: string;
+  // include other properties of a Purchase here
 };
 
 type cellActionProps = {
   onClose: () => void;
   isOpen: boolean;
-  sample?: Sample | null; // Allow null as a possible value
+  Purchase?: Purchase | null; // Allow null as a possible value
 };
 
-const SampleModalForm: React.FC<cellActionProps> = ({
+const PurchaseModalForm: React.FC<cellActionProps> = ({
   onClose,
   isOpen,
-  sample,
+  Purchase,
 }) => {
   const [loading, setLoading] = useState(false);
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof SampleSchema>>({
-    resolver: zodResolver(SampleSchema),
-    defaultValues: sample ? { Sample: sample.Sample } : { Sample: "" },
+  const form = useForm<z.infer<typeof PurchaseSchema>>({
+    resolver: zodResolver(PurchaseSchema),
+    defaultValues: Purchase
+      ? { Purchase: Purchase.Purchase }
+      : { Purchase: "" },
   });
   const queryClient = useQueryClient();
 
-  const SampleMutation = useMutation({
-    mutationKey: ["Sample"],
-    mutationFn: apiSaveSample,
+  const PurchaseMutation = useMutation({
+    mutationKey: ["Purchase"],
+    mutationFn: apiSavePurchase,
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["LabSamples"],
-      }); // Invalidate the 'Samples' query
+        queryKey: ["LabPurchases"],
+      }); // Invalidate the 'Purchases' query
     },
     onMutate: () => {
       setLoading(true);
@@ -77,25 +79,23 @@ const SampleModalForm: React.FC<cellActionProps> = ({
       onClose();
       form.reset();
       toast.success(
-        sample ? "Sample updated successfully" : "Sample added successfully"
+        Purchase
+          ? "Purchase updated successfully"
+          : "Purchase added successfully"
       );
-    },
-    onError: (error) => {
-      setLoading(false);
-      toast.error(error.message);
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SampleSchema>) {
+  function onSubmit(values: z.infer<typeof PurchaseSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // If we're updating an existing sample, include the id
-    if (sample) {
-      SampleMutation.mutate({ ...values, ID: sample.ID });
+    // If we're updating an existing Purchase, include the id
+    if (Purchase) {
+      PurchaseMutation.mutate({ ...values, ID: Purchase.ID });
     } else {
-      // If we're creating a new sample, don't include the id
-      SampleMutation.mutate(values);
+      // If we're creating a new Purchase, don't include the id
+      PurchaseMutation.mutate(values);
     }
     // 3. Clear the form after submission.
   }
@@ -107,12 +107,12 @@ const SampleModalForm: React.FC<cellActionProps> = ({
   // }, [form.formState.isSubmitSuccessful, onClose]);
 
   useEffect(() => {
-    // Reset form with the new sample when sample prop changes
-    console.log("Sample", sample);
+    // Reset form with the new Purchase when Purchase prop changes
+    console.log("Purchase", Purchase);
     form.reset({
-      Sample: sample ? sample.Sample : "",
+      Purchase: Purchase ? Purchase.Purchase : "",
     });
-  }, [sample]);
+  }, [Purchase]);
 
   return (
     <>
@@ -123,12 +123,12 @@ const SampleModalForm: React.FC<cellActionProps> = ({
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col gap-1">
-                    Add Sample
+                    Add Purchase
                   </ModalHeader>
                   <ModalBody>
                     <FormField
                       control={form.control}
-                      name="Sample"
+                      name="Purchase"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Name</FormLabel>
@@ -150,7 +150,11 @@ const SampleModalForm: React.FC<cellActionProps> = ({
                       Cancle
                     </Button>
                     <Button variant="shadow" type="submit" disabled={loading}>
-                      {loading ? <Spinner /> : <>{sample ? "Update" : "Add"}</>}
+                      {loading ? (
+                        <Spinner />
+                      ) : (
+                        <>{Purchase ? "Update" : "Add"}</>
+                      )}
                     </Button>
                   </ModalFooter>
                 </>
@@ -163,4 +167,4 @@ const SampleModalForm: React.FC<cellActionProps> = ({
   );
 };
 
-export default SampleModalForm;
+export default PurchaseModalForm;
