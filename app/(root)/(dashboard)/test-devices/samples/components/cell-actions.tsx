@@ -31,6 +31,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [editingSample, setEditingSample] = useState<Sample | null>(null);
+
   const handleEdit = async () => {
     const sample = await apiGetSample(data.ID); // Fetch the sample data
     setEditingSample(sample); // Set the sample being edited

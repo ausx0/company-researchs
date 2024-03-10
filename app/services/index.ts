@@ -50,6 +50,30 @@ const postData = async (path: string, data: any) => {
   }
 };
 
+const postJsonData = async (path: string, data: any) => {
+  try {
+    const response = await axiosInstance.post(path, data, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error({ error });
+    throw new Error(error.message);
+  }
+};
+
+const putJsonData = async (path: string, data: any) => {
+  try {
+    const response = await axiosInstance.put(path, data, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error({ error });
+    throw new Error(error.message);
+  }
+};
+
 const putData = async (path: string, data: any) => {
   try {
     const response = await axiosInstance.put(path, data, PutOptions);
@@ -85,6 +109,8 @@ const apiService = {
   postData,
   putData,
   DestroyData,
+  postJsonData,
+  putJsonData,
 };
 
 export default apiService;

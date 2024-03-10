@@ -8,7 +8,7 @@ import OrderForm from "./components/OrderForm";
 const AddOrder = () => {
   return (
     <>
-      <Card className="h-auto p-4 bg-gray-100">
+      <Card className=" p-4 bg-gray-100 h-auto">
         <div className="flex justify-between items-center m-4">
           <h1 className="text-2xl font-semibold uppercase">Add Order</h1>
         </div>

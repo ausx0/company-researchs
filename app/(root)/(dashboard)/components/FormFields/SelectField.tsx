@@ -10,6 +10,9 @@ interface ISelectField {
   errors: any;
   options: { value: string; label: string }[]; // Add this prop for the options
   isLoading?: boolean; // Add this prop for the loading state
+  isMulti?: boolean;
+  key?: any;
+  onChange?: (value: any) => void; // Add this prop for the change handler
 }
 
 const SelectField: React.FC<ISelectField> = ({
@@ -19,41 +22,73 @@ const SelectField: React.FC<ISelectField> = ({
   errors,
   options, // Add this prop for the options
   isLoading, // Add this prop for the loading state
+  isMulti,
+  onChange, // Add this prop for the change handler
+
+  key,
 }) => {
   return (
     <>
-      <div className="mb-2">
+      <div className="">
         <Label>{label}</Label>
+        <Controller
+          key={name} // Add key prop here
+          name={name}
+          control={control}
+          defaultValue={isMulti ? [] : ""}
+          render={({ field }) => (
+            <Select
+              isMulti={isMulti}
+              options={isLoading ? [] : options} // pass an empty array as options when data is being loaded
+              value={
+                isMulti
+                  ? options?.filter((option) =>
+                      field.value ? field.value.includes(option.value) : false
+                    )
+                  : options?.find((option) => option.value === field.value)
+              }
+              onChange={
+                isMulti
+                  ? (selectedOptions) => {
+                      const options = Array.isArray(selectedOptions)
+                        ? selectedOptions
+                        : [selectedOptions];
+                      field.onChange(
+                        options.map((option: any) => option.value)
+                      );
+                      onChange &&
+                        onChange(options.map((option: any) => option.value)); // Call the change handler
+                    }
+                  : (option) => {
+                      field.onChange(option ? (option as any).value : "");
+                      onChange && onChange(option ? (option as any).value : ""); // Call the change handler
+                    }
+              }
+              isLoading={isLoading} // pass the isLoading prop to the Select component\
+              // className="z-50"
+              // menuPosition="absolute"
+
+              menuPlacement="bottom"
+              styles={{
+                menu: (base) => ({ ...base, zIndex: 9999 }),
+                menuList: (base) => ({
+                  ...base,
+                  zIndex: 9999,
+                  backgroundColor: "white",
+                  // Hide scrollbar for Chrome, Safari and Opera
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                  // Hide scrollbar for IE, Edge and Firefox
+                  msOverflowStyle: "none" /* IE and Edge */,
+                  scrollbarWidth: "none" /* Firefox */,
+                }),
+              }}
+            />
+          )}
+        />
+        {errors[name] && <p className="text-danger">{errors[name].message}</p>}
       </div>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <Select
-            options={isLoading ? [] : options} // pass an empty array as options when data is being loaded
-            value={options?.find((option) => option.value === field.value)} // set the selected option
-            onChange={(option) => field.onChange((option as any).value)} // update the field value when an option is selected
-            isLoading={isLoading} // pass the isLoading prop to the Select component\
-            // className="z-50"
-            menuPosition="fixed"
-            menuPlacement="auto"
-            styles={{
-              menu: (base) => ({ ...base, zIndex: 9999 }),
-              menuList: (base) => ({
-                ...base,
-                // Hide scrollbar for Chrome, Safari and Opera
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-                // Hide scrollbar for IE, Edge and Firefox
-                msOverflowStyle: "none" /* IE and Edge */,
-                scrollbarWidth: "none" /* Firefox */,
-              }),
-            }}
-          />
-        )}
-      />
-      {errors[name] && <p className="text-danger">{errors[name].message}</p>}
     </>
   );
 };

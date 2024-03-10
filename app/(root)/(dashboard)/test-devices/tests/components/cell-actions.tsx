@@ -34,6 +34,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const handleEdit = async () => {
     const Test = await apiGetTest(data.ID); // Fetch the Test data
+    console.log(data.ID);
     setEditingTest(Test); // Set the Test being edited
     onOpen();
   };
@@ -68,7 +69,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
         onConfirm={onDelete}
         loading={loading}
       />
-      <TestModalForm isOpen={isOpen} onClose={onClose} test={editingTest} />{" "}
+      <TestModalForm isOpen={isOpen} onClose={onClose} test={editingTest} />
       {/* Pass the ID as a prop */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

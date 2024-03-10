@@ -107,13 +107,13 @@ const SampleModalForm: React.FC<cellActionProps> = ({
   // }, [form.formState.isSubmitSuccessful, onClose]);
 
   useEffect(() => {
-    // Reset form with the new sample when sample prop changes
-    console.log("Sample", sample);
-    form.reset({
-      Sample: sample ? sample.Sample : "",
-    });
+    if (sample) {
+      console.log("Sample", sample);
+      form.reset({
+        Sample: sample.Sample,
+      });
+    }
   }, [sample]);
-
   return (
     <>
       <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>

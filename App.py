@@ -118,8 +118,8 @@ def LabSamples():
         elif request.method == 'PUT':
             QuerySample = DBLabSamples.query.get(request.form['Sample_id'])
             QuerySample.Sample = request.form['Sample']
-            QuerySample.State = request.form['State']
-            QuerySample.User_id = request.form['User_id']
+            QuerySample.State = 1
+            QuerySample.User_id = QueryAuth.ID
             QuerySample.TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             DBLabSamples.update(QuerySample)
             
@@ -223,7 +223,7 @@ def LabTests():
             QueryTest.Test = request.form['Test']
             QueryTest.OnePrice = request.form['OnePrice']
             QueryTest.Price = request.form['Price']
-            QueryTest.State = request.form['State']
+            QueryTest.State = 1
             QueryTest.User_id = QueryAuth.ID
             QueryTest.TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             DBLabTests.update(QueryTest)
@@ -269,6 +269,19 @@ def LabTestsAll():
     else:
         return {
             'State':'Not Authorized'
+        }, 401
+
+@app.route('/LabTests/Filter', methods=['GET'])
+def LabTestsFilter():
+    AuthCode = request.headers.get('Authorization')
+    QueryAuth = User.query.filter(User.Key == AuthCode).first()
+    if QueryAuth:
+        QueryTests = DBLabTests.query.filter(DBLabTests.Sample_id == request.args.get('Sample_id')).all()
+        AllTests = [{"ID": "#TS-" + str(Test.ID), "Test": Test.Test, "Sample":Test.Sample_id, "OnePrice":Test.OnePrice, "Price":Test.Price, "State":Test.State} for Test in QueryTests]
+        return jsonify(AllTests), 200
+    else:
+        return {
+            'State' : 'Not Authorized'
         }, 401
     
 ################## END Tests ######################
@@ -339,7 +352,7 @@ def LabSubTests():
             QuerySubTest.RFrom = request.form['RFrom']
             QuerySubTest.RTo = request.form['RTo']
             QuerySubTest.Unit = request.form['Unit']
-            QuerySubTest.State = request.form['State']
+            QuerySubTest.State = 1
             QuerySubTest.User_id = QueryAuth.ID
             QuerySubTest.TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             DBLabSubTests.update(QuerySubTest)
@@ -373,6 +386,19 @@ def LabSubTestsAll():
     if QueryAuth:
         QuerySubTest = db.session.query(DBLabSubTests, DBLabTests.Test).join(DBLabTests, DBLabSubTests.Test_id == DBLabTests.ID).all()
         AllSubTests = [{"ID": SubTest[0].ID, "SubTest": SubTest[0].SubTest, "Test":SubTest[1], "Cost":SubTest[0].Cost, "Price":SubTest[0].Price, "Result":SubTest[0].Result, "RFrom":SubTest[0].RFrom, "RTo":SubTest[0].RTo, "Unit":SubTest[0].Unit, "State":SubTest[0].State} for SubTest in QuerySubTest]
+        return jsonify(AllSubTests), 200
+    else:
+        return {
+            'State':'Not Authorized'
+        }, 401
+
+@app.route('/LabSubTests/Filter', methods=['GET'])
+def LabSubTestsFilter():
+    AuthCode = request.headers.get('Authorization')
+    QueryAuth = User.query.filter(User.Key == AuthCode).first()
+    if QueryAuth:
+        QuerySubTests = DBLabSubTests.query.filter(DBLabSubTests.Test_id == request.args.get('Test_id')).all()
+        AllSubTests = [{"ID": SubTest.ID, "SubTest": SubTest.SubTest, "Test":SubTest.Test_id, "Cost":SubTest.Cost, "Price":SubTest.Price, "Result":SubTest.Result, "RFrom":SubTest.RFrom, "RTo":SubTest.RTo, "Unit":SubTest.Unit, "State":SubTest.State} for SubTest in QuerySubTests]
         return jsonify(AllSubTests), 200
     else:
         return {
@@ -460,7 +486,7 @@ def LabPatients():
             QueryPatient.Diabetes = request.form['Diabetes']
             QueryPatient.Skin = request.form['Skin']
             QueryPatient.Notes = request.form['Notes']
-            QueryPatient.State = request.form['State']
+            QueryPatient.State = 1
             QueryPatient.User_id = QueryAuth.ID
             QueryPatient.TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             DBLabPatients.update(QueryPatient)
@@ -620,7 +646,7 @@ def LabClients():
             QueryClient.Phone = request.form['Phone']
             QueryClient.Address = request.form['Address']
             QueryClient.Rep = request.form['Rep']
-            QueryClient.State = request.form['State']
+            QueryClient.State = 1
             QueryClient.User_id = QueryAuth.ID
             QueryClient.TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             DBLabClients.update(QueryClient)
@@ -749,9 +775,6 @@ def LabOrderSamples():
                 TimeStamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             )
             DBLabOrderSamples.insert(NewOrderSample)
-
-
-
             return {
                 'State':'OK'
             }, 200

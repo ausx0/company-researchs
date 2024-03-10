@@ -39,7 +39,6 @@ import SelectField from "../../../components/FormFields/SelectField";
 
 export type Test = {
   ID?: string | undefined;
-
   Test: string;
   Sample_id: { label: string; value: string };
   OnePrice: boolean;
@@ -113,6 +112,15 @@ const TestModalForm: React.FC<cellActionProps> = ({
       toast.error(error.message);
     },
   });
+
+  console.log("Test", test?.ID);
+  const onSubmit: SubmitHandler<Test> = (values) => {
+    if (test) {
+      TestMutation.mutate({ ...values, ID: test.ID });
+    } else {
+      TestMutation.mutate(values);
+    }
+  };
 
   useEffect(() => {
     // Reset form with the new test when test prop changes

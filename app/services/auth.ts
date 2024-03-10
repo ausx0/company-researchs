@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const url = axiosInstance + "Login";
 
-export async function login(data: any) {
+export async function Login(data: any) {
   const formData = new FormData();
 
   for (const key in data) {
@@ -22,6 +22,8 @@ export async function login(data: any) {
     if (response.data.Session_key) {
       Cookies.set("token", response.data.Session_key);
       console.log(response.data);
+
+      // router.push("/home");
       return response.data;
     } else {
       throw new Error("Login failed");

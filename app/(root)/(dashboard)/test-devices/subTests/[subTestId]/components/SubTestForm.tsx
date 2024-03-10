@@ -14,13 +14,14 @@ import SelectField from "@/app/(root)/(dashboard)/components/FormFields/SelectFi
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiGetTests } from "@/app/services/api/Tests";
 import InputField from "@/app/(root)/(dashboard)/components/FormFields/InputField";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { apiCreateSubTest } from "@/app/services/api/SubTests";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const SubTestForm = () => {
   // 1. Define your form.
-
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -57,6 +58,7 @@ const SubTestForm = () => {
     },
     onSuccess: () => {
       toast.success("Sub Test added successfully");
+      router.push("/test-devices/subTests");
     },
   });
   // 2. Define a submit handler.
@@ -101,14 +103,14 @@ const SubTestForm = () => {
                 errors={errors}
                 control={control}
                 type="text"
-                label="Sub Test Name"
+                label="Cost"
                 name="Cost"
               />
               <InputField
                 errors={errors}
                 control={control}
                 type="text"
-                label="Sub Test Name"
+                label="Price"
                 name="Price"
               />
             </div>
@@ -117,7 +119,7 @@ const SubTestForm = () => {
                 errors={errors}
                 control={control}
                 type="text"
-                label="Sub Test Name"
+                label="Unit"
                 name="Unit"
               />
 
@@ -125,27 +127,38 @@ const SubTestForm = () => {
                 errors={errors}
                 control={control}
                 type="text"
-                label="Sub Test Name"
+                label="RFrom"
                 name="RFrom"
               />
+
               <InputField
                 errors={errors}
                 control={control}
                 type="text"
-                label="Sub Test Name"
-                name="Result"
-              />
-              <InputField
-                errors={errors}
-                control={control}
-                type="text"
-                label="Sub Test Name"
+                label="RTo"
                 name="RTo"
               />
+              <div className="flex flex-col">
+                <SelectField
+                  control={control}
+                  label="Result"
+                  name="Result"
+                  errors={errors}
+                  options={[
+                    { value: "1", label: "Number" },
+                    { value: "2", label: "Short Text" },
+                    { value: "3", label: "Long Text" },
+                  ]}
+                />
+              </div>
             </div>
           </div>
-          <Button type="submit" className="w-full">
-            Save
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={TestMutation.isPending}
+          >
+            {TestMutation.isPending ? <Spinner /> : "Add"}
           </Button>
         </div>
       </form>

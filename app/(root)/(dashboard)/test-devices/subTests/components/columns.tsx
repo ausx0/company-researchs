@@ -15,7 +15,13 @@ export type SubTestsData = {
   Price: number;
   RFrom: number;
   RTo: number;
-  Result: number;
+  Result: "1" | "2" | "3"; // Change this line
+};
+
+const resultOptions = {
+  "1": "Number",
+  "2": "Short Text",
+  "3": "Long Text",
 };
 
 export const columns: ColumnDef<SubTestsData>[] = [
@@ -54,6 +60,7 @@ export const columns: ColumnDef<SubTestsData>[] = [
   {
     accessorKey: "Result",
     header: "Result",
+    cell: (cell) => resultOptions[cell.row.original.Result] || "Unknown", // Use cell.row.original.Result to get the cell value
   },
   {
     accessorKey: "actions",

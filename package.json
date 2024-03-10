@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
     "framer-motion": "^10.18.0",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
@@ -48,6 +49,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",

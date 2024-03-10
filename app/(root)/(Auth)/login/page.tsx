@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { login } from "../../../services/auth";
+import { Login } from "../../../services/auth";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { Spinner } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   Username: z.string().min(2, {
@@ -37,14 +37,14 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const loginMutation = useMutation({
     mutationKey: ["login"],
-    mutationFn: login,
+    mutationFn: Login,
     onMutate: () => {
       setLoading(true);
     },
     onSuccess: (data) => {
       if (data.Session_key) {
         toast.success("Login Success");
-        // router.push("/home");
+        router.push("/home");
       } else {
         throw new Error("Login failed");
       }

@@ -13,14 +13,14 @@ import PatientModalForm from "@/app/(root)/(dashboard)/customers/patients/compon
 import InputField from "@/app/(root)/(dashboard)/components/FormFields/InputField";
 import { formatISO } from "date-fns";
 
-interface StepOneFormProps {
+interface AddOrderFormProps {
   control: Control<z.infer<typeof StepOneOrderSchema>>;
   errors: FieldErrors<z.infer<typeof StepOneOrderSchema>>;
   watch: any;
   setValue: any;
 }
 
-const StepOneForm: React.FC<StepOneFormProps> = ({
+const AddOrderForm: React.FC<AddOrderFormProps> = ({
   control,
   errors,
   watch,
@@ -193,4 +193,4 @@ const StepOneForm: React.FC<StepOneFormProps> = ({
   );
 };
 
-export default StepOneForm;
+export default AddOrderForm;
