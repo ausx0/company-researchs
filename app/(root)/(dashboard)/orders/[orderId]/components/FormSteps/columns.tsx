@@ -8,8 +8,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 // You can use a Zod schema here if you want.
 export type OrdersData = {
   ID: string;
-  Test: string;
-  SubTest: string[];
+  Test: { id: string; label: string };
+  SubTest: { id: string; label: string }[];
   Price: number;
 };
 
@@ -20,19 +20,17 @@ export const columns: ColumnDef<OrdersData>[] = [
   },
   {
     accessorKey: "Test",
-    header: "Test",
+    header: "Test ID",
+    cell: ({ row }) => row.original.Test.label,
   },
   {
     accessorKey: "SubTest",
-    header: "SubTest",
-    cell: ({ row }) => row.original.SubTest || "",
+    header: "SubTest IDs",
+    cell: ({ row }) =>
+      row.original.SubTest.map((subTest) => subTest.label).join(", "),
   },
   {
     accessorKey: "Price",
     header: "Price",
   },
-  //   {
-  //     id: "actions",
-  //     cell: ({ row }) => <CellAction data={row.original} />,
-  //   },
 ];

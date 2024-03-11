@@ -1,7 +1,6 @@
 "use client";
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
-import logoIcon from "@/public/OreoLogo.svg";
+import React, { useState } from "react";
 import fullLogoIcon from "@/public/OreoLogoFull.svg";
 import {
   Accordion,
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import {
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -19,24 +17,16 @@ import {
 } from "@nextui-org/react";
 import {
   ArchiveIcon,
-  ArrowRight,
-  ArrowRightFromLine,
   BadgeDollarSign,
-  BookText,
-  FileSearch,
   HomeIcon,
   MailCheck,
   MessageCircleWarning,
-  MessageSquareText,
-  Microscope,
   SendToBack,
   Settings,
   TestTubes,
   Users,
 } from "lucide-react";
 import CollapsIcon from "@/public/icons/collapseIcon";
-import ConsultationIcon from "@/public/icons/consultation";
-import ResearchIcon from "@/public/icons/researchIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -225,9 +215,7 @@ const SideBar = () => {
                                   : "opacity-50 flex items-center w-full  hover:opacity-100"
                               }
                             >
-                              <div className="flex">
-                                <ArrowRight className="mr-2" /> {subItem.text}
-                              </div>
+                              <div className="flex">{subItem.text}</div>
                             </Link>
                           </DropdownItem>
                         ))}
@@ -278,7 +266,6 @@ const SideBar = () => {
                                 : "opacity-50 flex items-center w-full  hover:opacity-100"
                             }
                           >
-                            <ArrowRight className="w-4 mr-2" />
                             {subItem.text}
                           </Link>
                         ))}

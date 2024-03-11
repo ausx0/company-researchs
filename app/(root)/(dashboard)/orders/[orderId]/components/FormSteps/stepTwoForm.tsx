@@ -81,43 +81,41 @@ const StepTwoForm = (
       Sample_id: undefined,
       Tests: [
         {
-          Test_id: "",
+          Test_id: undefined,
           SubTest_id: [],
         },
       ],
-      Patient_id: "",
+      Patient_id: undefined,
     },
   });
 
   const handleAddSample = () => {
-    const Test_id = getValues("Test_id");
-    const SubTest_id = getValues("SubTest_id");
+    const Test = getValues("Test_id");
+    const SubTest = getValues("SubTest_id");
 
-    const Test = TestsOptions().find(
-      (option: OptionType) => option.value === Test_id
+    // Get the label for the Test and SubTest
+    const TestLabel = TestsOptions().find(
+      (option) => option.value === Test
     )?.label;
-    const SubTest = SubTestsOptions()
-      .filter((option: OptionType) => SubTest_id.includes(option.value))
-      .map((option: OptionType) => option.label);
+    const SubTestLabels = SubTest.map(
+      (subTestId) =>
+        SubTestsOptions().find((option) => option.value === subTestId)?.label
+    );
 
     const newOrder = {
-      ID: orders.length + 1,
-      Test,
-      SubTest: SubTest.join(", "),
+      ID: orders.length + 1, // Add this line
+      Test: { id: Test, label: TestLabel },
+      SubTest: SubTest.map((id, index) => ({
+        id,
+        label: SubTestLabels[index],
+      })),
     };
 
     setOrders((prevOrders) => {
       const updatedOrders = [...prevOrders, newOrder];
-      // Update the form data with the updated orders state
-      setValue("Tests", updatedOrders);
       return updatedOrders;
     });
   };
-
-  const handleDeleteOrder = (index: number) => {
-    setOrders((prevOrders) => prevOrders.filter((_, i) => i !== index));
-  };
-
   // setValue("Tests", orders); // Set the "Samples" field value to the orders state
 
   const {
@@ -190,16 +188,22 @@ const StepTwoForm = (
   });
 
   const onSubmit = (data: z.infer<typeof OrderTestsSchema>) => {
-    try {
-      // Here you can access the form data
-      console.log("data", data);
-      // Include the orders state in the data that's being sent to the server
-      AddTestOrder.mutate({ ...data, Tests: orders });
-      // Perform any actions you need, such as sending the data to a server
-      // ...
-    } catch (error) {
-      console.error("Form submission error:", error);
-    }
+    // Here you can access the form data
+    console.log("data", data);
+
+    // Include the orders state in the data that's being sent to the server
+    const dataWithOrders = {
+      ...data,
+      Tests: orders.map((order) => ({
+        Test_id: order.Test.id,
+        SubTest_id: order.SubTest.map((subTest) => subTest.id),
+      })),
+    };
+
+    AddTestOrder.mutate(dataWithOrders);
+
+    // Perform any actions you need, such as sending the data to a server
+    // ...
   };
 
   const handleCloseModal = () => {
@@ -263,9 +267,9 @@ const StepTwoForm = (
     }));
   };
 
-  useEffect(() => {
-    console.log("Tests", orders);
-  }, [orders]);
+  // useEffect(() => {
+  //   console.log("Tests", orders);
+  // }, [orders]);
 
   // useEffect(() => {
   //   if (sampleId) {
@@ -274,11 +278,11 @@ const StepTwoForm = (
   //   // Other code...
   // }, [sampleId]);
 
-  useEffect(() => {
-    if (SamplesData) {
-      setValue("Sample_id", SamplesData[0].ID);
-    }
-  }, [SamplesData]);
+  // useEffect(() => {
+  //   if (SamplesData) {
+  //     setValue("Sample_id", SamplesData[0].ID);
+  //   }
+  // }, [SamplesData]);
 
   return (
     <>
@@ -443,11 +447,7 @@ const StepTwoForm = (
                     <div className="flex items-center justify-between">
                       <div>New Tests</div>
                       <div>
-                        <Button
-                          className="flex gap-3"
-                          type="submit"
-                          onClick={() => AddTestOrder.mutate(orders)}
-                        >
+                        <Button className="flex gap-3" type="submit">
                           <UploadCloud /> Submit Tests
                         </Button>
                       </div>

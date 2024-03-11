@@ -32,14 +32,14 @@ export const StepOneOrderSchema = z
   });
 
 export const OrderTestsSchema = z.object({
-  Order_id: z.string().optional(),
-  Patient_id: z.string().min(1).max(50).optional(),
+  Order_id: z.coerce.string().optional(),
+  Patient_id: z.coerce.number().optional(),
   Sample_id: z.coerce.number().optional(),
   Tests: z
     .array(
       z.object({
-        Test_id: z.string().min(1).max(50),
-        SubTest_id: z.array(z.string()),
+        Test_id: z.coerce.number().optional(),
+        SubTest_id: z.array(z.coerce.number()).optional(),
       })
     )
     .optional(),
