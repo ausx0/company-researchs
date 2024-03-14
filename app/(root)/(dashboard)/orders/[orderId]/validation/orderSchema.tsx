@@ -32,7 +32,7 @@ export const StepOneOrderSchema = z
   });
 
 export const OrderTestsSchema = z.object({
-  Order_id: z.coerce.string().optional(),
+  Order_id: z.coerce.number().optional(),
   Patient_id: z.coerce.number().optional(),
   Sample_id: z.coerce.number().optional(),
   Tests: z

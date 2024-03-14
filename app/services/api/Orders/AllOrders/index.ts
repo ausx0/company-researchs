@@ -9,6 +9,10 @@ export const apiGetOrder = (ID: string) => {
 };
 
 export const apiCreateOrder = (data: any) => {
+  return apiService.postData(`/LabOrders/Create`, data);
+};
+
+export const apiCreateSampleOrder = (data: any) => {
   return apiService.postJsonData(`/LabOrders/Create`, data);
 };
 

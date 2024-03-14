@@ -77,7 +77,7 @@ const StepTwoForm = (
   } = useForm<z.infer<typeof OrderTestsSchema>>({
     resolver: zodResolver(OrderTestsSchema),
     defaultValues: {
-      Order_id: id,
+      Order_id: id || undefined,
       Sample_id: undefined,
       Tests: [
         {
@@ -349,7 +349,10 @@ const StepTwoForm = (
               </Card>
             </div>
             <div className="flex flex-col gap-10 w-3/4">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="flex flex-col gap-10"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <Card className="shadow-lg h-auto w-full">
                   <CardHeader>Sample Information </CardHeader>
                   <Separator />
@@ -367,7 +370,7 @@ const StepTwoForm = (
                         </div>
                         <SelectField
                           control={control}
-                          name="patient_id"
+                          name="Patient_id"
                           label=""
                           errors={errors}
                           options={PatientOptions()}
