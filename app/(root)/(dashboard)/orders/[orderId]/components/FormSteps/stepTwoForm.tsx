@@ -18,7 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { apiGetSamples } from "@/app/services/api/Samples";
 import {
-  apiAddOrderTest,
+  apiAddOrderSample,
   apiGetSubTestsByTest,
   apiGetTestsBySample,
 } from "@/app/services/api/Orders/OrderForm";
@@ -30,6 +30,7 @@ import Loading from "@/components/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertModal } from "@/components/modals/alert-modal";
 import toast from "react-hot-toast";
+import PaymentForm from "./PaymentForm";
 interface OptionType {
   value: string;
   label: string;
@@ -56,7 +57,7 @@ const StepTwoForm = (
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Get the id from the URL
 
-  console.log("this is the id", id);
+  // console.log("this is the id", id);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Add this state
   const [modalKey, setModalKey] = useState(0); // Add this state
@@ -77,46 +78,57 @@ const StepTwoForm = (
   } = useForm<z.infer<typeof OrderTestsSchema>>({
     resolver: zodResolver(OrderTestsSchema),
     defaultValues: {
-      Order_id: id || undefined,
+      Order_id: id ? Number(id) : undefined,
       Sample_id: undefined,
-      Tests: [
-        {
-          Test_id: undefined,
-          SubTest_id: [],
-        },
-      ],
+      Tests: {
+        Test_id: undefined,
+        SubTest_id: [],
+      },
       Patient_id: undefined,
     },
   });
 
   const handleAddSample = () => {
-    const Test = getValues("Test_id");
-    const SubTest = getValues("SubTest_id");
-
+    const Test = getValues("Tests.Test_id");
+    const SubTest = getValues("Tests.SubTest_id");
     // Get the label for the Test and SubTest
-    const TestLabel = TestsOptions().find(
-      (option) => option.value === Test
-    )?.label;
-    const SubTestLabels = SubTest.map(
-      (subTestId) =>
-        SubTestsOptions().find((option) => option.value === subTestId)?.label
+    const TestOption = TestsOptions().find(
+      (option: { value: number | undefined }) => option.value === Test
     );
 
+    const TestLabel = TestOption?.label;
+
+    const SubTestOptions = SubTest
+      ? SubTest.map((subTestId) =>
+          SubTestsOptions().find(
+            (option: { value: number }) => option.value === subTestId
+          )
+        )
+      : [];
+
+    const SubTestLabels = SubTestOptions.map((option) => option?.label);
+
+    // const TestPrice = TestOption?.Price || 0;
+    const SubTestPrices = SubTestOptions.map((option) => option?.Price || 0);
+    const totalSubTestPrice = SubTestPrices.reduce((a, b) => a + b, 0);
+
     const newOrder = {
-      ID: orders.length + 1, // Add this line
+      ID: orders.length + 1, // Add index to ID to ensure it's unique
       Test: { id: Test, label: TestLabel },
-      SubTest: SubTest.map((id, index) => ({
+      SubTest: SubTest?.map((id, index) => ({
         id,
         label: SubTestLabels[index],
       })),
+      Price: totalSubTestPrice, // Add this line
     };
+
+    console.log("newOrder", newOrder);
 
     setOrders((prevOrders) => {
       const updatedOrders = [...prevOrders, newOrder];
       return updatedOrders;
     });
   };
-  // setValue("Tests", orders); // Set the "Samples" field value to the orders state
 
   const {
     data: patientsData,
@@ -178,7 +190,7 @@ const StepTwoForm = (
 
   const AddTestOrder = useMutation({
     mutationKey: ["AddTestOrder"],
-    mutationFn: apiAddOrderTest,
+    mutationFn: apiAddOrderSample,
     onSuccess: () => {
       toast.success("Test added successfully");
       // queryClient.invalidateQueries({
@@ -196,7 +208,7 @@ const StepTwoForm = (
       ...data,
       Tests: orders.map((order) => ({
         Test_id: order.Test.id,
-        SubTest_id: order.SubTest.map((subTest) => subTest.id),
+        SubTest_id: order.SubTest.map((subTest: { id: any }) => subTest.id),
       })),
     };
 
@@ -212,24 +224,24 @@ const StepTwoForm = (
   };
 
   const handleSampleChange = (newSampleId: any) => {
-    if (sampleId != "") setPendingSampleId(newSampleId);
+    if (sampleId != undefined) setPendingSampleId(newSampleId);
     setOpen(true);
   };
 
-  console.log("sample id", sampleId);
+  // console.log("sample id", sampleId);
 
   const selectAllSubTests = () => {
     const allSubTestsIds = SubTestsOptions().map(
       (option: OptionType) => option.value
     );
-    setValue("SubTest_id", allSubTestsIds);
+    setValue("Tests.SubTest_id", allSubTestsIds);
   };
 
   useEffect(() => {
     if (sampleId) {
-      TestsMutation.mutate(sampleId); // Trigger the mutation when "sample_id" changes
-      setValue("Test_id", ""); // Reset the "test_id" field
-      setValue("SubTest_id", ""); // Reset the "SubTest_id" field
+      TestsMutation.mutate(String(sampleId)); // Trigger the mutation when "sample_id" changes
+      setValue("Tests.Test_id", undefined); // Reset the "test_id" field
+      setValue("Tests.SubTest_id", undefined); // Reset the "SubTest_id" field
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sampleId]);
@@ -241,18 +253,19 @@ const StepTwoForm = (
     return TestData.map((item: any) => ({
       value: item.ID,
       label: item.Test,
+      Price: item.Price, // Assuming the data has a Price property
     }));
   };
 
-  const testId = watch("Test_id"); // Watch the "testId" field
-  console.log("testId:", testId); // Log the testId value
+  const testId = watch("Tests.Test_id"); // Watch the "testId" field
+  // console.log("testId:", testId); // Log the testId value
 
   useEffect(() => {
-    console.log("mutating with testId:", testId); // Log the testId value before mutation
+    // console.log("mutating with testId:", testId); // Log the testId value before mutation
 
     if (testId) {
-      console.log("mutating with testId:", testId); // Log the testId value before mutation
-      SubTestsMutation.mutate(testId); // Trigger the mutation when "testId" changes
+      // console.log("mutating with testId:", testId); // Log the testId value before mutation
+      SubTestsMutation.mutate(String(testId)); // Trigger the mutation when "testId" changes
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testId]);
@@ -264,9 +277,9 @@ const StepTwoForm = (
     return SubTestData.map((item: any) => ({
       value: item.ID,
       label: item.SubTest,
+      Price: item.Price, // Assuming the data has a Price property
     }));
   };
-
   // useEffect(() => {
   //   console.log("Tests", orders);
   // }, [orders]);
@@ -286,7 +299,7 @@ const StepTwoForm = (
 
   return (
     <>
-      <AlertModal
+      {/* <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={() => {
@@ -296,7 +309,7 @@ const StepTwoForm = (
         }}
         loading={loading}
         title="This Action Will Reset The Tests Table"
-      />
+      /> */}
       <PatientModalForm
         key={modalKey} // Add the key prop here
         isOpen={isModalOpen}
@@ -344,7 +357,7 @@ const StepTwoForm = (
                 <CardHeader>Total</CardHeader>
                 <Separator />
                 <CardContent>
-                  <div>1000IQD</div>
+                  <PaymentForm />
                 </CardContent>
               </Card>
             </div>
@@ -399,7 +412,7 @@ const StepTwoForm = (
                           isLoading={TestsMutation.isPending}
                           label="Tests"
                           control={control}
-                          name="Test_id"
+                          name="Tests.Test_id"
                           options={TestsOptions()}
                         />
                       </div>
@@ -414,7 +427,7 @@ const StepTwoForm = (
                           isLoading={SubTestsMutation.isPending}
                           label="Sub Test"
                           control={control}
-                          name="SubTest_id"
+                          name="Tests.SubTest_id"
                           options={SubTestsOptions()} // Pass the options directly
                         />
                       </div>

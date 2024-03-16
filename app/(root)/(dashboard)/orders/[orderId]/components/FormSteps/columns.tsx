@@ -27,7 +27,9 @@ export const columns: ColumnDef<OrdersData>[] = [
     accessorKey: "SubTest",
     header: "SubTest IDs",
     cell: ({ row }) =>
-      row.original.SubTest.map((subTest) => subTest.label).join(", "),
+      row.original.SubTest
+        ? row.original.SubTest.map((subTest) => subTest.label).join(", ")
+        : "",
   },
   {
     accessorKey: "Price",

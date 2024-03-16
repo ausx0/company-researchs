@@ -36,12 +36,10 @@ export const OrderTestsSchema = z.object({
   Patient_id: z.coerce.number().optional(),
   Sample_id: z.coerce.number().optional(),
   Tests: z
-    .array(
-      z.object({
-        Test_id: z.coerce.number().optional(),
-        SubTest_id: z.array(z.coerce.number()).optional(),
-      })
-    )
+    .object({
+      Test_id: z.coerce.number().optional(),
+      SubTest_id: z.array(z.coerce.number()).optional(),
+    })
     .optional(),
 });
 
@@ -53,4 +51,14 @@ export const StepTwoOrderSchema = z.object({
   Status: z.string().min(1).max(50),
 
   // Price: z.string().min(0),
+});
+
+export const OrderPaymentSchema = z.object({
+  Order_id: z.coerce.number().optional(),
+  Cost: z.coerce.number().optional(),
+  Bofore_discount: z.coerce.number().optional(),
+  Discount: z.coerce.number().optional(),
+  Total: z.coerce.number().optional(),
+  Payment_status: z.coerce.number().optional(),
+  Paid: z.coerce.number().optional(),
 });
