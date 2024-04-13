@@ -1,4 +1,4 @@
-import { OrderPaymentSchema } from "@/app/(root)/(dashboard)/orders/[orderId]/validation/orderSchema";
+import { OrderPaymentSchema } from "@/app/(root)/(Admin)/orders/[orderId]/validation/orderSchema";
 import apiService from "@/app/services";
 import { z } from "zod";
 

@@ -21,18 +21,41 @@ export async function Login(data: any) {
     const response = await axiosInstance.post("/Login", formData, options);
     if (response.data.Session_key) {
       Cookies.set("token", response.data.Session_key);
-      console.log(response.data);
+      const role = getRoleFromSessionKey(response.data.Session_key);
 
+      const userData = { ...response.data, Session_key: undefined, role };
+
+      localStorage.setItem("userData", JSON.stringify(userData)); // Save userData to local storage
+      localStorage.setItem("userRole", role); // Save userData to local storage
+
+      // console.log(response.data);
       // router.push("/home");
-      return response.data;
+      return response.data; // Return original response data
     } else {
       throw new Error("Login failed");
     }
   } catch (error) {
     console.error(error);
+    throw error; // Throw the error so it can be handled by react-query
   }
 }
 
 export function logout() {
   Cookies.remove("token");
+  localStorage.removeItem("userData");
+  localStorage.removeItem("userRole");
+}
+
+function getRoleFromSessionKey(sessionKey: string) {
+  const firstNumber = parseInt(sessionKey[0]);
+  switch (firstNumber) {
+    case 1:
+      return "Admin";
+    case 2:
+      return "lab-tech";
+    case 3:
+      return "reception";
+    default:
+      return "user";
+  }
 }

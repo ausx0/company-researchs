@@ -1,4 +1,4 @@
-import { Purchase } from "@/app/(root)/(dashboard)/finance/purchases/components/PurchaseModalForm";
+import { Purchase } from "@/app/(root)/(Admin)/finance/purchases/components/PurchaseModalForm";
 import apiService from "@/app/services";
 
 export const apiGetPurchases = () => {

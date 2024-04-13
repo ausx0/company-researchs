@@ -1,4 +1,4 @@
-import { Sample } from "@/app/(root)/(dashboard)/test-devices/samples/components/SampleModalForm";
+import { Sample } from "@/app/(root)/(Admin)/test-devices/samples/components/SampleModalForm";
 import apiService from "../..";
 
 export const apiGetSamples = () => {

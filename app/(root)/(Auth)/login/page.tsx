@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import react, { useState } from "react";
+import react, { useContext, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,10 @@ import { Login } from "../../../services/auth";
 import toast from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import { AbilityContext } from "@/app/Rules/Can";
+import { defineAbilitiesFor } from "@/app/Rules/defineAbility";
+import { createMongoAbility } from "@casl/ability";
+import { useAuth } from "@/app/hooks/useAuth";
 
 const formSchema = z.object({
   Username: z.string().min(2, {
@@ -33,7 +37,6 @@ const formSchema = z.object({
 
 const LoginPage = () => {
   const router = useRouter(); // ✅ Now we have type-safety and autocompletion
-
   const [loading, setLoading] = useState(false);
   const loginMutation = useMutation({
     mutationKey: ["login"],
@@ -44,14 +47,13 @@ const LoginPage = () => {
     onSuccess: (data) => {
       if (data.Session_key) {
         toast.success("Login Success");
-        router.push("/home");
       } else {
         throw new Error("Login failed");
       }
       setLoading(true);
     },
     onError: (error) => {
-      toast.error("Username or Password is incorrect");
+      toast.error(error.message);
       setLoading(false);
     },
   });

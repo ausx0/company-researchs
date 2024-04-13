@@ -9,6 +9,8 @@ import {
 import { ReactQueryProvider } from "./Providers/ReacrQueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
+import AccessProvider from "./Providers/CaslProvider";
+import { AuthProvider } from "./hooks/useAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,13 +26,15 @@ export default function RootLayout({
 }) {
   return (
     <ReactQueryProvider>
-      <html lang="en">
-        <body className={`${inter.className} scrollbar-none overflow-hidden`}>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Toaster />
-        </body>
-      </html>
+      <AuthProvider>
+        <html lang="en">
+          <body className={`${inter.className} scrollbar-none overflow-hidden`}>
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+            <Toaster />
+          </body>
+        </html>
+      </AuthProvider>
     </ReactQueryProvider>
   );
 }

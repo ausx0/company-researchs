@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/core": "^0.29.0",
+    "@casl/ability": "^6.7.1",
+    "@casl/react": "^3.1.0",
     "@flaticon/flaticon-uicons": "^3.1.0",
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.3.4",
@@ -37,6 +40,7 @@
     "jspdf": "^2.5.1",
     "lucide-react": "^0.303.0",
     "next": "14.0.4",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.3",
