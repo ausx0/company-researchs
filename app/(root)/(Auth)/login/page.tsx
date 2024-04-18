@@ -38,6 +38,7 @@ const formSchema = z.object({
 const LoginPage = () => {
   const router = useRouter(); // ✅ Now we have type-safety and autocompletion
   const [loading, setLoading] = useState(false);
+  const { setUser } = useAuth();
   const loginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: Login,
@@ -47,10 +48,15 @@ const LoginPage = () => {
     onSuccess: (data) => {
       if (data.Session_key) {
         toast.success("Login Success");
+        setUser({ role: data.Scope }); // Update the user role
+        router.refresh();
       } else {
         throw new Error("Login failed");
       }
       setLoading(true);
+    },
+    onSettled: () => {
+      setLoading(false);
     },
     onError: (error) => {
       toast.error(error.message);

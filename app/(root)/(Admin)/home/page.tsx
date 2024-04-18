@@ -16,11 +16,14 @@ import {
   UserRoundSearch,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { apiGetAllCurrentOrders } from "@/app/services/api/Home/CurrentOrders";
+import {
+  apiGetAllCurrentOrders,
+  apiGetAllCurrentOrdersCount,
+} from "@/app/services/api/Home/CurrentOrders";
 import { Spinner } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
-import { apiGetAllCurrentOrdersCount } from "@/app/services/api/Home/CurrentOrdersCount";
 import { AbilityContext, Can } from "@/app/Rules/Can";
+import { apiGetAllCompletedOrders } from "@/app/services/api/Home/CompletedOrders";
 
 const HoemPage = () => {
   const ability = useContext(AbilityContext);
@@ -35,15 +38,15 @@ const HoemPage = () => {
   });
 
   const {
-    data: CurrentOrdersCount,
-    isLoading: CurrentOrdersCountLoading,
-    error: CurrentOrdersCountError,
+    data: CompletedOrders,
+    isLoading: CompletedOrdersLoading,
+    error: CompletedOrdersError,
   } = useQuery({
-    queryKey: ["current_orders_count"], // Fix: Pass the queryKey as an array
-    queryFn: apiGetAllCurrentOrdersCount,
+    queryKey: ["completed-orders"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetAllCompletedOrders,
   });
 
-  if (CurrentOrdersLoading || CurrentOrdersCountLoading) {
+  if (CurrentOrdersLoading || CompletedOrdersLoading) {
     return <Spinner />;
   }
 
@@ -54,20 +57,21 @@ const HoemPage = () => {
     console.log("User cannot read Article");
   }
 
+  const currentOrdersLength = CurrentOrders ? CurrentOrders.length : 0;
+  const completedOrdersLength = CompletedOrders ? CompletedOrders.length : 0;
+
   return (
     <>
       <div className="grid gap-4 grid-cols-4 grid-rows-8  bg-slate-100 p-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
-              <Can I="read" a="Article">
-                <div>Content that should be visible only for Admin User</div>
-              </Can>
+              Current Orders
             </CardTitle>
             <UserRoundSearch className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <h1 className="text-2xl font-bold">200</h1>
+            <h1 className="text-2xl font-bold">{currentOrdersLength}</h1>
             <p className="text-xs text-mutedsh-foreground">
               The Amount Of Appointments
             </p>

@@ -2,7 +2,7 @@
 import SelectField from "@/app/(root)/(Admin)/components/FormFields/SelectField";
 import { apiGetClients } from "@/app/services/api/Customers/Clients";
 import { apiGetPatients } from "@/app/services/api/Customers/Patients";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { Control, FieldErrors, useForm } from "react-hook-form";
@@ -20,15 +20,17 @@ import {
 import { StepOneOrderSchema } from "../validation/orderSchema";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import ButtonLoader from "../../../components/UI/ButtonLoader";
 
 interface OrderFormProps {
   ID: number | string | undefined;
 }
 
 interface OrderData {
-  Type: string;
-  Patient_id: string; // if patient_id is also a number
-  Client_id: string;
+  Type: number;
+  Patient_id: number; // if patient_id is also a number
+  Client_id: number;
   Referred: string;
   Date: string;
   Notes: string;
@@ -50,7 +52,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
   const defaultValues = orderData
     ? {
         Type: orderData.Type,
-        // patient_id: Number(orderData.patient_id), // convert to number
+        patient_id: Number(orderData.Patient_id), // convert to number
         Client_id: Number(orderData.Client_id), // convert to number
         Referred: orderData.Referred,
         Date: orderData.Date,
@@ -77,7 +79,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     defaultValues,
   });
 
-  const AddOrderMutation = useMutation({
+  const { isPending: AddOrderLoading, mutate: AddOrderMutation } = useMutation({
     mutationKey: ["AddOrder"],
     mutationFn: apiCreateOrder,
     onSuccess: (data) => {
@@ -93,7 +95,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     // Here you can access the form data
 
     console.log(data);
-    AddOrderMutation.mutate(data);
+    AddOrderMutation(data);
     // Perform any actions you need, such as sending the data to a server
     // ...
   };
@@ -281,9 +283,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
             <Button
               type="submit"
               color="primary"
-              className="w-[10rem] p-4 px-5"
+              disabled={AddOrderLoading}
+              // disabled={AddOrderLoading}
             >
-              Save
+              {AddOrderLoading ? <Spinner color="default" /> : "Save"}
             </Button>
           </div>
         </div>

@@ -3,9 +3,10 @@ import {
   MongoAbility,
   createMongoAbility,
 } from "@casl/ability";
-import { User } from "../Types";
 
 type Actions = "create" | "read" | "update" | "delete";
+type Role = "Admin" | "lab-tech" | "reception";
+
 type Subjects =
   | "Article"
   | "Comment"
@@ -15,7 +16,12 @@ type Subjects =
   | "reception";
 type AppAbility = MongoAbility<[Actions, Subjects]>;
 
-export function defineAbilitiesFor(user: any) {
+interface User {
+  role: Role;
+  // other properties...
+}
+
+export function defineAbilitiesFor(user: User) {
   console.log(user);
   const { can, build, cannot, rules } = new AbilityBuilder<AppAbility>(
     createMongoAbility
@@ -26,7 +32,8 @@ export function defineAbilitiesFor(user: any) {
   ) {
     case "Admin":
       can("read", "Admin"); // add this line
-
+      can("read", "lab-tech"); // Admin can read "lab-tech"
+      can("read", "reception"); // Admin can read "reception"
       break;
     case "lab-tech":
       can("read", "lab-tech");

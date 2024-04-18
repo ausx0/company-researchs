@@ -34,13 +34,13 @@ export const StepOneOrderSchema = z
 export const OrderTestsSchema = z.object({
   Order_id: z.coerce.number().optional(),
   Patient_id: z.coerce.number().optional(),
-  Sample_id: z.coerce.number().optional(),
-  Tests: z
-    .object({
-      Test_id: z.coerce.number().optional(),
-      SubTest_id: z.array(z.coerce.number()).optional(),
-    })
-    .optional(),
+  Total: z.coerce.number(),
+  Sample_id: z.coerce.number().min(0),
+  Received: z.number().min(0).max(1),
+  Tests: z.object({
+    Test_id: z.coerce.number().min(0),
+    SubTest_id: z.array(z.coerce.number().min(0)),
+  }),
 });
 
 export const StepTwoOrderSchema = z.object({
@@ -55,7 +55,7 @@ export const StepTwoOrderSchema = z.object({
 
 export const OrderPaymentSchema = z.object({
   Order_id: z.coerce.number().optional(),
-  Cost: z.coerce.number().optional(),
+  // Cost: z.coerce.number().optional(),
   Bofore_discount: z.coerce.number().optional(),
   Discount: z.coerce.number().optional(),
   Total: z.coerce.number().optional(),

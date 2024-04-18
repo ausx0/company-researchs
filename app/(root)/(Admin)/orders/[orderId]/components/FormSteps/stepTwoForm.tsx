@@ -1,13 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import SelectField from "@/app/(root)/(Admin)/components/FormFields/SelectField";
 import { apiGetPatients } from "@/app/services/api/Customers/Patients";
-import { Button } from "@nextui-org/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+} from "@nextui-org/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { OrderTestsSchema } from "../../validation/orderSchema";
 import { z } from "zod";
-import { Plus, UploadCloud, Wand } from "lucide-react";
+import { Plus, Trash2, UploadCloud, Wand } from "lucide-react";
 import PatientModalForm from "@/app/(root)/(Admin)/customers/patients/components/PatientModalForm";
 import {
   Card,
@@ -15,6 +21,8 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { ColumnDef } from "@tanstack/react-table";
+
 import { Separator } from "@/components/ui/separator";
 import { apiGetSamples } from "@/app/services/api/Samples";
 import {
@@ -23,7 +31,7 @@ import {
   apiGetTestsBySample,
 } from "@/app/services/api/Orders/OrderForm";
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "./columns";
+// import { columns } from "./columns";
 import { apiGetOrder } from "@/app/services/api/Orders/AllOrders";
 import { usePathname } from "next/navigation";
 import Loading from "@/components/ui/loading";
@@ -31,6 +39,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertModal } from "@/components/modals/alert-modal";
 import toast from "react-hot-toast";
 import PaymentForm from "./PaymentForm";
+import ModalAlert from "@/app/(root)/(Admin)/components/modals/ModalAlert";
 interface OptionType {
   value: string;
   label: string;
@@ -43,6 +52,13 @@ interface OptionType {
 //   reset: any;
 //   setValue: any;
 // }
+
+type OrdersData = {
+  ID: string;
+  Test: { id: string; label: string };
+  SubTest: { id: string; label: string }[];
+  Price: number;
+};
 
 const StepTwoForm = (
   {
@@ -66,6 +82,10 @@ const StepTwoForm = (
   const [pendingSampleId, setPendingSampleId] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0); // State to store the total price
+  const [openAlertModal, setOpenAlertModal] = useState(false);
+  const [formComplete, setFormComplete] = useState(false);
+  const [orderIdCounter, setOrderIdCounter] = useState(1); // Initialize ID counter
 
   const {
     control,
@@ -85,12 +105,24 @@ const StepTwoForm = (
         SubTest_id: [],
       },
       Patient_id: undefined,
+      Total: totalPrice,
+      Received: 0,
     },
   });
 
   const handleAddSample = () => {
     const Test = getValues("Tests.Test_id");
     const SubTest = getValues("Tests.SubTest_id");
+
+    // Check if Test and SubTest are not empty
+    if (!Test || !SubTest || SubTest.length === 0) {
+      // Handle the case when Test or SubTest is empty
+      // For example, show a toast message or alert
+      // return early to prevent adding an empty order
+      toast.error("Please select a Test and SubTest");
+      return;
+    }
+
     // Get the label for the Test and SubTest
     const TestOption = TestsOptions().find(
       (option: { value: number | undefined }) => option.value === Test
@@ -112,8 +144,14 @@ const StepTwoForm = (
     const SubTestPrices = SubTestOptions.map((option) => option?.Price || 0);
     const totalSubTestPrice = SubTestPrices.reduce((a, b) => a + b, 0);
 
+    // Update Total field in form data
+    const newTotal = totalPrice + totalSubTestPrice;
+    setTotalPrice(newTotal);
+
+    console.log("new total", newTotal);
+
     const newOrder = {
-      ID: orders.length + 1, // Add index to ID to ensure it's unique
+      ID: orderIdCounter, // Use the ID counter
       Test: { id: Test, label: TestLabel },
       SubTest: SubTest?.map((id, index) => ({
         id,
@@ -123,6 +161,7 @@ const StepTwoForm = (
     };
 
     console.log("newOrder", newOrder);
+    setOrderIdCounter((prevCounter) => prevCounter + 1);
 
     setOrders((prevOrders) => {
       const updatedOrders = [...prevOrders, newOrder];
@@ -188,34 +227,57 @@ const StepTwoForm = (
     }));
   };
 
+  const queryClient = useQueryClient();
+
   const AddTestOrder = useMutation({
     mutationKey: ["AddTestOrder"],
     mutationFn: apiAddOrderSample,
     onSuccess: () => {
       toast.success("Test added successfully");
+
       // queryClient.invalidateQueries({
       //   queryKey: ["LabOrders"],
       // }); // Invalidate the 'Orders' query
     },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders"],
+      });
+    },
   });
+  // console.log("error", errors);
+
+  const handleNoSample = () => {
+    setValue("Received", 0);
+    setFormComplete(true);
+    setOpenAlertModal(false); // Close the modal after setting state
+    handleSubmit(onSubmit)(); // Submit the form
+  };
+
+  const handleYesSample = () => {
+    setValue("Received", 1);
+    setFormComplete(true);
+    setOpenAlertModal(false); // Close the modal after setting state
+    handleSubmit(onSubmit)(); // Submit the form
+  };
 
   const onSubmit = (data: z.infer<typeof OrderTestsSchema>) => {
-    // Here you can access the form data
-    console.log("data", data);
+    // setFormComplete(false);
 
-    // Include the orders state in the data that's being sent to the server
-    const dataWithOrders = {
-      ...data,
-      Tests: orders.map((order) => ({
-        Test_id: order.Test.id,
-        SubTest_id: order.SubTest.map((subTest: { id: any }) => subTest.id),
-      })),
-    };
+    if (openAlertModal) {
+      const dataWithOrders = {
+        ...data,
+        Tests: orders.map((order) => ({
+          Test_id: order.Test.id,
+          SubTest_id: order.SubTest.map((subTest: { id: any }) => subTest.id),
+        })),
+      };
 
-    AddTestOrder.mutate(dataWithOrders);
-
-    // Perform any actions you need, such as sending the data to a server
-    // ...
+      AddTestOrder.mutate(dataWithOrders);
+      setFormComplete(false);
+      reset();
+      setOpenAlertModal(false);
+    } else setOpenAlertModal(true);
   };
 
   const handleCloseModal = () => {
@@ -239,7 +301,7 @@ const StepTwoForm = (
 
   useEffect(() => {
     if (sampleId) {
-      TestsMutation.mutate(String(sampleId)); // Trigger the mutation when "sample_id" changes
+      TestsMutation.mutate(Number(sampleId)); // Trigger the mutation when "sample_id" changes
       setValue("Tests.Test_id", undefined); // Reset the "test_id" field
       setValue("Tests.SubTest_id", undefined); // Reset the "SubTest_id" field
     }
@@ -280,6 +342,16 @@ const StepTwoForm = (
       Price: item.Price, // Assuming the data has a Price property
     }));
   };
+
+  // const calculateTotalPrice = () => {
+  //   const totalPrice = orders.reduce((acc, curr) => acc + curr.Price, 0);
+  //   setTotalPrice(totalPrice);
+  // };
+
+  // useEffect(() => {
+  //   calculateTotalPrice(); // Calculate total price initially and when orders change
+  // }, [orders]);
+
   // useEffect(() => {
   //   console.log("Tests", orders);
   // }, [orders]);
@@ -297,6 +369,66 @@ const StepTwoForm = (
   //   }
   // }, [SamplesData]);
 
+  // Define a function to handle delete action
+  // Define a function to handle delete action
+  // Define a function to handle delete action
+  const handleDelete = (orderId: number) => {
+    // Find the order to be deleted
+    const orderToDelete = orders.find((order) => order.ID === orderId);
+    if (!orderToDelete) return;
+
+    // Calculate the new total price by subtracting the price of the deleted order
+    const updatedTotalPrice = totalPrice - orderToDelete.Price;
+    setTotalPrice(updatedTotalPrice);
+
+    // Remove the order from the orders array
+    setOrders((prevOrders) =>
+      prevOrders.filter((order) => order.ID !== orderId)
+    );
+  };
+  useEffect(() => {
+    // Recalculate total price after removing the order
+    console.log("total price", totalPrice);
+    setValue("Total", totalPrice);
+  }, [orders]);
+
+  const columns: ColumnDef<OrdersData>[] = [
+    {
+      accessorKey: "ID",
+      header: "ID",
+    },
+    {
+      accessorKey: "Test",
+      header: "Test ID",
+      cell: ({ row }) => row.original.Test.label,
+    },
+    {
+      accessorKey: "SubTest",
+      header: "SubTest IDs",
+      cell: ({ row }) =>
+        row.original.SubTest
+          ? row.original.SubTest.map((subTest) => subTest.label).join(", ")
+          : "",
+    },
+    {
+      accessorKey: "Price",
+      header: "Price",
+    },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button
+          color="danger"
+          size="sm"
+          onClick={() => handleDelete(row.original.ID)} // Define a function to handle delete action
+        >
+          <Trash2 /> {/* Render the Trash icon */}
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <>
       {/* <AlertModal
@@ -310,6 +442,18 @@ const StepTwoForm = (
         loading={loading}
         title="This Action Will Reset The Tests Table"
       /> */}
+      <ModalAlert
+        backdrop="blur"
+        size="md"
+        title="Sample Received"
+        description="Did You Receive The Sample?"
+        isOpen={openAlertModal}
+        handleNoAction={handleNoSample}
+        handleYesAction={handleYesSample}
+        // onClose={handleNoSample}
+        // onConfirm={handleYesSample}
+      />
+
       <PatientModalForm
         key={modalKey} // Add the key prop here
         isOpen={isModalOpen}
@@ -341,7 +485,7 @@ const StepTwoForm = (
                 <div>
                   <h1 className="font-bold text-2xl uppercase">Type</h1>
                   <p className="leading-8 text-lg capitalize">
-                    {orderData.Type === "1" ? "Client" : "Patient"}
+                    {orderData.Type === 1 ? "Patient" : "Client"}
                   </p>
                 </div>
               </div>
@@ -357,7 +501,7 @@ const StepTwoForm = (
                 <CardHeader>Total</CardHeader>
                 <Separator />
                 <CardContent>
-                  <PaymentForm />
+                  <PaymentForm orderData={orderData} />
                 </CardContent>
               </Card>
             </div>
@@ -371,25 +515,28 @@ const StepTwoForm = (
                   <Separator />
                   <CardContent className="m-4 flex gap-8 flex-col">
                     <div className="flex gap-4 w-auto">
-                      <div className="flex flex-col w-full  ">
-                        <div className="flex items-center">
-                          <span>Patient</span>
-                          <div
-                            className="ml-2 bg-slate-400 w-6 rounded cursor-pointer"
-                            onClick={() => setIsModalOpen(true)}
-                          >
-                            <Plus color="white" />
+                      {orderData?.Type === 2 && (
+                        <div className="flex flex-col w-full  ">
+                          <div className="flex items-center">
+                            <span>Patient</span>
+                            <div
+                              className="ml-2 bg-slate-400 w-6 rounded cursor-pointer"
+                              onClick={() => setIsModalOpen(true)}
+                            >
+                              <Plus color="white" />
+                            </div>
                           </div>
+                          <SelectField
+                            control={control}
+                            name="Patient_id"
+                            label=""
+                            errors={errors}
+                            options={PatientOptions()}
+                            isLoading={patientsLoading}
+                          />
                         </div>
-                        <SelectField
-                          control={control}
-                          name="Patient_id"
-                          label=""
-                          errors={errors}
-                          options={PatientOptions()}
-                          isLoading={patientsLoading}
-                        />
-                      </div>
+                      )}
+
                       <div className="flex  w-full gap-2  ">
                         <div className="w-full">
                           <SelectField
@@ -461,10 +608,10 @@ const StepTwoForm = (
                 <Card className="h-auto">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <div>New Tests</div>
+                      <div>Total Price: {totalPrice}</div>
                       <div>
                         <Button className="flex gap-3" type="submit">
-                          <UploadCloud /> Submit Tests
+                          <UploadCloud /> Submit Sample
                         </Button>
                       </div>
                     </div>

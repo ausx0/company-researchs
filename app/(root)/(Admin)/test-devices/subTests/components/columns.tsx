@@ -50,13 +50,10 @@ export const columns: ColumnDef<SubTestsData>[] = [
     header: "Price",
   },
   {
-    accessorKey: "RFrom",
-    header: "RFrom",
+    accessorKey: "Reference",
+    header: "Reference",
   },
-  {
-    accessorKey: "RTo",
-    header: "RTo",
-  },
+
   {
     accessorKey: "Result",
     header: "Result",

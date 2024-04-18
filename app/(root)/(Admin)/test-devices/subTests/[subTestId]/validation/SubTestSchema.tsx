@@ -8,7 +8,6 @@ export const SubTestSchema = z.object({
   Unit: z.string().min(0),
   Cost: z.coerce.number().min(0),
   Price: z.coerce.number().min(0),
-  RFrom: z.coerce.number().min(0),
+  Reference: z.string().min(0),
   Result: z.coerce.number().min(0),
-  RTo: z.coerce.number().min(0),
 });

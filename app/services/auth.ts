@@ -1,3 +1,4 @@
+"use client";
 import { axiosInstance } from "@/lib";
 import Cookies from "js-cookie";
 
@@ -24,10 +25,10 @@ export async function Login(data: any) {
       const role = getRoleFromSessionKey(response.data.Session_key);
 
       const userData = { ...response.data, Session_key: undefined, role };
-
-      localStorage.setItem("userData", JSON.stringify(userData)); // Save userData to local storage
-      localStorage.setItem("userRole", role); // Save userData to local storage
-
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userData", JSON.stringify(userData)); // Save userData to local storage
+        localStorage.setItem("userRole", role); // Save userData to local storage
+      }
       // console.log(response.data);
       // router.push("/home");
       return response.data; // Return original response data

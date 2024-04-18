@@ -23,7 +23,8 @@ const NavBar = () => {
   };
   // let userData = null;
 
-  const userDataString = localStorage.getItem("userData");
+  const userDataString =
+    typeof window !== "undefined" ? localStorage.getItem("userData") : null;
 
   const userData = userDataString ? JSON.parse(userDataString) : null;
 

@@ -1,9 +1,11 @@
+"use client";
 import { DataTable } from "@/components/ui/data-table";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
 import TestsDataTable from "./components/client";
 import AddNewTest from "./components/AddNewTest";
+import { withAuthorization } from "@/app/Rules/Authorization";
 
 const TestsPage = () => {
   return (
@@ -23,4 +25,4 @@ const TestsPage = () => {
   );
 };
 
-export default TestsPage;
+export default withAuthorization(TestsPage, ["Admin", "lab-tech"]); // Only allow 'Admin' and 'lab-tech' to access this page

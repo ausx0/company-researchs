@@ -11,6 +11,7 @@ interface IInputField {
   errors: any;
   type: string;
   icon?: React.ReactNode; // Add this prop
+  disabled?: boolean;
 }
 
 const InputField: React.FC<IInputField> = ({
@@ -21,6 +22,7 @@ const InputField: React.FC<IInputField> = ({
   type,
   icon,
   placeholder,
+  disabled,
 }) => {
   return (
     <div className="flex flex-col">
@@ -32,6 +34,7 @@ const InputField: React.FC<IInputField> = ({
           <Input
             placeholder={placeholder}
             variant="underlined"
+            disabled={disabled}
             label={
               <div className="flex gap-1 items-center">
                 {icon}

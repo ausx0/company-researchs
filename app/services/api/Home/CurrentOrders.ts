@@ -4,6 +4,10 @@ export const apiGetAllCurrentOrders = () => {
   return apiService.getData(`/LabOrders/All/Current`);
 };
 
+export const apiGetAllCurrentOrdersCount = () => {
+  return apiService.getData(`/LabOrders/All/Current/Count`);
+};
+
 // export const apiGetOrder = (ID: string) => {
 //   return apiService.getData(`/LabOrders?Order_id=${ID}`);
 // };

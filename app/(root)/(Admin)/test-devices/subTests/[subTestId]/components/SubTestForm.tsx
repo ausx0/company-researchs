@@ -42,9 +42,8 @@ const SubTestForm = () => {
       Unit: "",
       Cost: undefined,
       Price: undefined,
-      RFrom: undefined,
+      Reference: "",
       Result: undefined,
-      RTo: undefined,
     },
   });
 
@@ -127,17 +126,10 @@ const SubTestForm = () => {
                 errors={errors}
                 control={control}
                 type="text"
-                label="RFrom"
-                name="RFrom"
+                label="Reference"
+                name="Reference"
               />
 
-              <InputField
-                errors={errors}
-                control={control}
-                type="text"
-                label="RTo"
-                name="RTo"
-              />
               <div className="flex flex-col">
                 <SelectField
                   control={control}

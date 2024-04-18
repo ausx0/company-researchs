@@ -21,16 +21,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>({ role: initialUserRole });
 
   useEffect(() => {
-    setUser({ role: initialUserRole });
-  }, [initialUserRole]);
+    const handleStorageChange = () => {
+      const updatedRole = localStorage.getItem("userRole") || "member";
+      setUser({ role: updatedRole });
+    };
 
+    window.addEventListener("storage", handleStorageChange);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
   return (
     <AbilityContext.Provider value={defineAbilitiesFor(user)}>
-      {children}
+      <AuthContext.Provider value={{ user, setUser }}>
+        {children}
+      </AuthContext.Provider>
     </AbilityContext.Provider>
   );
 };
-
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

@@ -8,7 +8,7 @@ interface ISelectField {
   name: string;
   label: string;
   errors: any;
-  options: { value: string; label: string }[]; // Add this prop for the options
+  options: { value: string | number; label: string }[]; // Add this prop for the options
   isLoading?: boolean; // Add this prop for the loading state
   isMulti?: boolean;
   key?: any;

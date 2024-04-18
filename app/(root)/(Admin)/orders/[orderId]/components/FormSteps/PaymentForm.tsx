@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { OrderPaymentSchema } from "../../validation/orderSchema";
 import { usePathname } from "next/navigation";
@@ -9,8 +9,14 @@ import { Button } from "@nextui-org/react";
 import { DollarSign } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiFinishOrder } from "@/app/services/api/Orders/OrderForm";
+import { formatPrice } from "@/lib/utils";
+import toast from "react-hot-toast";
 
-const PaymentForm = () => {
+type OrderDataProps = {
+  orderData: any;
+};
+
+const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Get the id from the URL
 
@@ -18,15 +24,17 @@ const PaymentForm = () => {
     getValues,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
+    watch,
   } = useForm({
     resolver: zodResolver(OrderPaymentSchema),
     defaultValues: {
       Order_id: id ? Number(id) : undefined,
-      Cost: undefined,
+      // Cost: undefined,
       Bofore_discount: undefined,
       Discount: undefined,
-      Total: undefined,
+      Total: orderData?.Total,
       Payment_status: undefined,
       Paid: undefined,
     },
@@ -35,6 +43,9 @@ const PaymentForm = () => {
   const FinishOrder = useMutation({
     mutationKey: ["FinishOrder"],
     mutationFn: apiFinishOrder,
+    onSuccess: () => {
+      toast.success("payment update successfully");
+    },
   });
 
   const onSubmit = (data: z.infer<typeof OrderPaymentSchema>) => {
@@ -42,24 +53,27 @@ const PaymentForm = () => {
     FinishOrder.mutate(data);
   };
 
+  useEffect(() => {
+    setValue("Total", orderData?.Total);
+  }, [orderData, setValue]);
+
   return (
     <>
       <form className="p-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col  gap-6">
-          <InputField
-            control={control}
-            name="Total"
-            label="Total"
-            type="number"
-            errors={errors}
-          />
-          <InputField
+          <div className="flex justify-between items-center">
+            <div className="text-lg">Total Price:</div>
+            <div className="font-bold text-lg ">
+              {formatPrice(watch("Total"))}
+            </div>
+          </div>
+          {/* <InputField
             control={control}
             name="Cost"
             label="Cost"
             type="number"
             errors={errors}
-          />
+          /> */}
           <InputField
             control={control}
             name="Bofore_discount"

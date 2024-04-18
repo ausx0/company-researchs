@@ -4,7 +4,7 @@ export const apiGetAllOrders = () => {
   return apiService.getData(`/LabOrders/All`);
 };
 
-export const apiGetOrder = (ID: string) => {
+export const apiGetOrder = (ID: number | string | undefined) => {
   return apiService.getData(`/LabOrders?Order_id=${ID}`);
 };
 

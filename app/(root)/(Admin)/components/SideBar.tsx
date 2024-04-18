@@ -29,20 +29,48 @@ import {
 import CollapsIcon from "@/public/icons/collapseIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/app/hooks/useAuth";
 
-const sidebarItems = [
+type Role = "Admin" | "lab-tech" | "reception";
+type SubItem = {
+  text: string;
+  link: string;
+  roles: Role[];
+};
+
+type SidebarItem = {
+  icon: JSX.Element;
+  title: string;
+  subItems: SubItem[];
+  roles: Role[];
+};
+
+const sidebarItems: SidebarItem[] = [
   {
     icon: <HomeIcon className="w-6 opacity-50 mr-2" />,
     title: "Home",
-    subItems: [{ text: "Dashboard", link: "/home" }],
+    subItems: [
+      {
+        text: "Dashboard",
+        link: "/home",
+        roles: ["Admin", "reception", "lab-tech"],
+      },
+    ],
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
   },
 
   {
     icon: <SendToBack className="w-6 opacity-50 mr-2" />,
     title: "Orders",
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
     subItems: [
-      { text: "Add Order", link: "/orders/add" },
-      { text: "All Orders", link: "/orders" },
+      {
+        text: "Add Order",
+        link: "/orders/add",
+        roles: ["Admin", "lab-tech", "reception"],
+      },
+      { text: "All Orders", link: "/orders", roles: ["Admin", "lab-tech"] },
+      { text: "Check Order", link: "/check-order", roles: ["reception"] },
     ],
   },
   // {
@@ -64,10 +92,12 @@ const sidebarItems = [
   {
     icon: <TestTubes className="w-6 opacity-50 mr-2" />,
     title: "Samples & Tests",
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
+
     subItems: [
-      { text: "Tests", link: "/test-devices/tests" },
-      { text: "Samples", link: "/test-devices/samples" },
-      { text: "Sub Tests", link: "/test-devices/subTests" },
+      { text: "Tests", link: "/test-devices/tests", roles: ["Admin"] },
+      { text: "Samples", link: "/test-devices/samples", roles: ["Admin"] },
+      { text: "Sub Tests", link: "/test-devices/subTests", roles: ["Admin"] },
 
       // { text: "Devices", link: "/test-devices/devices" },
 
@@ -77,15 +107,26 @@ const sidebarItems = [
   {
     icon: <Users className="w-6 opacity-50 mr-2" />,
     title: "Customers",
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
+
     subItems: [
-      { text: "Patients", link: "/customers/patients" },
-      { text: "Clients", link: "/customers/clients" },
+      {
+        text: "Patients",
+        link: "/customers/patients",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "Clients",
+        link: "/customers/clients",
+        roles: ["Admin", "lab-tech"],
+      },
       // { text: "Suppliers", link: "/clients/suppliers" },
     ],
   },
   {
     icon: <ArchiveIcon className="w-6 opacity-50 mr-2" />,
     title: "Inventory",
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
     subItems: [
       // Add subItems for Inventory
       { text: "Items", link: "/inventory/items" },
@@ -94,6 +135,8 @@ const sidebarItems = [
   {
     icon: <BadgeDollarSign className="w-6 opacity-50 mr-2" />,
     title: "Finance",
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+
     subItems: [
       // Add subItems for Finance
       { text: "Purchases", link: "/finance/purchases" },
@@ -108,6 +151,8 @@ const sidebarItems = [
   {
     icon: <MessageCircleWarning className="w-6 opacity-50 mr-2" />,
     title: "Reports",
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
+
     subItems: [
       // Add subItems for Reports
       { text: "Daily Report", link: "/reports/daily-reports" },
@@ -117,6 +162,8 @@ const sidebarItems = [
   {
     icon: <MailCheck className="w-6 opacity-50 mr-2" />,
     title: "Messaging",
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
+
     subItems: [
       // Add subItems for Messaging
       { text: "All Messages", link: "/messaging/all-messages" },
@@ -126,15 +173,19 @@ const sidebarItems = [
   {
     icon: <Settings className="w-6 opacity-50 mr-2" />,
     title: "Settings",
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+
     subItems: [
       // Add subItems for Settings
       { text: "User Log", link: "/settings/user-log" },
       { text: "Users", link: "/settings/users" },
     ],
   },
-];
+].map((item) => ({ ...item, roles: (item.roles || []) as Role[] })); // Ensure roles is always defined and cast to Role[]
 
 const SideBar = () => {
+  const { user } = useAuth(); // Get the current user's role
+
   const pathname = usePathname();
 
   const [toggleCollapse, setToggleCollapse] = useState(false);
@@ -160,6 +211,14 @@ const SideBar = () => {
     setToggleCollapse(!toggleCollapse);
   };
 
+  const filteredItems = sidebarItems
+    .filter((item) => item.roles && item.roles.includes(user.role as Role))
+    .map((item) => ({
+      ...item,
+      subItems: item.subItems.filter(
+        (subItem) => subItem.roles && subItem.roles.includes(user.role as Role)
+      ),
+    }));
   return (
     <>
       <div
@@ -184,7 +243,7 @@ const SideBar = () => {
           </div>
           <div className="flex flex-col items-start mt-2">
             <Accordion type="single" collapsible className={collapseMenuIcon}>
-              {sidebarItems.map((item, index) => (
+              {filteredItems.map((item, index) => (
                 <React.Fragment key={index}>
                   {toggleCollapse ? (
                     // Render dropdown menu for collapsed view

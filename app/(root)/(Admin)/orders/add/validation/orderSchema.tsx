@@ -5,7 +5,7 @@ import * as z from "zod";
 
 export const StepOneOrderSchema = z.object({
   Date: z.string().min(2).max(50),
-  Type: z.string(),
+  Type: z.coerce.number(),
   Client_id: z.coerce.number(), // patient_id: z.coerce.number().optional(),
   Notes: z.string().optional(),
   Referred: z.string().min(3).max(50),
