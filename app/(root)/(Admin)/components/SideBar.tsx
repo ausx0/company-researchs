@@ -141,7 +141,11 @@ const sidebarItems: SidebarItem[] = [
       // Add subItems for Finance
       { text: "Purchases", link: "/finance/purchases" },
       { text: "Add Purchase", link: "/finance/purchases/add" },
-      { text: "Expenses", link: "/finance/expenses" },
+      {
+        text: "Expenses",
+        link: "/finance/expenses",
+        roles: ["Admin", "lab-tech"],
+      },
       { text: "Inbound", link: "/finance/inbound" },
       { text: "Outbound", link: "/finance/outbound" },
       { text: "Prices", link: "/finance/prices" },

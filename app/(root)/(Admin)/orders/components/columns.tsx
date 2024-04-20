@@ -43,6 +43,10 @@ export const columns: ColumnDef<OrdersData>[] = [
     cell: ({ row }) => <>{formatPrice(row.getValue("Total"))}</>, // Render the formatted price
   },
   {
+    accessorKey: "Referred",
+    header: "Referred",
+  },
+  {
     accessorKey: "State",
     header: "State",
     cell: ({ row }) => {
@@ -52,6 +56,7 @@ export const columns: ColumnDef<OrdersData>[] = [
       return <span className={`font-semibold ${stateColor}`}>{stateText}</span>;
     },
   },
+
   // {
   //   id: "actions",
   //   cell: ({ row }) => <CellAction data={row.original} />,

@@ -33,7 +33,6 @@ const ModalAlert: React.FC<ModalProps> = ({
       backdrop={backdrop}
       size={size}
       isOpen={isOpen}
-      onClose={}
       // onClose={onClose}
       // isDismissable={false}
       // isKeyboardDismissDisabled={true}

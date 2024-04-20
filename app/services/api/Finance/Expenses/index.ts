@@ -1,22 +1,22 @@
 import apiService from "@/app/services";
 
 export const apiGetExpenses = () => {
-  return apiService.getData(`/LabExpenses/All`);
+  return apiService.getData(`/Expenses/All`);
 };
 
 export const apiGetExpense = (id: string) => {
-  return apiService.getData(`/LabExpenses/${id}`);
+  return apiService.getData(`/Expenses/${id}`);
 };
 
 export const apiPostExpense = (data: any) => {
-  return apiService.postData(`/LabExpenses`, data);
+  return apiService.postData(`/Expenses`, data);
 };
 
 export const apiPutExpense = (id: string, data: any) => {
-  return apiService.putData(`/LabExpenses/${id}`, data);
+  return apiService.putData(`/Expenses/${id}`, data);
 };
 
 export const apiDeleteExpense = (data: any) => {
-  return apiService.DestroyData(`/LabExpenses`, data);
+  return apiService.DestroyData(`/Expenses`, data);
 };
 // Compare this snippet from app/services/api/index.ts:
