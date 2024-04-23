@@ -19,9 +19,9 @@ const OrderInfo = () => {
     queryFn: () => apiGetOrder(orderId),
   });
 
-  // if (OrderInfoDataLoading) {
-  //   return <Loading />;
-  // }
+  if (OrderInfoDataLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

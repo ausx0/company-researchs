@@ -55,7 +55,7 @@ export const StepTwoOrderSchema = z.object({
 
 export const OrderPaymentSchema = z.object({
   Order_id: z.coerce.number().optional(),
-  // Cost: z.coerce.number().optional(),
+  Payer: z.string(),
   Bofore_discount: z.coerce.number().optional(),
   Discount: z.coerce.number().optional(),
   Total: z.coerce.number().optional(),

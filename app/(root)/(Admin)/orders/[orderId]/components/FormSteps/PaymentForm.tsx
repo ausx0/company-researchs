@@ -31,7 +31,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
     resolver: zodResolver(OrderPaymentSchema),
     defaultValues: {
       Order_id: id ? Number(id) : undefined,
-      // Cost: undefined,
+      Payer: "",
       Bofore_discount: undefined,
       Discount: undefined,
       Total: orderData?.Total,
@@ -67,13 +67,13 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
               {formatPrice(watch("Total"))}
             </div>
           </div>
-          {/* <InputField
+          <InputField
             control={control}
-            name="Cost"
-            label="Cost"
-            type="number"
+            name="Payer"
+            label="Payer"
+            type="text"
             errors={errors}
-          /> */}
+          />
           <InputField
             control={control}
             name="Bofore_discount"

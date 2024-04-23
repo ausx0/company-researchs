@@ -25,4 +25,4 @@ const TestsPage = () => {
   );
 };
 
-export default withAuthorization(TestsPage, ["Admin", "lab-tech"]); // Only allow 'Admin' and 'lab-tech' to access this page
+export default TestsPage; // Only allow 'Admin' and 'lab-tech' to access this page

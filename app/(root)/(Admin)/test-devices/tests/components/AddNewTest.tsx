@@ -10,6 +10,7 @@ import {
 import { Plus } from "lucide-react";
 import React from "react";
 import TestModalForm from "./TestModalForm";
+import { withAuthorization } from "@/app/Rules/Authorization";
 
 const AddNewTest = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,4 +25,4 @@ const AddNewTest = () => {
   );
 };
 
-export default AddNewTest;
+export default withAuthorization(AddNewTest, ["lab-tech"]); // Only allow 'Admin' and 'lab-tech' to access this page
