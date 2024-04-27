@@ -9,19 +9,19 @@ import {
 } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 import React from "react";
-import TestModalForm from "./TestModalForm";
+import InventoryModalForm from "./InventoryModalForm";
 
-const AddNewTest = () => {
+const AddNewInventory = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button onPress={onOpen} radius="sm" size="sm" variant="flat">
-        Add Test <Plus />
+        Add Inventory <Plus />
       </Button>
-      <TestModalForm isOpen={isOpen} onClose={onClose} />
+      <InventoryModalForm isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
 
-export default AddNewTest; // Only allow 'Admin' and 'lab-tech' to access this page
+export default AddNewInventory;

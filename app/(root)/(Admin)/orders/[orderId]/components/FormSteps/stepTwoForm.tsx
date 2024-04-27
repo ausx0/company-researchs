@@ -301,9 +301,9 @@ const StepTwoForm = (
 
   useEffect(() => {
     if (sampleId) {
-      TestsMutation.mutate(Number(sampleId)); // Trigger the mutation when "sample_id" changes
-      setValue("Tests.Test_id", undefined); // Reset the "test_id" field
-      setValue("Tests.SubTest_id", undefined); // Reset the "SubTest_id" field
+      TestsMutation.mutate(String(sampleId)); // Trigger the mutation when "sample_id" changes
+      setValue("Tests.Test_id", Number(undefined)); // Reset the "test_id" field
+      setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sampleId]);
@@ -372,7 +372,7 @@ const StepTwoForm = (
   // Define a function to handle delete action
   // Define a function to handle delete action
   // Define a function to handle delete action
-  const handleDelete = (orderId: number) => {
+  const handleDelete = (orderId: string) => {
     // Find the order to be deleted
     const orderToDelete = orders.find((order) => order.ID === orderId);
     if (!orderToDelete) return;

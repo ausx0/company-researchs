@@ -2,7 +2,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDown, ArrowRight, ArrowRightCircle } from "lucide-react";
 import React, { HTMLProps } from "react";
 
-export type OrderSamplesData = [];
+interface OrderSample {
+  // Define the structure of a single order sample
+  Sample_identifier: string;
+  Tests: any[]; // Define the structure of the Tests property
+  // Add other properties if necessary
+}
+
+export type OrderSamplesData = {
+  Sample_identifier: string;
+  Tests: any[];
+};
 
 export const OrderSampleColumns: ColumnDef<OrderSamplesData>[] = [
   {

@@ -137,9 +137,9 @@ const SubTestForm = () => {
                   name="Result"
                   errors={errors}
                   options={[
-                    { value: "1", label: "Number" },
-                    { value: "2", label: "Short Text" },
-                    { value: "3", label: "Long Text" },
+                    { value: "1", label: "Short Text" },
+                    { value: "2", label: "Long Text" },
+                    { value: "3", label: "Number" },
                   ]}
                 />
               </div>

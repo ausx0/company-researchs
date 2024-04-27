@@ -18,6 +18,7 @@ import {
 import {
   ArchiveIcon,
   BadgeDollarSign,
+  FileText,
   HomeIcon,
   MailCheck,
   MessageCircleWarning,
@@ -32,18 +33,19 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
 
 type Role = "Admin" | "lab-tech" | "reception";
-type SubItem = {
+
+interface SubItem {
   text: string;
   link: string;
   roles: Role[];
-};
+}
 
-type SidebarItem = {
+interface SidebarItem {
   icon: JSX.Element;
   title: string;
   subItems: SubItem[];
   roles: Role[];
-};
+}
 
 const sidebarItems: SidebarItem[] = [
   {
@@ -58,7 +60,6 @@ const sidebarItems: SidebarItem[] = [
     ],
     roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
   },
-
   {
     icon: <SendToBack className="w-6 opacity-50 mr-2" />,
     title: "Orders",
@@ -73,42 +74,32 @@ const sidebarItems: SidebarItem[] = [
       { text: "Check Order", link: "/check-order", roles: ["reception"] },
     ],
   },
-  // {
-  //   icon: <MessageSquareText className="w-6 opacity-50 mr-2" />,
-  //   title: "Consultation",
-  //   subItems: [
-  //     { text: "Add Consultation", link: "/consultation/add" },
-  //     { text: "All Consultations", link: "/consultation" },
-  //   ],
-  // },
-  // {
-  //   icon: <Microscope className="w-6 opacity-50 mr-2" />,
-  //   title: "Researches",
-  //   subItems: [
-  //     { text: "Add Research", link: "/researches/add" },
-  //     { text: "All Researches", link: "/researches" },
-  //   ],
-  // },
+  {
+    icon: <FileText className="w-6 opacity-50 mr-2" />,
+    title: "Results",
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+    subItems: [
+      {
+        text: "Submit Result",
+        link: "/result",
+        roles: ["Admin", "lab-tech", "reception"],
+      },
+    ],
+  },
   {
     icon: <TestTubes className="w-6 opacity-50 mr-2" />,
     title: "Samples & Tests",
-    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
       { text: "Tests", link: "/test-devices/tests", roles: ["Admin"] },
       { text: "Samples", link: "/test-devices/samples", roles: ["Admin"] },
       { text: "Sub Tests", link: "/test-devices/subTests", roles: ["Admin"] },
-
-      // { text: "Devices", link: "/test-devices/devices" },
-
-      // Add more subItems as needed
     ],
   },
   {
     icon: <Users className="w-6 opacity-50 mr-2" />,
     title: "Customers",
-    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
       {
         text: "Patients",
@@ -120,72 +111,114 @@ const sidebarItems: SidebarItem[] = [
         link: "/customers/clients",
         roles: ["Admin", "lab-tech"],
       },
-      // { text: "Suppliers", link: "/clients/suppliers" },
     ],
   },
   {
     icon: <ArchiveIcon className="w-6 opacity-50 mr-2" />,
-    title: "Inventory",
-    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
+    title: "Stock",
+    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
-      // Add subItems for Inventory
-      { text: "Items", link: "/inventory/items" },
+      { text: "Items", link: "/stock/items", roles: ["Admin", "lab-tech"] },
+      {
+        text: "Inventory",
+        link: "/stock/inventory",
+        roles: ["Admin", "lab-tech"],
+      },
     ],
   },
   {
     icon: <BadgeDollarSign className="w-6 opacity-50 mr-2" />,
     title: "Finance",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech", "reception"], // Only admin, lab-tech, and reception can see this
     subItems: [
-      // Add subItems for Finance
-      { text: "Purchases", link: "/finance/purchases" },
-      { text: "Add Purchase", link: "/finance/purchases/add" },
+      {
+        text: "Purchases",
+        link: "/finance/purchases",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "Add Purchase",
+        link: "/finance/purchases/add",
+        roles: ["Admin", "lab-tech"],
+      },
       {
         text: "Expenses",
         link: "/finance/expenses",
         roles: ["Admin", "lab-tech"],
       },
-      { text: "Inbound", link: "/finance/inbound" },
-      { text: "Outbound", link: "/finance/outbound" },
-      { text: "Prices", link: "/finance/prices" },
-      { text: "Categories", link: "/finance/categories" },
+      {
+        text: "Inbound",
+        link: "/finance/inbound",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "Outbound",
+        link: "/finance/outbound",
+        roles: ["Admin", "lab-tech"],
+      },
+      { text: "Prices", link: "/finance/prices", roles: ["Admin", "lab-tech"] },
+      {
+        text: "Categories",
+        link: "/finance/categories",
+        roles: ["Admin", "lab-tech"],
+      },
     ],
   },
   {
     icon: <MessageCircleWarning className="w-6 opacity-50 mr-2" />,
     title: "Reports",
-    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
-      // Add subItems for Reports
-      { text: "Daily Report", link: "/reports/daily-reports" },
-      { text: "Generate Reports", link: "/finance/generate-reports" },
+      {
+        text: "Daily Report",
+        link: "/reports/daily-reports",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "Generate Reports",
+        link: "/finance/generate-reports",
+        roles: ["Admin", "lab-tech"],
+      },
     ],
   },
   {
     icon: <MailCheck className="w-6 opacity-50 mr-2" />,
     title: "Messaging",
-    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
-      // Add subItems for Messaging
-      { text: "All Messages", link: "/messaging/all-messages" },
-      { text: "New Message", link: "/messaging/new-message" },
+      {
+        text: "All Messages",
+        link: "/messaging/all-messages",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "New Message",
+        link: "/messaging/new-message",
+        roles: ["Admin", "lab-tech"],
+      },
     ],
   },
   {
     icon: <Settings className="w-6 opacity-50 mr-2" />,
     title: "Settings",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
-
+    roles: ["Admin", "lab-tech", "reception"], // Only admin, lab-tech, and reception can see this
     subItems: [
-      // Add subItems for Settings
-      { text: "User Log", link: "/settings/user-log" },
-      { text: "Users", link: "/settings/users" },
+      {
+        text: "User Log",
+        link: "/settings/user-log",
+        roles: ["Admin", "lab-tech"],
+      },
+      { text: "Users", link: "/settings/users", roles: ["Admin", "lab-tech"] },
     ],
   },
-].map((item) => ({ ...item, roles: (item.roles || []) as Role[] })); // Ensure roles is always defined and cast to Role[]
+].map((item) => ({
+  ...item,
+  subItems: item.subItems.map((subItem) => ({
+    ...subItem,
+    roles: subItem.roles as Role[],
+  })),
+  roles: item.roles as Role[],
+}));
 
 const SideBar = () => {
   const { user } = useAuth(); // Get the current user's role

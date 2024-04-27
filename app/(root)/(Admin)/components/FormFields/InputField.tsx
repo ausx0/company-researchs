@@ -12,6 +12,9 @@ interface IInputField {
   type: string;
   icon?: React.ReactNode; // Add this prop
   disabled?: boolean;
+  startContent?: any;
+  className?: React.ReactNode | any;
+  defaultValue?: any;
 }
 
 const InputField: React.FC<IInputField> = ({
@@ -23,20 +26,26 @@ const InputField: React.FC<IInputField> = ({
   icon,
   placeholder,
   disabled,
+  startContent,
+  className,
+  defaultValue,
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full flex-col">
       {/* <Label htmlFor="name">{label}</Label> */}
       <Controller
         name={name}
         control={control}
+        defaultValue={defaultValue}
         render={({ field }) => (
           <Input
             placeholder={placeholder}
             variant="underlined"
             disabled={disabled}
+            startContent={startContent}
+            className={className}
             label={
-              <div className="flex gap-1 items-center">
+              <div className="flex gap-1 py-3 text-lg font-semibold items-center">
                 {icon}
                 {label}
               </div>

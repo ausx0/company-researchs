@@ -5,7 +5,7 @@ import { defineAbilitiesFor } from "../Rules/defineAbility";
 import { AbilityContext } from "../Rules/Can";
 
 interface User {
-  role: string;
+  role: any;
   // Add other user properties here
 }
 
@@ -17,10 +17,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const initialUserRole = localStorage.getItem("userRole") || "member";
+  const initialUserRole =
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem("userRole") || "member"
+      : "member";
   const [user, setUser] = useState<User>({ role: initialUserRole });
 
   useEffect(() => {
+    if (typeof localStorage === "undefined") return; // Skip in non-browser environments
     const handleStorageChange = () => {
       const updatedRole = localStorage.getItem("userRole") || "member";
       setUser({ role: updatedRole });

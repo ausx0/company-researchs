@@ -24,7 +24,7 @@ import { motion } from "framer-motion";
 import ButtonLoader from "../../../components/UI/ButtonLoader";
 
 interface OrderFormProps {
-  ID: number | string | undefined;
+  ID?: number | string | undefined;
 }
 
 interface OrderData {

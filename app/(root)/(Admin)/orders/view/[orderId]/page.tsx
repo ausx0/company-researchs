@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import OrderInfo from "./components/OrderInfo";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Spinner } from "@nextui-org/react";
-import Loading from "../loading";
 import OrderSamples from "./components/OrderSamples";
 import OrderPayment from "./components/OrderPayment";
 import OrderAction from "./components/OrderAction";

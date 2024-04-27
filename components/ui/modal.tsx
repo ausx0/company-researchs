@@ -6,6 +6,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogOverlay,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
@@ -33,13 +34,15 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onChange}>
-      <AlertDialogContent className="bg-white">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <div>{children}</div>
-      </AlertDialogContent>
+      <AlertDialogOverlay onClose={() => console.log("closed")}>
+        <AlertDialogContent className="bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <div>{children}</div>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
     </AlertDialog>
   );
 };

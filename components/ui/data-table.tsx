@@ -42,8 +42,8 @@ interface DataTableProps<TData, TValue> {
   showPagination?: boolean; // new property
   showSearch?: boolean; // new property
   showColumns?: boolean; // new property
-  renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement;
-  getRowCanExpand: (row: Row<TData>) => boolean;
+  renderSubComponent?: (props: { row: Row<TData> }) => React.ReactElement;
+  getRowCanExpand?: (row: Row<TData>) => boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -176,7 +176,7 @@ export function DataTable<TData, TValue>({
                     </TableCell>
                   ))}
                 </TableRow>
-                {row.getIsExpanded() && (
+                {row.getIsExpanded() && renderSubComponent && (
                   <TableRow>
                     {/* Render sub-component only if row is expanded */}
                     <td colSpan={row.getVisibleCells().length}>

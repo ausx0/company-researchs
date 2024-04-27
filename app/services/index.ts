@@ -21,6 +21,11 @@ const DeleteOptions = {
   },
 };
 
+const PatchOptions = {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+};
+
 const getData = async (path: string, params?: any) => {
   try {
     const response = await axiosInstance.get(path, { params });
@@ -84,6 +89,16 @@ const putData = async (path: string, data: any) => {
   }
 };
 
+const patchData = async (path: string, data: any) => {
+  try {
+    const response = await axiosInstance.patch(path, data, PatchOptions);
+    return response.data;
+  } catch (error: any) {
+    console.error({ error });
+    throw new Error(error.message);
+  }
+};
+
 const DestroyData = async (path: string, data: any) => {
   try {
     const formData = new FormData();
@@ -111,6 +126,7 @@ const apiService = {
   DestroyData,
   postJsonData,
   putJsonData,
+  patchData,
 };
 
 export default apiService;

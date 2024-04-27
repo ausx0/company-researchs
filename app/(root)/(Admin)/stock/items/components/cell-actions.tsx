@@ -14,16 +14,15 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { OrdersData } from "./columns";
+import { ItemsData } from "./columns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ItemModal, { Item } from "./ItemModalForm";
 import { useDisclosure } from "@nextui-org/react";
-import {
-  apiDeleteOrder,
-  apiGetOrder,
-} from "@/app/services/api/Orders/AllOrders";
+import ItemModalForm from "./ItemModalForm";
+import { apiDeleteItem, apiGetItem } from "@/app/services/api/Inventory/Items";
 
 export interface cellActionProps {
-  data: OrdersData;
+  data: ItemsData;
 }
 
 export const CellAction: React.FC<cellActionProps> = ({ data }) => {
@@ -31,11 +30,12 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [editingOrder, setEditingOrder] = useState<null>(null);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   const handleEdit = async () => {
-    const Order = await apiGetOrder(data.ID); // Fetch the Order data
-    setEditingOrder(Order); // Set the Order being edited
+    const Item = await apiGetItem(data.ID); // Fetch the Item data
+    console.log(data.ID);
+    setEditingItem(Item); // Set the Item being edited
     onOpen();
   };
 
@@ -45,31 +45,38 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeleteOrderMutation = useMutation({
-    mutationKey: ["DeleteOrder"],
-    mutationFn: apiDeleteOrder,
+  const DeleteItemMutation = useMutation({
+    mutationKey: ["DeleteItem"],
+    mutationFn: apiDeleteItem,
+    onMutate: () => {
+      setLoading(true);
+    },
     onSuccess: () => {
-      toast.success("Order Delete successfully");
+      setLoading(false);
+      toast.success("Item Delete successfully");
       queryClient.invalidateQueries({
-        queryKey: ["lab-orders"],
-      }); // Invalidate the 'Orders' query
+        queryKey: ["Items"],
+      }); // Invalidate the 'Items' query
+      setOpen(false);
+    },
+    onError: () => {
+      setLoading(false);
     },
   });
-  // const onDelete = async () => {
-  //   console.log(`Order_id = ${data.ID}`);
-  //   DeleteOrderMutation.mutate({ Order_id: data.ID });
-  //   setOpen(false);
-  // };
+  const onDelete = async () => {
+    console.log(`Item_id = ${data.ID}`);
+    DeleteItemMutation.mutate({ Item_id: data.ID });
+  };
 
   return (
     <>
-      {/* <AlertModal
+      <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        // onConfirm={onDelete}
+        onConfirm={onDelete}
         loading={loading}
-      /> */}
-      {/* <OrderModalForm isOpen={isOpen} onClose={onClose} Order={editingOrder} /> */}
+      />
+      <ItemModalForm isOpen={isOpen} onClose={onClose} Item={editingItem} />
       {/* Pass the ID as a prop */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -8,21 +8,39 @@ interface Props {
   name: string;
   label: string;
   type: any;
+  disabled?: boolean;
 }
 
-const TextField: React.FC<Props> = ({ control, errors, name, label, type }) => {
+const TextField: React.FC<Props> = ({
+  control,
+  errors,
+  name,
+  label,
+  type,
+  disabled = false,
+}) => {
   return (
     <>
-      <label htmlFor={name}>{label}</label>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <Input type={type} {...field} placeholder={name} />
-        )}
-      />
-      {errors && errors[name] && <span>{errors[name].message}</span>}{" "}
-      {/* Conditionally render error message */}
+      <div className="flex w-full flex-col gap-2">
+        <label htmlFor={name}>{label}</label>
+        <Controller
+          name={name}
+          control={control}
+          render={({ field }) => (
+            <Input
+              className="w-full"
+              type={type}
+              {...field}
+              placeholder={name}
+              disabled={disabled}
+            />
+          )}
+        />
+        {errors && errors[name] && (
+          <span className="text-danger">{errors[name].message}</span>
+        )}{" "}
+        {/* Conditionally render error message */}
+      </div>
     </>
   );
 };

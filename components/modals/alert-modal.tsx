@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@nextui-org/react";
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           Cancel
         </Button>
         <Button disabled={loading} variant="destructive" onClick={onConfirm}>
-          Continue
+          {loading ? <Spinner color="white" /> : "Confirm"}
         </Button>
       </div>
     </Modal>
