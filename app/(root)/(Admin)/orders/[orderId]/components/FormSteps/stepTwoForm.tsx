@@ -116,6 +116,10 @@ const StepTwoForm = (
 
     // Check if Test and SubTest are not empty
     if (!Test || !SubTest || SubTest.length === 0) {
+      if (orderData?.Type === 2 && watch("Patient_id")?.valueOf.length === 0) {
+        toast.error("Please select a Patient");
+        return;
+      }
       // Handle the case when Test or SubTest is empty
       // For example, show a toast message or alert
       // return early to prevent adding an empty order
@@ -610,7 +614,12 @@ const StepTwoForm = (
                     <div className="flex items-center justify-between">
                       <div>Total Price: {totalPrice}</div>
                       <div>
-                        <Button className="flex gap-3" type="submit">
+                        <Button
+                          disabled={orders.values.length === 0}
+                          className="flex gap-3"
+                          type="submit"
+                          color="primary"
+                        >
                           <UploadCloud /> Submit Sample
                         </Button>
                       </div>

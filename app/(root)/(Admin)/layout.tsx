@@ -3,11 +3,34 @@ import SideBar from "./components/SideBar";
 import NavBar from "./components/NavBar";
 import { Can } from "@/app/Rules/Can";
 
+import socket from "@/app/services/Socket";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 export default function DashboardLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
 }) {
+  const { MessageToast } = useToast();
+
+  useEffect(() => {
+    // Listen for a custom event from the server
+    socket.on("notifications", (data) => {
+      console.log("Received data from server:", data);
+      MessageToast({ description: data });
+    });
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      socket.off("notifications");
+      MessageToast({
+        variant: "destructive",
+        title: "The Connection is closed",
+        description: "There was a problem with your request.",
+      });
+    };
+  }, []);
   return (
     <>
       <section className="h-screen flex flex-row justify-start overflow-hidden">

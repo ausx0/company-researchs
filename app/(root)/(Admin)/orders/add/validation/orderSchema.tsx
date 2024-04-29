@@ -8,7 +8,7 @@ export const StepOneOrderSchema = z.object({
   Type: z.coerce.number(),
   Client_id: z.coerce.number(), // patient_id: z.coerce.number().optional(),
   Notes: z.string().optional(),
-  Referred: z.string().min(3).max(50),
+  Referred: z.string().optional(),
   //   Samples: z
   //     .array(
   //       z.object({

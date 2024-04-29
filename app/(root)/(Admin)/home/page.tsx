@@ -23,6 +23,7 @@ import {
 import { Spinner } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { AbilityContext, Can } from "@/app/Rules/Can";
+import { useEffect } from "react";
 import { apiGetAllCompletedOrders } from "@/app/services/api/Home/CompletedOrders";
 
 const HoemPage = () => {

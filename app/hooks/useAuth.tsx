@@ -17,10 +17,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const initialUserRole =
-    typeof localStorage !== "undefined"
-      ? localStorage.getItem("userRole") || "member"
-      : "member";
+  const initialUserRole = localStorage.getItem("userRole") || "member";
+
   const [user, setUser] = useState<User>({ role: initialUserRole });
 
   useEffect(() => {

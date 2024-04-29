@@ -20,6 +20,6 @@ export const apiUpdateOrder = (data: any, orderId: string) => {
   return apiService.putJsonData(`/LabOrders/${orderId}`, data);
 };
 
-export const apiDeleteOrder = (orderId: string) => {
+export const apiDeleteOrder = (orderId: any) => {
   return apiService.DestroyData(`/LabOrders`, orderId);
 };

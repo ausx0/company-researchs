@@ -106,7 +106,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
           <div className="flex items-center justify-between">
             <div></div>
             <div>
-              <Button className="flex gap-3" type="submit">
+              <Button className="flex gap-3" type="submit" color="primary">
                 <DollarSign /> Finish
               </Button>
             </div>

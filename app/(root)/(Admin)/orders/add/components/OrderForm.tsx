@@ -45,8 +45,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
   const [modalKey, setModalKey] = useState(0); // Add this state
 
   const { data: orderData } = useQuery<OrderData>({
-    queryKey: ["Order", ID],
-    queryFn: () => (ID ? apiGetOrder(ID) : Promise.resolve(null)),
+    queryKey: ["Lab-Orders"],
+    // queryFn: () => (ID ? apiGetOrder(ID) : Promise.resolve(null)),
   });
 
   const defaultValues = orderData
@@ -62,7 +62,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
         Type: 1,
         patient_id: undefined, // set to undefined
         client_id: undefined, // set to undefined
-        referred: "",
+        Referred: "",
         Date: "",
         Notes: "",
       };

@@ -40,8 +40,8 @@ const NavBar = () => {
               <User
                 as="button"
                 className="transition-transform"
-                description={userData?.Username}
-                name={userData?.Fullname}
+                description={`@${userData?.Username}`}
+                name={userData?.Username}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="User Actions" variant="flat">
@@ -49,14 +49,14 @@ const NavBar = () => {
                 <p className="font-bold">Signed in as</p>
                 <p className="font-bold">{userData?.Scope}</p>
               </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
+              {/* <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
               <DropdownItem key="analytics">Analytics</DropdownItem>
               <DropdownItem key="system">System</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
               <DropdownItem key="help_and_feedback">
                 Help & Feedback
-              </DropdownItem>
+              </DropdownItem> */}
               <DropdownItem key="logout" color="danger" onClick={onLogout}>
                 Log Out
               </DropdownItem>

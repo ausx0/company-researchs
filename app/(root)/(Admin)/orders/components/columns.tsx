@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { CellAction } from "./cell-actions";
 import { formatPrice } from "@/lib/utils";
+import Badge from "@/components/ui/Badge";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -47,18 +48,27 @@ export const columns: ColumnDef<OrdersData>[] = [
     header: "Referred",
   },
   {
+    accessorKey: "payment_status",
+    header: "Payment Status",
+  },
+  {
     accessorKey: "State",
     header: "State",
     cell: ({ row }) => {
       const state = row.getValue("State");
-      const stateText = state === 1 ? "Completed" : "Pending";
-      const stateColor = state === 1 ? "text-cyan-500" : "text-yellow-500";
-      return <span className={`font-semibold ${stateColor}`}>{stateText}</span>;
+      return <StateBadge state={state} />;
     },
   },
 
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <CellAction data={row.original} />,
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />,
+  },
 ];
+
+const StateBadge = ({ state }: any) => {
+  const stateText = state === 1 ? "Completed" : "Pending";
+  const stateColor = state === 1 ? "bg-cyan-500" : "bg-yellow-500";
+
+  return <Badge text={stateText} color={stateColor} />;
+};

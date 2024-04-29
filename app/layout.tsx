@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import AccessProvider from "./Providers/CaslProvider";
 import { AuthProvider } from "./hooks/useAuth";
+import { MessageToaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,8 +31,9 @@ export default function RootLayout({
         <html lang="en">
           <body className={`${inter.className} scrollbar-none overflow-hidden`}>
             {children}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false}  /> */}
             <Toaster />
+            <MessageToaster />
           </body>
         </html>
       </AuthProvider>
