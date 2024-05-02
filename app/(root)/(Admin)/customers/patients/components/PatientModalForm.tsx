@@ -8,6 +8,7 @@ import {
   ModalFooter,
   Button,
   Input,
+  Checkbox,
 } from "@nextui-org/react";
 import {
   MailIcon,
@@ -18,7 +19,7 @@ import {
   Plus,
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { PatientSchema } from "../validation/PatientSchema";
 import { z } from "zod";
 import {
@@ -54,10 +55,15 @@ const PatientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
       Age: undefined,
       Gender: "",
       Notes: "",
-
+      Height: "",
+      Weight: "",
+      Hypertension: false,
+      Diabetes: false,
+      Skin: "",
       // Price: "",
     },
   });
+  console.log(form.formState.errors);
 
   const Genders = [
     {
@@ -103,7 +109,7 @@ const PatientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
 
   return (
     <>
-      <Modal backdrop="blur" size="xl" isOpen={isOpen} onClose={onClose}>
+      <Modal backdrop="blur" size="4xl" isOpen={isOpen} onClose={onClose}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <ModalContent>
@@ -193,6 +199,68 @@ const PatientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
                             type="text"
                           />
                         </div>
+                      </div>
+                      <div className="flex w-full gap-8">
+                        <div className="w-full">
+                          <InputField
+                            name="Height"
+                            control={form.control}
+                            errors={form.formState.errors}
+                            label="Height"
+                            type="Text"
+                          />
+                        </div>
+                        <div className="w-full">
+                          <InputField
+                            name="Weight"
+                            control={form.control}
+                            errors={form.formState.errors}
+                            label="Weight"
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex w-full gap-8">
+                        <div className="w-full">
+                          <InputField
+                            name="Skin"
+                            control={form.control}
+                            errors={form.formState.errors}
+                            label="Skin"
+                            type="Text"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex  gap-4">
+                        <Controller
+                          control={form.control}
+                          name="Hypertension"
+                          render={({ field }) => (
+                            <Checkbox
+                              checked={field.value} // set checked status
+                              onChange={(e) => field.onChange(e.target.checked)} // update field value on change
+                            >
+                              Hypertension
+                            </Checkbox>
+                          )}
+                        />
+
+                        <Controller
+                          control={form.control}
+                          name="Diabetes"
+                          render={({ field }) => (
+                            <Checkbox
+                              checked={field.value} // set checked status
+                              onChange={(e) => field.onChange(e.target.checked)} // update field value on change
+                            >
+                              Diabetes
+                            </Checkbox>
+                          )}
+                        />
+
+                        {/* {form.formState.errors.OnePrice && (
+                          <span>{errors.OnePrice.message}</span>
+                        )} */}
                       </div>
                     </div>
                   </ModalBody>

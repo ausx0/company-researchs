@@ -10,6 +10,11 @@ export const PatientSchema = z.object({
   Notes: z.string().optional(),
   Age: z.coerce.number().min(1).max(150),
   Gender: z.string().min(1),
+  Weight: z.any().optional(),
+  Height: z.any().optional(),
+  Skin: z.any().optional(),
+  Hypertension: z.boolean(),
+  Diabetes: z.boolean(),
 
   // Price: z.string().min(0),
 });
