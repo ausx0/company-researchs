@@ -1,7 +1,7 @@
 "use client";
 import classNames from "classnames";
 import React, { useState } from "react";
-import fullLogoIcon from "@/public/OreoLogoFull.svg";
+import fullLogoIcon from "@/public/OreoLogoFullPNG.png";
 import {
   Accordion,
   AccordionContent,
@@ -268,7 +268,7 @@ const SideBar = () => {
               <Image
                 src={fullLogoIcon}
                 alt=""
-                className={`transition duration-800 ease-linear max-w-[50%] `}
+                className={`transition duration-800 ease-linear max-w-[70%] `}
               />
             </div>
             <button

@@ -13,6 +13,8 @@ import {
   ClipboardList,
   CreditCard,
   PersonStandingIcon,
+  SendToBack,
+  Timer,
   UserRoundSearch,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -25,9 +27,13 @@ import { useQuery } from "@tanstack/react-query";
 import { AbilityContext, Can } from "@/app/Rules/Can";
 import { useEffect } from "react";
 import { apiGetAllCompletedOrders } from "@/app/services/api/Home/CompletedOrders";
+import Loading from "@/components/ui/loading";
+import { CurrentCellAction } from "./components/currentCellActions";
+import { useRouter } from "next/navigation";
 
 const HoemPage = () => {
-  const ability = useContext(AbilityContext);
+  // const ability = useContext(AbilityContext);
+  const router = useRouter();
 
   const {
     data: CurrentOrders,
@@ -51,25 +57,18 @@ const HoemPage = () => {
     return <Spinner />;
   }
 
-  console.log("rules", ability.rules);
-  if (ability.can("read", "Article")) {
-    console.log("User can read Article");
-  } else {
-    console.log("User cannot read Article");
-  }
-
   const currentOrdersLength = CurrentOrders ? CurrentOrders.length : 0;
   const completedOrdersLength = CompletedOrders ? CompletedOrders.length : 0;
 
   return (
     <>
-      <div className="grid gap-4 grid-cols-4 grid-rows-8  bg-slate-100 p-4">
+      <div className="grid gap-4 grid-cols-4 grid-rows-10  bg-slate-100 p-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
               Current Orders
             </CardTitle>
-            <UserRoundSearch className="h-4 w-4" />
+            <SendToBack className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <h1 className="text-2xl font-bold">{currentOrdersLength}</h1>
@@ -123,14 +122,48 @@ const HoemPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-white col-span-2 row-span-2 p-4">
+        <Card className="bg-white col-span-4 row-span-4 p-4">
           <CardHeader className="flex flex-row justify-between items-center p-2 ">
-            <CardTitle className="text-xl ">Current Researches</CardTitle>
-            <BookOpenText className="" />
+            <CardTitle className="text-xl ">Current Orders</CardTitle>
+            <SendToBack className="" />
           </CardHeader>
           <Separator className="my-4" />
           <CardContent>
-            <h1 className="text-md font-bold">No Researches Found</h1>
+            {CurrentOrdersLoading ? (
+              <Loading />
+            ) : (
+              <>
+                {CurrentOrders.length === 0 ? (
+                  <h1 className="text-md font-bold">No Orders Found</h1>
+                ) : (
+                  <ul className="divide-y divide-gray-200">
+                    {CurrentOrders.map((order: any) => (
+                      <li
+                        key={order.ID}
+                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 cursor-pointer transition"
+                        onClick={() => router.push(`/orders/view/${order.ID}`)}
+                      >
+                        <div>
+                          <p className="text-lg font-semibold">
+                            {order.Order_identifier}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {order.Client_name}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Date: {order.Date}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Samples: {order.Samples}
+                          </p>
+                        </div>
+                        <CurrentCellAction data={order} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
 
