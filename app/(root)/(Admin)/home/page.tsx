@@ -30,6 +30,7 @@ import { apiGetAllCompletedOrders } from "@/app/services/api/Home/CompletedOrder
 import Loading from "@/components/ui/loading";
 import { CurrentCellAction } from "./components/currentCellActions";
 import { useRouter } from "next/navigation";
+import { apiGetAllPendingPayments } from "@/app/services/api/Home/PendingPayments";
 
 const HoemPage = () => {
   // const ability = useContext(AbilityContext);
@@ -45,6 +46,15 @@ const HoemPage = () => {
   });
 
   const {
+    data: PendingPayments,
+    isLoading: PendingPaymentsLoading,
+    error: PendingPaymentsError,
+  } = useQuery({
+    queryKey: ["pending_payments"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetAllPendingPayments,
+  });
+
+  const {
     data: CompletedOrders,
     isLoading: CompletedOrdersLoading,
     error: CompletedOrdersError,
@@ -53,16 +63,21 @@ const HoemPage = () => {
     queryFn: apiGetAllCompletedOrders,
   });
 
-  if (CurrentOrdersLoading || CompletedOrdersLoading) {
+  if (
+    CurrentOrdersLoading ||
+    CompletedOrdersLoading ||
+    PendingPaymentsLoading
+  ) {
     return <Spinner />;
   }
 
   const currentOrdersLength = CurrentOrders ? CurrentOrders.length : 0;
   const completedOrdersLength = CompletedOrders ? CompletedOrders.length : 0;
+  const pendingPaymentsLength = PendingPayments ? PendingPayments.length : 0;
 
   return (
     <>
-      <div className="grid gap-4 grid-cols-4 grid-rows-10  bg-slate-100 p-4">
+      <div className="grid gap-4 grid-cols-4 grid-rows-12  bg-slate-100 p-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
@@ -73,21 +88,21 @@ const HoemPage = () => {
           <CardContent>
             <h1 className="text-2xl font-bold">{currentOrdersLength}</h1>
             <p className="text-xs text-mutedsh-foreground">
-              The Amount Of Appointments
+              The Amount Of Current Orders
             </p>
           </CardContent>
         </Card>
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
-              Appointments
+              Pending Payments
             </CardTitle>
-            <UserRoundSearch className="h-4 w-4" />
+            <CreditCard className="size-4" />
           </CardHeader>
           <CardContent>
-            <h1 className="text-2xl font-bold">200</h1>
+            <h1 className="text-2xl font-bold">{pendingPaymentsLength}</h1>
             <p className="text-xs text-mutedsh-foreground">
-              The Amount Of Appointments
+              The Amount Of Pending Payments
             </p>
           </CardContent>
         </Card>
@@ -128,7 +143,7 @@ const HoemPage = () => {
             <SendToBack className="" />
           </CardHeader>
           <Separator className="my-4" />
-          <CardContent>
+          <CardContent className="px-0">
             {CurrentOrdersLoading ? (
               <Loading />
             ) : (
@@ -140,7 +155,7 @@ const HoemPage = () => {
                     {CurrentOrders.map((order: any) => (
                       <li
                         key={order.ID}
-                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 cursor-pointer transition"
+                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 rounded-md cursor-pointer transition"
                         onClick={() => router.push(`/orders/view/${order.ID}`)}
                       >
                         <div>
@@ -195,8 +210,44 @@ const HoemPage = () => {
             <CreditCard className="" />
           </CardHeader>
           <Separator className="my-4" />
-          <CardContent>
-            <h1 className="text-md font-bold">No Pending Payments Found</h1>
+          <CardContent className="px-0">
+            {CurrentOrdersLoading ? (
+              <Loading />
+            ) : (
+              <>
+                {PendingPayments.length === 0 ? (
+                  <h1 className="text-md font-bold">
+                    No Pending Payments Found
+                  </h1>
+                ) : (
+                  <ul className="divide-y divide-gray-200">
+                    {PendingPayments.map((order: any) => (
+                      <li
+                        key={order.ID}
+                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 rounded-md cursor-pointer transition"
+                        // onClick={() => router.push(`/orders/view/${order.ID}`)}
+                      >
+                        <div>
+                          <p className="text-lg font-semibold">
+                            {order.Order_identifier}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {order.Client_name}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Date: {order.Date}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Samples: {order.Samples}
+                          </p>
+                        </div>
+                        {/* <CurrentCellAction data={order} /> */}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
 
