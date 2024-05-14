@@ -1,6 +1,6 @@
 "use client";
-import { motion } from "framer-motion";
-import react, { useContext, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+import react, { useContext, useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,14 +25,14 @@ import { AbilityContext } from "@/app/Rules/Can";
 import { defineAbilitiesFor } from "@/app/Rules/defineAbility";
 import { createMongoAbility } from "@casl/ability";
 import { useAuth } from "@/app/hooks/useAuth";
+import Image from "next/image";
+import fullLogoIcon from "@/public/OreoLogoFullPNG.png";
 
 const formSchema = z.object({
   Username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  Password: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  Password: z.string(),
 });
 
 const LoginPage = () => {
@@ -82,71 +82,88 @@ const LoginPage = () => {
     //   console.log(error);
     // }
   }
+  // Animation controls for clouds
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full bg-white p-10 rounded-xl shadow-lg space-y-8"
-      >
+    <div className="min-h-screen flex items-stretch text-white">
+      <div className="lg:flex w-1/2  flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4">Welcome Back!</h1>
+          <p className="text-white text-opacity-70">
+            To keep connected with us please login with your personal info
+          </p>
+        </div>
+      </div>
+      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center">
         <motion.div
-          initial={{ y: -50 }}
+          className="w-full max-w-md p-8 space-y-8"
+          initial={{ y: -250 }}
           animate={{ y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ type: "spring", stiffness: 120 }}
         >
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <div className="flex justify-center items-center">
+            <Image
+              src={fullLogoIcon}
+              alt=""
+              className={`transition duration-800 ease-linear max-w-[50%] `}
+            />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-700 text-center">
             Sign in to your account
           </h2>
-        </motion.div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="Username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ahmed" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="Password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div>
+          <p className="text-gray-600 text-center">Enter your details below.</p>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="Username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="Username"
+                          {...field}
+                          className="mt-1 block w-full border border-gray-300 rounded-md bg-gray-100 text-gray-700"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="Password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type="password"
+                          placeholder="Password"
+                          {...field}
+                          className="mt-1 block w-full border border-gray-300 rounded-md bg-gray-100 text-gray-700"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full py-3 px-6 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200"
               >
-                {loading ? (
-                  <Spinner /> // Replace with your spinner component
-                ) : (
-                  "Sign in"
-                )}
+                {loading ? <Spinner color="white" /> : "Sign in"}
               </motion.button>
-            </div>
-          </form>
-        </Form>
-      </motion.div>
+            </form>
+          </Form>
+        </motion.div>
+      </div>
     </div>
   );
 };

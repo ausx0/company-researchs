@@ -19,9 +19,9 @@ export type SubTestsData = {
 };
 
 const resultOptions = {
-  "1": "Number",
-  "2": "Short Text",
-  "3": "Long Text",
+  "1": "Short Text",
+  "2": "Long Text",
+  "3": "Number",
 };
 
 export const columns: ColumnDef<SubTestsData>[] = [

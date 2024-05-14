@@ -615,7 +615,7 @@ const StepTwoForm = (
                       <div>Total Price: {totalPrice}</div>
                       <div>
                         <Button
-                          disabled={orders.values.length === 0}
+                          // disabled={orders.values.length === 0}
                           className="flex gap-3"
                           type="submit"
                           color="primary"
