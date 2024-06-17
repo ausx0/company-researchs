@@ -93,11 +93,11 @@ const TestModalForm: React.FC<cellActionProps> = ({
   });
 
   const TestMutation = useMutation({
-    mutationKey: ["Test"],
+    mutationKey: ["add-test"],
     mutationFn: apiSaveTest,
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["LabTest"],
+        queryKey: ["lab-tests"],
       }); // Invalidate the 'Test' query
     },
     onMutate: () => {

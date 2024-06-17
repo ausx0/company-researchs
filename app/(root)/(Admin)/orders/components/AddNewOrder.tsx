@@ -22,7 +22,7 @@ const AddNewOrder = () => {
         radius="sm"
         size="sm"
         variant="flat"
-        onClick={() => router.push("/add")}
+        onClick={() => router.push("/orders/add")}
       >
         Add Order <Plus />
       </Button>

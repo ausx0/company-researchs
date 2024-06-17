@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function TestsDataTable() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["LabTests"], // Fix: Pass the queryKey as an array
+    queryKey: ["lab-tests"], // Fix: Pass the queryKey as an array
     queryFn: apiGetTests,
   });
 

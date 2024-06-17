@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Check, MoreHorizontal, X } from "lucide-react";
 import { CellAction } from "./cell-actions";
 
 // This type is used to define the shape of our data.
@@ -35,6 +35,15 @@ export const columns: ColumnDef<SamplesData>[] = [
   {
     accessorKey: "State",
     header: "State",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // console.log(value);
+      return row.original.State === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
   },
   {
     id: "actions",

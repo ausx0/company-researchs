@@ -143,7 +143,7 @@ const HoemPage = () => {
             <SendToBack className="" />
           </CardHeader>
           <Separator className="my-4" />
-          <CardContent className="px-0">
+          <CardContent className="px-0 h-[50vh] overflow-auto">
             {CurrentOrdersLoading ? (
               <Loading />
             ) : (

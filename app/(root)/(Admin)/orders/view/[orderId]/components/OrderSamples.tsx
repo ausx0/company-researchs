@@ -12,6 +12,7 @@ import {
   OrderTestColumns,
 } from "./OrderSamplesColumns";
 import { motion } from "framer-motion";
+import { OrderSubTestsColumns } from "./OrderSamplesColumns";
 
 const OrderSamples = () => {
   const router = useRouter();
@@ -27,7 +28,32 @@ const OrderSamples = () => {
     return <Loading />;
   }
 
-  const renderSubComponent = ({ row }: { row: Row<OrderSamplesData> }) => {
+  const renderSampleComponent = ({ row }: { row: Row<OrderSamplesData> }) => {
+    console.log("Row Data:", row.original); // Log the row data
+    console.log("SubTests Data:", row.original.SubTests); // Log the Tests data
+    return (
+      <motion.div
+        className="px-10 p-4 overflow-hidden"
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <DataTable
+          data={row.original.SubTests}
+          columns={OrderSubTestsColumns}
+          searchKey="Test_identifier"
+          getRowCanExpand={() => false}
+          // renderSubComponent={renderSampleComponent}
+          showColumns={false}
+          showSearch={false}
+          showPagination={false}
+        />
+      </motion.div>
+    );
+  };
+
+  const renderTestComponent = ({ row }: { row: Row<OrderSamplesData> }) => {
     console.log("Row Data:", row.original); // Log the row data
     console.log("Tests Data:", row.original.Tests); // Log the Tests data
     return (
@@ -43,7 +69,7 @@ const OrderSamples = () => {
           columns={OrderTestColumns}
           searchKey="Test_identifier"
           getRowCanExpand={() => true}
-          renderSubComponent={renderSubComponent}
+          renderSubComponent={renderSampleComponent}
           showColumns={false}
           showSearch={false}
           showPagination={false}
@@ -59,7 +85,7 @@ const OrderSamples = () => {
         columns={OrderSampleColumns}
         searchKey="Sample_identifier"
         getRowCanExpand={() => true}
-        renderSubComponent={renderSubComponent}
+        renderSubComponent={renderTestComponent}
       />
     </>
   );

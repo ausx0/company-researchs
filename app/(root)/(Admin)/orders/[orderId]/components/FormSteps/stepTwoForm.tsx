@@ -7,13 +7,14 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { OrderTestsSchema } from "../../validation/orderSchema";
 import { z } from "zod";
-import { Plus, Trash2, UploadCloud, Wand } from "lucide-react";
+import { Plus, TestTubes, Trash2, UploadCloud, Wand } from "lucide-react";
 import PatientModalForm from "@/app/(root)/(Admin)/customers/patients/components/PatientModalForm";
 import {
   Card,
@@ -40,6 +41,7 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import toast from "react-hot-toast";
 import PaymentForm from "./PaymentForm";
 import ModalAlert from "@/app/(root)/(Admin)/components/modals/ModalAlert";
+import OrderSamples from "../../../view/[orderId]/components/OrderSamples";
 interface OptionType {
   value: string;
   label: string;
@@ -86,6 +88,7 @@ const StepTwoForm = (
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
   const [orderIdCounter, setOrderIdCounter] = useState(1); // Initialize ID counter
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     control,
@@ -454,10 +457,24 @@ const StepTwoForm = (
         isOpen={openAlertModal}
         handleNoAction={handleNoSample}
         handleYesAction={handleYesSample}
-        // onClose={handleNoSample}
+        onClose={() => setOpenAlertModal(false)}
         // onConfirm={handleYesSample}
       />
 
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        onClose={onClose}
+        size="full"
+        className="overflow-hidden max-h-[90vh]"
+      >
+        <ModalContent className="overflow-hidden">
+          <ModalHeader>Samples Information</ModalHeader>
+          <ModalBody className="overflow-auto">
+            <OrderSamples />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <PatientModalForm
         key={modalKey} // Add the key prop here
         isOpen={isModalOpen}
@@ -500,8 +517,8 @@ const StepTwoForm = (
         </Card>
         <div className="w-full">
           <div className="flex flex-row-reverse gap-10">
-            <div className="flex flex-col gap-10 w-3/12 h-full">
-              <Card className="shadow-lg h-[50vh]">
+            <div className="flex flex-col gap-10 w-[40%] h-full">
+              <Card className="shadow-lg ">
                 <CardHeader>Total</CardHeader>
                 <Separator />
                 <CardContent>
@@ -515,7 +532,14 @@ const StepTwoForm = (
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <Card className="shadow-lg h-auto w-full">
-                  <CardHeader>Sample Information </CardHeader>
+                  <CardHeader className="flex p-4 flex-row justify-between">
+                    <div>Sample Information</div>
+                    <div>
+                      <Button onPress={onOpen} color="primary">
+                        <TestTubes className="w-6  " /> All Samples
+                      </Button>
+                    </div>
+                  </CardHeader>
                   <Separator />
                   <CardContent className="m-4 flex gap-8 flex-col">
                     <div className="flex gap-4 w-auto">

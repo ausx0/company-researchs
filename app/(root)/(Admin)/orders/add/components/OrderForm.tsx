@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import ButtonLoader from "../../../components/UI/ButtonLoader";
-
+import { format } from "date-fns";
 interface OrderFormProps {
   ID?: number | string | undefined;
 }
@@ -55,7 +55,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
         patient_id: Number(orderData.Patient_id), // convert to number
         Client_id: Number(orderData.Client_id), // convert to number
         Referred: orderData.Referred,
-        Date: orderData.Date,
+        Date: format(new Date(orderData.Date), "dd/MM/yyyy"), // format the date
         Notes: orderData.Notes,
       }
     : {
@@ -63,7 +63,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
         patient_id: undefined, // set to undefined
         client_id: undefined, // set to undefined
         Referred: "",
-        Date: "",
+        Date: format(new Date(), "yyyy-MM-dd"), // set today's date in YYYY-MM-DD format
         Notes: "",
       };
 
@@ -79,7 +79,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     defaultValues,
   });
 
-  const { isPending: AddOrderLoading, mutate: AddOrderMutation } = useMutation({
+  const {
+    isPending: AddOrderLoading,
+    mutate: AddOrderMutation,
+    isSuccess,
+  } = useMutation({
     mutationKey: ["AddOrder"],
     mutationFn: apiCreateOrder,
     onSuccess: (data) => {
@@ -153,11 +157,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     setIsModalOpen(false);
     setModalKey((prevKey) => prevKey + 1); // Increment the key every time the modal is closed
   };
-
   useEffect(() => {
     const today = new Date();
-    const todayISO = formatISO(today, { representation: "date" });
-    setValue("Date", todayISO);
+    const todayFormatted = format(today, "dd/MM/yyyy");
+    setValue("Date", todayFormatted);
   }, [setValue]);
 
   return (
@@ -180,14 +183,25 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
             />
           </div>
           {watch("Type") === 1 && (
-            <SelectField
-              control={control}
-              name="Client_id"
-              label="Patient"
-              errors={errors}
-              options={PatientOptions()}
-              isLoading={patientsLoading}
-            />
+            <div>
+              <div className="flex items-center py-2">
+                <span>Patient</span>
+                <div
+                  className="ml-2 bg-slate-400 w-6 rounded cursor-pointer"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <Plus color="white" />
+                </div>
+              </div>
+              <SelectField
+                control={control}
+                name="Client_id"
+                label=""
+                errors={errors}
+                options={PatientOptions()}
+                isLoading={patientsLoading}
+              />
+            </div>
           )}
           {watch("Type") === 2 && (
             <SelectField
@@ -255,10 +269,9 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
               <InputField
                 // label="Order Name"
                 name={"Date"}
-                type="date"
+                type="text"
                 control={control}
                 errors={errors}
-
                 // placeholder="Order Name"
                 // control={undefined}
                 // errors={undefined}
@@ -283,10 +296,14 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
             <Button
               type="submit"
               color="primary"
-              disabled={AddOrderLoading}
+              disabled={AddOrderLoading || isSuccess}
               // disabled={AddOrderLoading}
             >
-              {AddOrderLoading ? <Spinner color="default" /> : "Save"}
+              {AddOrderLoading || isSuccess ? (
+                <Spinner color="default" />
+              ) : (
+                "Save"
+              )}
             </Button>
           </div>
         </div>

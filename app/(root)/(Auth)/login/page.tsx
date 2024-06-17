@@ -27,6 +27,7 @@ import { createMongoAbility } from "@casl/ability";
 import { useAuth } from "@/app/hooks/useAuth";
 import Image from "next/image";
 import fullLogoIcon from "@/public/OreoLogoFullPNG.png";
+import authImg from "@/public/auth-img.png";
 
 const formSchema = z.object({
   Username: z.string().min(2, {
@@ -83,11 +84,20 @@ const LoginPage = () => {
     // }
   }
   // Animation controls for clouds
-
   return (
     <div className="min-h-screen flex items-stretch text-white">
-      <div className="lg:flex w-1/2  flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-        <div className="text-center">
+      <div
+        style={{
+          backgroundImage: `url(${authImg.src})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundColor: "#000", // Add a background color
+        }} // Use inline styles to set the background images
+        className={`lg:flex w-1/2 flex items-center justify-center text-center`} // Add text-center here to center the text
+      >
+        <div className="bg-black bg-opacity-50 p-4 rounded">
+          {" "}
+          {/* Add this div to create a semi-transparent overlay for the text */}
           <h1 className="text-5xl font-bold text-white mb-4">Welcome Back!</h1>
           <p className="text-white text-opacity-70">
             To keep connected with us please login with your personal info

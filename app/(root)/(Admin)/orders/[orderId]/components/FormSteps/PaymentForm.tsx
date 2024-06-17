@@ -32,7 +32,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
     defaultValues: {
       Order_id: id ? Number(id) : undefined,
       Payer: "",
-      Bofore_discount: undefined,
+      Bofore_discount: orderData?.Bofore_discount,
       Discount: undefined,
       Total: orderData?.Total,
       Payment_status: undefined,
@@ -67,6 +67,12 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
               {formatPrice(watch("Total"))}
             </div>
           </div>
+          <div className="flex justify-between items-center">
+            <div className="text-lg">Before Discount:</div>
+            <div className="font-bold text-lg ">
+              {formatPrice(watch("Bofore_discount"))}
+            </div>
+          </div>
           <InputField
             control={control}
             name="Payer"
@@ -74,13 +80,14 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
             type="text"
             errors={errors}
           />
-          <InputField
+          {/* <InputField
             control={control}
             name="Bofore_discount"
             label="Before Discount"
             type="number"
             errors={errors}
-          />
+          /> */}
+
           <InputField
             control={control}
             name="Discount"

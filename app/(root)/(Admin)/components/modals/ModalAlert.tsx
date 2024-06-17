@@ -13,7 +13,7 @@ type ModalProps = {
   isOpen: boolean;
   title?: string;
   description: string;
-  // onClose?: () => void;
+  onClose?: () => void;
   handleYesAction: () => void;
   handleNoAction: () => void;
 };
@@ -24,7 +24,7 @@ const ModalAlert: React.FC<ModalProps> = ({
   isOpen,
   title,
   description,
-  // onClose,
+  onClose,
   handleNoAction,
   handleYesAction,
 }) => {
@@ -33,9 +33,9 @@ const ModalAlert: React.FC<ModalProps> = ({
       backdrop={backdrop}
       size={size}
       isOpen={isOpen}
-      // onClose={onClose}
+      onClose={onClose}
       // isDismissable={false}
-      // isKeyboardDismissDisabled={true}
+      // isKeyboardDismissDisabled={false}
     >
       <ModalContent>
         <ModalHeader className="text-cyan-400">{title}</ModalHeader>

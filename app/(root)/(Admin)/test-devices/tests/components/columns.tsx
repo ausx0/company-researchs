@@ -2,16 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Check, MoreHorizontal, X } from "lucide-react";
 import { CellAction } from "./cell-actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type TestsData = {
   ID: string;
-  OnePrice: string;
-  OnePage: string;
-  Text: string;
+  OnePrice: number;
+  OnePage: number;
+  Text: number;
   Price: number;
   Sample: string;
   Tests: string;
@@ -24,20 +24,8 @@ export const columns: ColumnDef<TestsData>[] = [
     header: "ID",
   },
   {
-    accessorKey: "OnePrice",
-    header: "One Price",
-  },
-  {
-    accessorKey: "OnePage",
-    header: "One Page",
-  },
-  {
-    accessorKey: "Text",
-    header: "Text",
-  },
-  {
-    accessorKey: "Price",
-    header: "Price",
+    accessorKey: "Test",
+    header: "Test",
   },
   {
     accessorKey: "Sample",
@@ -54,12 +42,61 @@ export const columns: ColumnDef<TestsData>[] = [
     },
   },
   {
-    accessorKey: "Test",
-    header: "Test",
+    accessorKey: "OnePrice",
+    header: "One Price",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // console.log(value);
+      return row.original.OnePrice === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
   },
+  {
+    accessorKey: "OnePage",
+    header: "One Page",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // console.log(value);
+      return row.original.OnePage === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
+  },
+  {
+    accessorKey: "Text",
+    header: "Text",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // console.log(value);
+      return row.original.Text === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
+  },
+  {
+    accessorKey: "Price",
+    header: "Price",
+  },
+
   {
     accessorKey: "State",
     header: "State",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // console.log(value);
+      return row.original.State === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
   },
   {
     id: "actions",
