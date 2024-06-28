@@ -55,7 +55,7 @@ export const CurrentCellAction: React.FC<cellActionProps> = ({ data }) => {
     onError: () => toast.error("Something Wrong Happened "),
   });
   const onDelete = async () => {
-    console.log(`Order_id = ${data.ID}`);
+    // .log(`Order_id = ${data.ID}`);
     DeleteOrderMutation.mutate({ Order_id: data.ID });
     setOpen(false);
   };

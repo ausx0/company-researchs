@@ -34,7 +34,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const handleEdit = async () => {
     const Item = await apiGetItem(data.ID); // Fetch the Item data
-    console.log(data.ID);
+    // .log(data.ID);
     setEditingItem(Item); // Set the Item being edited
     onOpen();
   };
@@ -64,7 +64,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
     },
   });
   const onDelete = async () => {
-    console.log(`Item_id = ${data.ID}`);
+    // .log(`Item_id = ${data.ID}`);
     DeleteItemMutation.mutate({ Item_id: data.ID });
   };
 

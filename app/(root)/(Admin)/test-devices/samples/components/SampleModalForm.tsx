@@ -108,7 +108,7 @@ const SampleModalForm: React.FC<cellActionProps> = ({
 
   useEffect(() => {
     if (sample) {
-      console.log("Sample", sample);
+      // .log("Sample", sample);
       form.reset({
         Sample: sample.Sample,
       });

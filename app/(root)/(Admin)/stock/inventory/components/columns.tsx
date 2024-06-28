@@ -79,7 +79,7 @@ export const columns: ColumnDef<InventoryData>[] = [
     header: "In Use",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.In_use === 1 ? (
         <Check color="green" />
       ) : (

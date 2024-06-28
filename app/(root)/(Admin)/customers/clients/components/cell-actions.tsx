@@ -54,7 +54,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
     },
   });
   const onDelete = async () => {
-    console.log(`Client_id = ${data.ID}`);
+    // .log(`Client_id = ${data.ID}`);
     DeleteClientMutation.mutate({ Client_id: data.ID });
     setOpen(false);
   };

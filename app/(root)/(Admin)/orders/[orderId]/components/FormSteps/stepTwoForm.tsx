@@ -75,7 +75,7 @@ const StepTwoForm = (
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Get the id from the URL
 
-  // console.log("this is the id", id);
+  // // .log("this is the id", id);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Add this state
   const [modalKey, setModalKey] = useState(0); // Add this state
@@ -89,92 +89,7 @@ const StepTwoForm = (
   const [formComplete, setFormComplete] = useState(false);
   const [orderIdCounter, setOrderIdCounter] = useState(1); // Initialize ID counter
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const {
-    control,
-    watch,
-    getValues,
-    reset,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof OrderTestsSchema>>({
-    resolver: zodResolver(OrderTestsSchema),
-    defaultValues: {
-      Order_id: id ? Number(id) : undefined,
-      Sample_id: undefined,
-      Tests: {
-        Test_id: undefined,
-        SubTest_id: [],
-      },
-      Patient_id: undefined,
-      Total: totalPrice,
-      Received: 0,
-    },
-  });
-
-  const handleAddSample = () => {
-    const Test = getValues("Tests.Test_id");
-    const SubTest = getValues("Tests.SubTest_id");
-
-    // Check if Test and SubTest are not empty
-    if (!Test || !SubTest || SubTest.length === 0) {
-      if (orderData?.Type === 2 && watch("Patient_id")?.valueOf.length === 0) {
-        toast.error("Please select a Patient");
-        return;
-      }
-      // Handle the case when Test or SubTest is empty
-      // For example, show a toast message or alert
-      // return early to prevent adding an empty order
-      toast.error("Please select a Test and SubTest");
-      return;
-    }
-
-    // Get the label for the Test and SubTest
-    const TestOption = TestsOptions().find(
-      (option: { value: number | undefined }) => option.value === Test
-    );
-
-    const TestLabel = TestOption?.label;
-
-    const SubTestOptions = SubTest
-      ? SubTest.map((subTestId) =>
-          SubTestsOptions().find(
-            (option: { value: number }) => option.value === subTestId
-          )
-        )
-      : [];
-
-    const SubTestLabels = SubTestOptions.map((option) => option?.label);
-
-    // const TestPrice = TestOption?.Price || 0;
-    const SubTestPrices = SubTestOptions.map((option) => option?.Price || 0);
-    const totalSubTestPrice = SubTestPrices.reduce((a, b) => a + b, 0);
-
-    // Update Total field in form data
-    const newTotal = totalPrice + totalSubTestPrice;
-    setTotalPrice(newTotal);
-
-    console.log("new total", newTotal);
-
-    const newOrder = {
-      ID: orderIdCounter, // Use the ID counter
-      Test: { id: Test, label: TestLabel },
-      SubTest: SubTest?.map((id, index) => ({
-        id,
-        label: SubTestLabels[index],
-      })),
-      Price: totalSubTestPrice, // Add this line
-    };
-
-    console.log("newOrder", newOrder);
-    setOrderIdCounter((prevCounter) => prevCounter + 1);
-
-    setOrders((prevOrders) => {
-      const updatedOrders = [...prevOrders, newOrder];
-      return updatedOrders;
-    });
-  };
+  const [addedSubTests, setAddedSubTests] = useState<number[]>([]);
 
   const {
     data: patientsData,
@@ -205,6 +120,35 @@ const StepTwoForm = (
     queryKey: ["Lab-Samples"],
     queryFn: apiGetSamples,
   });
+
+  const {
+    control,
+    watch,
+    getValues,
+    reset,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof OrderTestsSchema>>({
+    resolver: zodResolver(OrderTestsSchema),
+    defaultValues: {
+      Order_id: id ? Number(id) : undefined,
+      Sample_id: undefined,
+      Tests: {
+        Test_id: undefined,
+        SubTest_id: [],
+      },
+      Patient_id: undefined,
+      Total: totalPrice,
+      Received: 0,
+    },
+  });
+
+  const Test = getValues("Tests.Test_id");
+  const SubTest = getValues("Tests.SubTest_id");
+  const patientId = getValues("Patient_id");
+
+  // .log(watch("Tests.SubTest_id"));
 
   const sampleId = watch("Sample_id"); // Watch the "sample_id" field
 
@@ -252,7 +196,7 @@ const StepTwoForm = (
       });
     },
   });
-  // console.log("error", errors);
+  // // .log("error", errors);
 
   const handleNoSample = () => {
     setValue("Received", 0);
@@ -270,6 +214,18 @@ const StepTwoForm = (
 
   const onSubmit = (data: z.infer<typeof OrderTestsSchema>) => {
     // setFormComplete(false);
+    // Check if Test and SubTest are not empty
+    if (!Test || !SubTest || SubTest.length === 0) {
+      if (orderData?.Type === 2 && patientId === undefined) {
+        toast.error("Please select a Patient");
+        return;
+      }
+      // Handle the case when Test or SubTest is empty
+      // For example, show a toast message or alert
+      // return early to prevent adding an empty order
+      toast.error("Please select a Test and SubTest");
+      return;
+    }
 
     if (openAlertModal) {
       const dataWithOrders = {
@@ -284,6 +240,7 @@ const StepTwoForm = (
       setFormComplete(false);
       reset();
       setOpenAlertModal(false);
+      setOrders([]);
     } else setOpenAlertModal(true);
   };
 
@@ -297,7 +254,7 @@ const StepTwoForm = (
     setOpen(true);
   };
 
-  // console.log("sample id", sampleId);
+  // // .log("sample id", sampleId);
 
   const selectAllSubTests = () => {
     const allSubTestsIds = SubTestsOptions().map(
@@ -327,13 +284,13 @@ const StepTwoForm = (
   };
 
   const testId = watch("Tests.Test_id"); // Watch the "testId" field
-  // console.log("testId:", testId); // Log the testId value
+  // // .log("testId:", testId); // Log the testId value
 
   useEffect(() => {
-    // console.log("mutating with testId:", testId); // Log the testId value before mutation
+    // // .log("mutating with testId:", testId); // Log the testId value before mutation
 
     if (testId) {
-      // console.log("mutating with testId:", testId); // Log the testId value before mutation
+      // // .log("mutating with testId:", testId); // Log the testId value before mutation
       SubTestsMutation.mutate(String(testId)); // Trigger the mutation when "testId" changes
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -343,42 +300,13 @@ const StepTwoForm = (
 
   const SubTestsOptions = () => {
     if (!SubTestData) return [];
-    return SubTestData.map((item: any) => ({
+    return SubTestData!.map((item: any) => ({
       value: item.ID,
       label: item.SubTest,
       Price: item.Price, // Assuming the data has a Price property
     }));
   };
 
-  // const calculateTotalPrice = () => {
-  //   const totalPrice = orders.reduce((acc, curr) => acc + curr.Price, 0);
-  //   setTotalPrice(totalPrice);
-  // };
-
-  // useEffect(() => {
-  //   calculateTotalPrice(); // Calculate total price initially and when orders change
-  // }, [orders]);
-
-  // useEffect(() => {
-  //   console.log("Tests", orders);
-  // }, [orders]);
-
-  // useEffect(() => {
-  //   if (sampleId) {
-  //     setOpen(true); // Open the modal
-  //   }
-  //   // Other code...
-  // }, [sampleId]);
-
-  // useEffect(() => {
-  //   if (SamplesData) {
-  //     setValue("Sample_id", SamplesData[0].ID);
-  //   }
-  // }, [SamplesData]);
-
-  // Define a function to handle delete action
-  // Define a function to handle delete action
-  // Define a function to handle delete action
   const handleDelete = (orderId: string) => {
     // Find the order to be deleted
     const orderToDelete = orders.find((order) => order.ID === orderId);
@@ -395,7 +323,7 @@ const StepTwoForm = (
   };
   useEffect(() => {
     // Recalculate total price after removing the order
-    console.log("total price", totalPrice);
+    // .log("total price", totalPrice);
     setValue("Total", totalPrice);
   }, [orders]);
 
@@ -435,6 +363,75 @@ const StepTwoForm = (
       ),
     },
   ];
+
+  const handleAddSample = () => {
+    console.log("Test:", Test, "SubTest:", SubTest);
+
+    if (!Test || !SubTest || SubTest.length === 0) {
+      if (orderData?.Type === 2 && patientId === undefined) {
+        toast.error("Please select a Patient");
+        return;
+      }
+      toast.error("Please select a Test and SubTest");
+      return;
+    }
+
+    const TestOption = TestsOptions().find(
+      (option: { value: number }) => option.value === Test
+    );
+    const TestLabel = TestOption?.label;
+
+    // Assuming SubTestsOptions() returns an array of { value, label, Price } for each subtest
+    // and SubTest is an array of selected subtest IDs
+    const SubTestOptions = SubTestsOptions().filter(
+      (option: { value: number }) => SubTest.includes(option.value)
+    );
+
+    const SubTestLabels = SubTestOptions.map(
+      (option: { label: any }) => option.label
+    );
+    const SubTestPrices = SubTestOptions.map(
+      (option: { Price: any }) => option.Price
+    );
+    const totalSubTestPrice = SubTestPrices.reduce(
+      (a: any, b: any) => a + b,
+      0
+    );
+
+    const newTotal = totalPrice + totalSubTestPrice;
+    setTotalPrice(newTotal);
+
+    // .log("new total", newTotal);
+
+    const newOrder = {
+      ID: orderIdCounter,
+      Test: { id: Test, label: TestLabel },
+      SubTest: SubTestOptions.map((option: { value: any; label: any }) => ({
+        id: option.value,
+        label: option.label,
+      })),
+      Price: totalSubTestPrice,
+    };
+
+    // .log("newOrder", newOrder);
+    setOrderIdCounter((prevCounter) => prevCounter + 1);
+
+    setOrders((prevOrders) => [...prevOrders, newOrder]);
+    // Update the addedSubTests state with the newly added SubTest IDs
+    setAddedSubTests((prevAdded) => [...prevAdded, ...SubTest]);
+  };
+
+  // Function to get available SubTests excluding the added ones
+  const getAvailableSubTests = () => {
+    return SubTestsOptions().filter(
+      (option: { value: number }) => !addedSubTests.includes(option.value)
+    );
+  };
+
+  // Example usage of getAvailableSubTests in rendering
+  // This part of the code would be used in your component's return statement
+  // to render the select field with options
+  const availableSubTests = getAvailableSubTests();
 
   return (
     <>
@@ -603,7 +600,7 @@ const StepTwoForm = (
                           label="Sub Test"
                           control={control}
                           name="Tests.SubTest_id"
-                          options={SubTestsOptions()} // Pass the options directly
+                          options={availableSubTests} // Pass the options directly
                         />
                       </div>
                       <div className="flex items-end w-auto ">

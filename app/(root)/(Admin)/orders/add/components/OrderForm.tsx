@@ -46,24 +46,24 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
 
   const { data: orderData } = useQuery<OrderData>({
     queryKey: ["Lab-Orders"],
-    // queryFn: () => (ID ? apiGetOrder(ID) : Promise.resolve(null)),
+    queryFn: () => (ID ? apiGetOrder(ID) : Promise.resolve(null)),
   });
 
   const defaultValues = orderData
     ? {
         Type: orderData.Type,
-        patient_id: Number(orderData.Patient_id), // convert to number
-        Client_id: Number(orderData.Client_id), // convert to number
+        Patient_id: Number(orderData.Patient_id),
+        Client_id: Number(orderData.Client_id),
         Referred: orderData.Referred,
-        Date: format(new Date(orderData.Date), "dd/MM/yyyy"), // format the date
+        Date: format(new Date(orderData.Date), "yyyy-MM-dd"),
         Notes: orderData.Notes,
       }
     : {
         Type: 1,
-        patient_id: undefined, // set to undefined
-        client_id: undefined, // set to undefined
+        Patient_id: undefined,
+        Client_id: undefined,
         Referred: "",
-        Date: format(new Date(), "yyyy-MM-dd"), // set today's date in YYYY-MM-DD format
+        Date: format(new Date(), "yyyy-MM-dd"),
         Notes: "",
       };
 
@@ -87,18 +87,20 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     mutationKey: ["AddOrder"],
     mutationFn: apiCreateOrder,
     onSuccess: (data) => {
-      console.log(data);
+      // .log(data);
       if (data.State === "OK") {
         toast.success("Order added successfully");
         router.push(`/orders/${data.Order_id}`);
       }
+    },
+    onError: (error) => {
+      toast.error("Error adding order");
     },
   });
 
   const onSubmit = (data: z.infer<typeof StepOneOrderSchema>) => {
     // Here you can access the form data
 
-    console.log(data);
     AddOrderMutation(data);
     // Perform any actions you need, such as sending the data to a server
     // ...
@@ -158,9 +160,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     setModalKey((prevKey) => prevKey + 1); // Increment the key every time the modal is closed
   };
   useEffect(() => {
-    const today = new Date();
-    const todayFormatted = format(today, "dd/MM/yyyy");
-    setValue("Date", todayFormatted);
+    setValue("Date", format(new Date(), "yyyy-MM-dd"));
   }, [setValue]);
 
   return (

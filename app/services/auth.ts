@@ -29,14 +29,14 @@ export async function Login(data: any) {
         localStorage.setItem("userData", JSON.stringify(userData)); // Save userData to local storage
         localStorage.setItem("userRole", role); // Save userData to local storage
       }
-      // console.log(response.data);
+      // // .log(response.data);
       // router.push("/home");
       return response.data; // Return original response data
     } else {
       throw new Error("Login failed");
     }
   } catch (error) {
-    console.error(error);
+    // .error(error);
     throw error; // Throw the error so it can be handled by react-query
   }
 }

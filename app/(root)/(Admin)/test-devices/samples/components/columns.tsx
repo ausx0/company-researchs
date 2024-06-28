@@ -37,7 +37,7 @@ export const columns: ColumnDef<SamplesData>[] = [
     header: "State",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.State === 1 ? (
         <Check color="green" />
       ) : (

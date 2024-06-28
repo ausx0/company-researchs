@@ -9,9 +9,9 @@ const AddConsultationForm = ({ params }: any) => {
         // For example, fetch data from an API
         const response = await fetch("your-api-endpoint");
         const data = await response.json();
-        console.log(data);
+        // .log(data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // .error("Error fetching data:", error);
       }
     };
 

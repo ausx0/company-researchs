@@ -78,9 +78,9 @@ const LoginPage = () => {
     loginMutation.mutate(values);
     // try {
     //   login(values);
-    //   console.log(values);
+    //   // .log(values);
     // } catch (error) {
-    //   console.log(error);
+    //   // .log(error);
     // }
   }
   // Animation controls for clouds

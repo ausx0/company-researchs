@@ -80,8 +80,8 @@ const SampleResultForm = () => {
         Subtest_id: querySubtests[subIndex].Subtest_id, // Include the Subtest_id from query data
       })),
     };
-    console.log("Submitting card index:", cardIndex);
-    console.log("Card data:", mutatedData);
+    // .log("Submitting card index:", cardIndex);
+    // .log("Card data:", mutatedData);
     mutate(mutatedData);
   };
 

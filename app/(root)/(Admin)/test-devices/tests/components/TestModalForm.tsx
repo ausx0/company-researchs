@@ -117,7 +117,7 @@ const TestModalForm: React.FC<cellActionProps> = ({
     },
   });
 
-  console.log("Test", test?.ID);
+  // .log("Test", test?.ID);
   const onSubmit: SubmitHandler<Test> = (values) => {
     if (test) {
       TestMutation.mutate({ ...values, ID: test.ID });

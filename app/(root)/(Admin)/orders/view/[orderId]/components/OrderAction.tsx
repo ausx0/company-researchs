@@ -20,7 +20,7 @@ const OrderAction = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("actions", data);
+      // .log("actions", data);
     }
   }, [data]);
 

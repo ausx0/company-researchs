@@ -49,7 +49,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
   });
 
   const onSubmit = (data: z.infer<typeof OrderPaymentSchema>) => {
-    console.log(data);
+    // .log(data);
     FinishOrder.mutate(data);
   };
 

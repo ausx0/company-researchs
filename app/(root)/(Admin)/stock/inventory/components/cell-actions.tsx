@@ -38,7 +38,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const handleEdit = async () => {
     const Inventory = await apiGetInventory(data.ID); // Fetch the Inventory data
-    console.log(data.ID);
+    // .log(data.ID);
     setEditingInventory(Inventory); // Set the Inventory being edited
     onOpen();
   };
@@ -68,7 +68,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
     },
   });
   const onDelete = async () => {
-    console.log(`Inventory_id = ${data.ID}`);
+    // .log(`Inventory_id = ${data.ID}`);
     DeleteInventoryMutation.mutate({ Inventory_id: data.ID });
   };
 

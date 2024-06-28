@@ -29,8 +29,6 @@ const OrderSamples = () => {
   }
 
   const renderSampleComponent = ({ row }: { row: Row<OrderSamplesData> }) => {
-    console.log("Row Data:", row.original); // Log the row data
-    console.log("SubTests Data:", row.original.SubTests); // Log the Tests data
     return (
       <motion.div
         className="px-10 p-4 overflow-hidden"
@@ -54,8 +52,6 @@ const OrderSamples = () => {
   };
 
   const renderTestComponent = ({ row }: { row: Row<OrderSamplesData> }) => {
-    console.log("Row Data:", row.original); // Log the row data
-    console.log("Tests Data:", row.original.Tests); // Log the Tests data
     return (
       <motion.div
         className="px-10 p-4 overflow-hidden"

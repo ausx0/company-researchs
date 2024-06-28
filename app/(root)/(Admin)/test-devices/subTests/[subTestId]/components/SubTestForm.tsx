@@ -65,7 +65,7 @@ const SubTestForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     TestMutation.mutate(values);
-    console.log(values);
+    // .log(values);
   }
   return (
     <>

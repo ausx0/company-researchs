@@ -22,7 +22,7 @@ interface User {
 }
 
 export function defineAbilitiesFor(user: User) {
-  console.log(user);
+  // .log(user);
   const { can, build, cannot, rules } = new AbilityBuilder<AppAbility>(
     createMongoAbility
   );

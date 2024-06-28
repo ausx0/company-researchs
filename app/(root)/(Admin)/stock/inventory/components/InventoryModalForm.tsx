@@ -112,7 +112,7 @@ const InventoryModalForm: React.FC<cellActionProps> = ({
     },
   });
 
-  console.log("Inventory", Inventory?.ID);
+  // .log("Inventory", Inventory?.ID);
   const onSubmit: SubmitHandler<Inventory> = (values) => {
     if (Inventory) {
       InventoryMutation.mutate({ ...values, ID: Inventory.ID });

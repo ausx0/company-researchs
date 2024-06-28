@@ -8,7 +8,7 @@ import { CellAction } from "./cell-actions";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type PatientsData = {
-  ID: number;
+  ID: any;
   Name: string;
   Age: number;
   Gender: number;
@@ -71,7 +71,7 @@ export const columns: ColumnDef<PatientsData>[] = [
     header: "Diabetes",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.Diabetes === 1 ? (
         <Check color="green" />
       ) : (
@@ -89,7 +89,7 @@ export const columns: ColumnDef<PatientsData>[] = [
     header: "Hypertension",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.Hypertension === 1 ? (
         <Check color="green" />
       ) : (

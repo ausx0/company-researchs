@@ -31,7 +31,7 @@ const getData = async (path: string, params?: any) => {
     const response = await axiosInstance.get(path, { params });
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -40,7 +40,7 @@ const getResponse = async (path: string) => {
     const response = await axiosInstance.get(path);
     return response;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -50,7 +50,7 @@ const postData = async (path: string, data: any) => {
     const response = await axiosInstance.post(path, data, PostOptions);
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -62,7 +62,7 @@ const postJsonData = async (path: string, data: any) => {
     });
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -74,7 +74,7 @@ const putJsonData = async (path: string, data: any) => {
     });
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -84,7 +84,7 @@ const putData = async (path: string, data: any) => {
     const response = await axiosInstance.put(path, data, PutOptions);
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -94,7 +94,7 @@ const patchData = async (path: string, data: any) => {
     const response = await axiosInstance.patch(path, data, PatchOptions);
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };
@@ -113,7 +113,7 @@ const DestroyData = async (path: string, data: any) => {
 
     return response.data;
   } catch (error: any) {
-    console.error({ error });
+    // .error({ error });
     throw new Error(error.message);
   }
 };

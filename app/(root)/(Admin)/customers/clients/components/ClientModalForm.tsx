@@ -74,7 +74,7 @@ const ClientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
   function onSubmit(values: z.infer<typeof ClientSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // .log(values);
     ClientMutation.mutate(values);
 
     // 3. Clear the form after submission.

@@ -108,7 +108,7 @@ const PurchaseModalForm: React.FC<cellActionProps> = ({
 
   useEffect(() => {
     // Reset form with the new Purchase when Purchase prop changes
-    console.log("Purchase", Purchase);
+    // .log("Purchase", Purchase);
     form.reset({
       Purchase: Purchase ? Purchase.Purchase : "",
     });

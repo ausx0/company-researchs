@@ -34,7 +34,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
 
   const handleEdit = async () => {
     const Test = await apiGetTest(data.ID); // Fetch the Test data
-    console.log(data.ID);
+    // .log(data.ID);
     setEditingTest(Test); // Set the Test being edited
     onOpen();
   };
@@ -56,7 +56,7 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
     },
   });
   const onDelete = async () => {
-    console.log(`Test_id = ${data.ID}`);
+    // .log(`Test_id = ${data.ID}`);
     DeleteTestMutation.mutate({ Test_id: data.ID });
     setOpen(false);
   };

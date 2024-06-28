@@ -46,7 +46,7 @@ export const columns: ColumnDef<TestsData>[] = [
     header: "One Price",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.OnePrice === 1 ? (
         <Check color="green" />
       ) : (
@@ -59,7 +59,7 @@ export const columns: ColumnDef<TestsData>[] = [
     header: "One Page",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.OnePage === 1 ? (
         <Check color="green" />
       ) : (
@@ -72,7 +72,7 @@ export const columns: ColumnDef<TestsData>[] = [
     header: "Text",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.Text === 1 ? (
         <Check color="green" />
       ) : (
@@ -90,7 +90,7 @@ export const columns: ColumnDef<TestsData>[] = [
     header: "State",
     cell: ({ row }) => {
       // const value = row.renderValue("In_use") as number;
-      // console.log(value);
+      // // .log(value);
       return row.original.State === 1 ? (
         <Check color="green" />
       ) : (

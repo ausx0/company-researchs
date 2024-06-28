@@ -1,6 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDown, ArrowRight, ArrowRightCircle } from "lucide-react";
 import React, { HTMLProps } from "react";
+import { OrderSampleCellAction } from "./OrderSampleAction";
+import { OrderSampleTestCellAction } from "./SampleTestActions";
+import { OrderSampleSubTestCellAction } from "./SampleSubtestAction";
 
 export interface SubTest {
   Sub_test: string;
@@ -18,6 +21,7 @@ export type OrderSamplesData = {
   Sample_identifier: string;
   Tests: any[];
   SubTests: any;
+  Sample_id?: number;
 };
 
 export const OrderSampleColumns: ColumnDef<OrderSamplesData>[] = [
@@ -64,6 +68,10 @@ export const OrderSampleColumns: ColumnDef<OrderSamplesData>[] = [
   {
     accessorKey: "Sample",
     header: "Sample",
+  },
+  {
+    header: "Actions",
+    cell: ({ row }) => <OrderSampleCellAction data={row.original} />,
   },
 ];
 
@@ -113,13 +121,17 @@ export const OrderTestColumns: ColumnDef<OrderSamplesData>[] = [
     accessorKey: "Test",
     header: "Test",
   },
+  {
+    header: "Actions",
+    cell: ({ row }) => <OrderSampleTestCellAction data={row.original} />,
+  },
 ];
 
 export const OrderSubTestsColumns: ColumnDef<OrderSamplesData>[] = [
   // ... existing columns ...
   {
-    accessorKey: "Sub_test",
-    header: "Sub Test",
+    accessorKey: "Sub_test_identifier",
+    header: "Subtest ID",
     cell: ({ row, getValue }) => (
       <div
         style={{
@@ -158,35 +170,31 @@ export const OrderSubTestsColumns: ColumnDef<OrderSamplesData>[] = [
     ),
   },
   {
-    accessorKey: "Sub_test_id",
-    header: "Sub Test ID",
-  },
-  {
-    accessorKey: "Sub_test_identifier",
-    header: "Sub Test Identifier",
-  },
-  {
-    accessorKey: "Sub_test_reference",
-    header: "Sub Test Reference",
+    accessorKey: "Sub_test",
+    header: "Subtest",
   },
   {
     accessorKey: "Sub_test_result",
-    header: "Sub Test Result",
+    header: "Subtest Result",
+    cell: ({ row }) => {
+      // Check if Sub_test_type is 2, and if so, render null for Sub_test_result
+      const subTestType = row.original.SubTests?.Sub_test_type;
+      const subTestResult = row.original.SubTests?.Sub_test_result;
+      return subTestType === 2 ? null : subTestResult;
+    },
   },
   {
-    accessorKey: "Sub_test_state",
-    header: "Sub Test State",
+    accessorKey: "Sub_test_reference",
+    header: "Subtest Reference",
   },
+
   {
     accessorKey: "Sub_test_status",
-    header: "Sub Test Status",
+    header: "Subtest Status",
   },
+
   {
-    accessorKey: "Sub_test_type",
-    header: "Sub Test Type",
-  },
-  {
-    accessorKey: "Subtest_template",
-    header: "Sub Test Template",
+    header: "Actions",
+    cell: ({ row }) => <OrderSampleSubTestCellAction data={row.original} />,
   },
 ];

@@ -19,7 +19,7 @@ const OrderFormDynamic = () => {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Get the id from the URL
 
-  console.log("this is the id", id);
+  // .log("this is the id", id);
   const [currentStep, setCurrentStep] = useState(2); // Add this state
 
   const handleNext = () => {};

@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     pathname === "/verifyemail";
 
   const token = cookieStore.get("token");
-  // console.log(token?.value);
+  // // .log(token?.value);
 
   if (pathname.startsWith("/_next")) return NextResponse.next();
 

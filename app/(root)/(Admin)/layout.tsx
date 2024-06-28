@@ -17,7 +17,7 @@ export default function DashboardLayout({
   useEffect(() => {
     // Listen for a custom event from the server
     socket.on("notifications", (data) => {
-      console.log("Received data from server:", data);
+      // .log("Received data from server:", data);
       MessageToast({ description: data });
     });
 
