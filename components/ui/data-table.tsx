@@ -133,9 +133,9 @@ export function DataTable<TData, TValue>({
         </div>
       )}
       <Table>
-        <TableHeader>
+        <TableHeader style={{ padding: "1px", height: "10px" }}>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="m-0">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
@@ -160,12 +160,13 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
                 <TableRow
+                  style={{ height: "5px" }}
                   className="hover:bg-slate-200"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell style={{ padding: "4px" }} key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

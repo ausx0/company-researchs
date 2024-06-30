@@ -48,7 +48,7 @@ export const columns: ColumnDef<OrdersData>[] = [
     header: "Referred",
   },
   {
-    accessorKey: "payment_status",
+    accessorKey: "Payment_status",
     header: "Payment Status",
   },
   {

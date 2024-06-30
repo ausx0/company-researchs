@@ -59,6 +59,8 @@ export const OrderPaymentSchema = z.object({
   Bofore_discount: z.coerce.number().optional(),
   Discount: z.coerce.number().optional(),
   Total: z.coerce.number().optional(),
-  Payment_status: z.coerce.number().optional(),
-  Paid: z.coerce.number().optional(),
+  Payment_status: z.coerce.string().optional(),
+  Payment_method: z.coerce.string().optional(),
+  Transaction_id: z.coerce.string().optional(),
+  Paid: z.coerce.string().optional(),
 });

@@ -14,7 +14,14 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { OrderTestsSchema } from "../../validation/orderSchema";
 import { z } from "zod";
-import { Plus, TestTubes, Trash2, UploadCloud, Wand } from "lucide-react";
+import {
+  DollarSign,
+  Plus,
+  TestTubes,
+  Trash2,
+  UploadCloud,
+  Wand,
+} from "lucide-react";
 import PatientModalForm from "@/app/(root)/(Admin)/customers/patients/components/PatientModalForm";
 import {
   Card,
@@ -42,6 +49,8 @@ import toast from "react-hot-toast";
 import PaymentForm from "./PaymentForm";
 import ModalAlert from "@/app/(root)/(Admin)/components/modals/ModalAlert";
 import OrderSamples from "../../../view/[orderId]/components/OrderSamples";
+import AllPaymentsOrder from "./AllPaymentsOrder";
+import { set } from "date-fns";
 interface OptionType {
   value: string;
   label: string;
@@ -90,6 +99,7 @@ const StepTwoForm = (
   const [orderIdCounter, setOrderIdCounter] = useState(1); // Initialize ID counter
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [addedSubTests, setAddedSubTests] = useState<number[]>([]);
+  const [isAllInvoicesOpen, setAllInvoicesOpen] = useState(false);
 
   const {
     data: patientsData,
@@ -144,9 +154,9 @@ const StepTwoForm = (
     },
   });
 
-  const Test = getValues("Tests.Test_id");
-  const SubTest = getValues("Tests.SubTest_id");
-  const patientId = getValues("Patient_id");
+  const Test = watch("Tests.Test_id");
+  const SubTest = watch("Tests.SubTest_id");
+  const patientId = watch("Patient_id");
 
   // .log(watch("Tests.SubTest_id"));
 
@@ -190,6 +200,12 @@ const StepTwoForm = (
       //   queryKey: ["LabOrders"],
       // }); // Invalidate the 'Orders' query
     },
+    onError: (error: any) => {
+      // Extract the error message from the error object
+      const errorMessage = "Subtest already exsists";
+
+      toast.error(errorMessage);
+    },
     onSettled: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["Lab-Orders"],
@@ -215,7 +231,7 @@ const StepTwoForm = (
   const onSubmit = (data: z.infer<typeof OrderTestsSchema>) => {
     // setFormComplete(false);
     // Check if Test and SubTest are not empty
-    if (!Test || !SubTest || SubTest.length === 0) {
+    if (orders.length === 0) {
       if (orderData?.Type === 2 && patientId === undefined) {
         toast.error("Please select a Patient");
         return;
@@ -261,6 +277,7 @@ const StepTwoForm = (
       (option: OptionType) => option.value
     );
     setValue("Tests.SubTest_id", allSubTestsIds);
+    console.log("All SubTests", allSubTestsIds);
   };
 
   useEffect(() => {
@@ -268,7 +285,23 @@ const StepTwoForm = (
       TestsMutation.mutate(String(sampleId)); // Trigger the mutation when "sample_id" changes
       setValue("Tests.Test_id", Number(undefined)); // Reset the "test_id" field
       setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
+
+      // Extract all SubTest IDs from all orders before clearing them
+      const allDeletedSubTestIds = orders.flatMap((order) =>
+        order.SubTest.map((subTest: any) => subTest.id)
+      );
+
+      // Update addedSubTests to remove all SubTest IDs from the cleared orders
+      setAddedSubTests((prevAdded) =>
+        prevAdded.filter(
+          (subTestId) => !allDeletedSubTestIds.includes(subTestId)
+        )
+      );
+
+      setOrders([]); // Reset the orders array
     }
+    setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
+    setTotalPrice(0); // Reset the total price
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sampleId]);
 
@@ -292,6 +325,7 @@ const StepTwoForm = (
     if (testId) {
       // // .log("mutating with testId:", testId); // Log the testId value before mutation
       SubTestsMutation.mutate(String(testId)); // Trigger the mutation when "testId" changes
+      setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testId]);
@@ -320,7 +354,21 @@ const StepTwoForm = (
     setOrders((prevOrders) =>
       prevOrders.filter((order) => order.ID !== orderId)
     );
+
+    // Extract SubTest IDs from the deleted order
+    const deletedSubTestIds = orderToDelete.SubTest.map(
+      (subTest: any) => subTest.id
+    );
+
+    // Update addedSubTests to remove the SubTest IDs of the deleted order
+    setAddedSubTests((prevAdded) =>
+      prevAdded.filter((subTestId) => !deletedSubTestIds.includes(subTestId))
+    );
+
+    // Optionally, if you need to reset or update the select component to reflect these changes,
+    // you might need to trigger some form of state update or call a function provided by the select component's API.
   };
+
   useEffect(() => {
     // Recalculate total price after removing the order
     // .log("total price", totalPrice);
@@ -419,6 +467,7 @@ const StepTwoForm = (
     setOrders((prevOrders) => [...prevOrders, newOrder]);
     // Update the addedSubTests state with the newly added SubTest IDs
     setAddedSubTests((prevAdded) => [...prevAdded, ...SubTest]);
+    setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
   };
 
   // Function to get available SubTests excluding the added ones
@@ -457,6 +506,20 @@ const StepTwoForm = (
         onClose={() => setOpenAlertModal(false)}
         // onConfirm={handleYesSample}
       />
+      <Modal
+        backdrop="blur"
+        isOpen={isAllInvoicesOpen}
+        onClose={() => setAllInvoicesOpen(false)}
+        size="5xl"
+        className="overflow-hidden min-h-[90vh]"
+      >
+        <ModalContent className="overflow-hidden">
+          <ModalHeader>Invoices Information</ModalHeader>
+          <ModalBody className="overflow-auto">
+            <AllPaymentsOrder />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       <Modal
         backdrop="blur"
@@ -516,7 +579,17 @@ const StepTwoForm = (
           <div className="flex flex-row-reverse gap-10">
             <div className="flex flex-col gap-10 w-[40%] h-full">
               <Card className="shadow-lg ">
-                <CardHeader>Total</CardHeader>
+                <CardHeader className="flex p-4 flex-row justify-between items-center">
+                  <div>Payment Information</div>
+                  <div>
+                    <Button
+                      onClick={() => setAllInvoicesOpen(true)}
+                      color="primary"
+                    >
+                      <DollarSign className="w-6  " /> All Invoices
+                    </Button>
+                  </div>
+                </CardHeader>{" "}
                 <Separator />
                 <CardContent>
                   <PaymentForm orderData={orderData} />
