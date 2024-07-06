@@ -31,7 +31,7 @@ export default function RootLayout({
         <html lang="en">
           <body className={`${inter.className} scrollbar-none overflow-hidden`}>
             {children}
-            {/* <ReactQueryDevtools initialIsOpen={false}  /> */}
+            <ReactQueryDevtools initialIsOpen={false} />
             <Toaster />
             <MessageToaster />
           </body>

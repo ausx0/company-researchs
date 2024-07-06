@@ -37,7 +37,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
       Discount: undefined,
       Total: orderData?.Total,
       Payment_status: undefined,
-      Payment_method: "Cash", // Default payment method is Cash
+      Payment_method: "0", // Default payment method is Cash
       Transaction_id: "",
       Paid: "",
     },
@@ -158,6 +158,8 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
             name="Paid"
             label="Paid"
             type="number"
+            isIQD={true}
+            startContent={"IQD"}
             errors={errors}
             disabled={paymentStatus !== "part_paid"}
           />

@@ -99,7 +99,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <Users className="w-6 opacity-50 mr-2" />,
     title: "Customers",
-    roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
+    roles: ["Admin", "lab-tech"], // Only admin and lab -tech can see this
     subItems: [
       {
         text: "Patients",
@@ -225,18 +225,18 @@ const SideBar = () => {
 
   const pathname = usePathname();
 
-  const [toggleCollapse, setToggleCollapse] = useState(false);
+  const [toggleCollapse, setToggleCollapse] = useState(true);
   const [isCollapsible, setIsCollapsible] = useState(true);
 
   const wrapperClasses = classNames("   p-2 ml-2 ", {
     ["w-[200px]"]: !toggleCollapse,
-    ["w-[70px] "]: toggleCollapse,
+    ["w-[70px] py-8 "]: toggleCollapse,
   });
 
   const collapseIconClasses = classNames(
-    "p-1 rounded bg-light-lighter absolute right-0",
+    "p-1 rounded bg-light-lighter absolute right-5 size-4",
     {
-      "rotate-180": toggleCollapse,
+      "rotate-180 ": toggleCollapse,
     }
   );
 
@@ -262,22 +262,31 @@ const SideBar = () => {
         className={wrapperClasses}
         style={{ transition: "width 300ms cubic-bezier(0.2, 0, 0, 1) 0s" }}
       >
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between relative">
-            <div className="flex items-center  gap-2 ">
-              <Image
-                src={fullLogoIcon}
-                alt=""
-                className={`transition duration-800 ease-linear max-w-[70%] `}
-              />
-            </div>
+        <div className={`flex flex-col gap-2 `}>
+          <div
+            className={`flex  items-center ${
+              toggleCollapse
+                ? "h-6 flex justify-center items-center"
+                : "justify-between"
+            }  relative`}
+          >
+            {!toggleCollapse ? (
+              <div className="flex items-center  gap-2 ">
+                <Image
+                  src={fullLogoIcon}
+                  alt=""
+                  className={`transition duration-800 ease-linear max-w-[70%] `}
+                />
+              </div>
+            ) : null}
             <button
-              className={`${collapseIconClasses} hover:opacity-60 transition duration-300 ease-soft-spring`}
+              className={`${collapseIconClasses}  hover:opacity-60 transition duration-300 ease-soft-spring`}
               onClick={handleSidebarToggle}
             >
               <CollapsIcon />
             </button>
           </div>
+
           <div className="flex flex-col items-start mt-2">
             <Accordion type="single" collapsible className={collapseMenuIcon}>
               {filteredItems.map((item, index) => (

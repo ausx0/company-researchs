@@ -12,25 +12,25 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { MessageToast } = useToast();
+  // const { MessageToast } = useToast();
 
-  useEffect(() => {
-    // Listen for a custom event from the server
-    socket.on("notifications", (data) => {
-      // .log("Received data from server:", data);
-      MessageToast({ description: data });
-    });
+  // useEffect(() => {
+  //   // Listen for a custom event from the server
+  //   socket.on("notifications", (data) => {
+  //     // .log("Received data from server:", data);
+  //     MessageToast({ description: data });
+  //   });
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("notifications");
-      MessageToast({
-        variant: "destructive",
-        title: "The Connection is closed",
-        description: "There was a problem with your request.",
-      });
-    };
-  }, []);
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     socket.off("notifications");
+  //     MessageToast({
+  //       variant: "destructive",
+  //       title: "The Connection is closed",
+  //       description: "There was a problem with your request.",
+  //     });
+  //   };
+  // }, []);
   return (
     <>
       <section className="h-screen flex flex-row justify-start overflow-hidden">

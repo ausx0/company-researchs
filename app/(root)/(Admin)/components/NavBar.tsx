@@ -29,7 +29,7 @@ const NavBar = () => {
   const router = useRouter();
   const [badgeCount, setBadgeCount] = useState(0);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, isError } = useQuery({
     queryKey: ["Notifications"],
     queryFn: apiGetNotifications,
   });
@@ -93,7 +93,7 @@ const NavBar = () => {
               <SheetHeader>
                 <SheetTitle>Notifications</SheetTitle>
                 <SheetDescription>
-                  {isLoading ? (
+                  {isLoading || isError ? (
                     <p>Loading...</p>
                   ) : (
                     data.map((notification: any) => (

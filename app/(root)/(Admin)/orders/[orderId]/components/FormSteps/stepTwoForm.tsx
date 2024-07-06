@@ -51,6 +51,7 @@ import ModalAlert from "@/app/(root)/(Admin)/components/modals/ModalAlert";
 import OrderSamples from "../../../view/[orderId]/components/OrderSamples";
 import AllPaymentsOrder from "./AllPaymentsOrder";
 import { set } from "date-fns";
+import { apiGetLabOrderInvoices } from "@/app/services/api/Orders/LabOrderInvoices";
 interface OptionType {
   value: string;
   label: string;
@@ -100,6 +101,11 @@ const StepTwoForm = (
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [addedSubTests, setAddedSubTests] = useState<number[]>([]);
   const [isAllInvoicesOpen, setAllInvoicesOpen] = useState(false);
+
+  const { data: InvoicesData } = useQuery({
+    queryKey: ["Lab-Orders-Invoices"],
+    queryFn: () => apiGetLabOrderInvoices(id),
+  });
 
   const {
     data: patientsData,
@@ -209,6 +215,9 @@ const StepTwoForm = (
     onSettled: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["Lab-Orders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders-Invoices"],
       });
     },
   });
@@ -510,8 +519,10 @@ const StepTwoForm = (
         backdrop="blur"
         isOpen={isAllInvoicesOpen}
         onClose={() => setAllInvoicesOpen(false)}
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
         size="5xl"
-        className="overflow-hidden min-h-[90vh]"
+        className="overflow-hidden max-h-[80vh]"
       >
         <ModalContent className="overflow-hidden">
           <ModalHeader>Invoices Information</ModalHeader>
@@ -602,7 +613,7 @@ const StepTwoForm = (
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <Card className="shadow-lg h-auto w-full">
-                  <CardHeader className="flex p-4 flex-row justify-between">
+                  <CardHeader className="flex p-4 flex-row items-center justify-between">
                     <div>Sample Information</div>
                     <div>
                       <Button onPress={onOpen} color="primary">
