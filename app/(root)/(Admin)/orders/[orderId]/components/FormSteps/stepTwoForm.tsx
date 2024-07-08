@@ -175,7 +175,13 @@ const StepTwoForm = (
 
   const SubTestsMutation = useMutation({
     mutationKey: ["Lab-SubTests"],
-    mutationFn: apiGetSubTestsByTest,
+    mutationFn: ({
+      testId,
+      orderType,
+    }: {
+      testId: string;
+      orderType: string;
+    }) => apiGetSubTestsByTest(testId, orderType),
   });
 
   const PatientOptions = () => {
@@ -257,7 +263,10 @@ const StepTwoForm = (
         ...data,
         Tests: orders.map((order) => ({
           Test_id: order.Test.id,
-          SubTest_id: order.SubTest.map((subTest: { id: any }) => subTest.id),
+          SubTest_id: order.SubTest.map((subTest: { id: any; price: any }) => ({
+            id: subTest.id,
+            price: subTest.price,
+          })),
         })),
       };
 
@@ -291,7 +300,7 @@ const StepTwoForm = (
 
   useEffect(() => {
     if (sampleId) {
-      TestsMutation.mutate(String(sampleId)); // Trigger the mutation when "sample_id" changes
+      TestsMutation.mutate(String(sampleId), orderData?.Type); // Trigger the mutation when "sample_id" changes
       setValue("Tests.Test_id", Number(undefined)); // Reset the "test_id" field
       setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
 
@@ -333,7 +342,10 @@ const StepTwoForm = (
 
     if (testId) {
       // // .log("mutating with testId:", testId); // Log the testId value before mutation
-      SubTestsMutation.mutate(String(testId)); // Trigger the mutation when "testId" changes
+      SubTestsMutation.mutate({
+        testId: String(testId),
+        orderType: orderData?.Type,
+      });
       setValue("Tests.SubTest_id", []); // Reset the "SubTest_id" field
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -459,15 +471,19 @@ const StepTwoForm = (
     setTotalPrice(newTotal);
 
     // .log("new total", newTotal);
-
     const newOrder = {
       ID: orderIdCounter,
       Test: { id: Test, label: TestLabel },
-      SubTest: SubTestOptions.map((option: { value: any; label: any }) => ({
-        id: option.value,
-        label: option.label,
-      })),
-      Price: totalSubTestPrice,
+      SubTest: SubTestOptions.map(
+        (option: { value: any; label: any; Price: any }) => ({
+          id: option.value,
+          label: option.label,
+          price: option.Price,
+        })
+      ),
+      Price: SubTestOptions.map((option: { Price: any }) => option.Price).join(
+        ", "
+      ),
     };
 
     // .log("newOrder", newOrder);
@@ -603,7 +619,7 @@ const StepTwoForm = (
                 </CardHeader>{" "}
                 <Separator />
                 <CardContent>
-                  <PaymentForm orderData={orderData} />
+                  {orderLoading ? <Loading /> : <PaymentForm />}
                 </CardContent>
               </Card>
             </div>

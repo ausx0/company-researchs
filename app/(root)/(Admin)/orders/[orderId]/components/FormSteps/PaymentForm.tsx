@@ -8,18 +8,27 @@ import InputField from "@/app/(root)/(Admin)/components/FormFields/InputField";
 import SelectField from "@/app/(root)/(Admin)/components/FormFields/SelectField";
 import { Button } from "@nextui-org/react";
 import { DollarSign } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiFinishOrder } from "@/app/services/api/Orders/OrderForm";
 import { formatPrice } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { apiGetOrder } from "@/app/services/api/Orders/AllOrders";
+import Loading from "@/components/ui/loading";
 
-type OrderDataProps = {
-  orderData: any;
-};
-
-const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
+const PaymentForm = () => {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Get the id from the URL
+  const {
+    data: orderData,
+    isLoading: orderLoading,
+    isFetching: orderFetching,
+    error: orderError,
+  } = useQuery<any>({
+    queryKey: ["Lab-Orders"],
+    queryFn: () => (id ? apiGetOrder(id) : Promise.resolve(null)),
+  });
+
+  console.log(orderData);
 
   const {
     getValues,
@@ -33,13 +42,27 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
     defaultValues: {
       Order_id: id ? Number(id) : undefined,
       Payer: "",
-      Bofore_discount: 0 || orderData?.Bofore_discount,
-      Discount: undefined,
-      Total: orderData?.Total,
-      Payment_status: undefined,
+      Bofore_discount: orderData?.Bofore_discount || 0,
+      Discount: orderData?.Discount || null,
+      Total: orderData?.Total || 0,
+      Payment_status: orderData?.Payment_status || "Unknown",
       Payment_method: "0", // Default payment method is Cash
       Transaction_id: "",
-      Paid: "",
+      Paid: orderData?.Paid || 0,
+      Total_due: orderData?.Total_due,
+      Subtotal: orderData?.Subtotal || 0,
+      Client_id: orderData?.Client_id || 1,
+      Client_name: orderData?.Client_name || "ahmed",
+      Completed: orderData?.Completed || 0,
+      Cost: orderData?.Cost || null,
+      Date: orderData?.Date || "2024-07-07",
+      Delivered: orderData?.Delivered || null,
+      ID: orderData?.ID || 44,
+      Notes: orderData?.Notes || "",
+      Order_identifier: orderData?.Order_identifier || "#DX0044",
+      Referred: orderData?.Referred || "asdasd",
+      State: orderData?.State || 1,
+      Type: orderData?.Type || 2,
     },
   });
 
@@ -47,7 +70,7 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
     mutationKey: ["FinishOrder"],
     mutationFn: apiFinishOrder,
     onSuccess: () => {
-      toast.success("payment update successfully");
+      toast.success("Payment updated successfully");
     },
   });
 
@@ -59,6 +82,8 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
   const paymentStatus = watch("Payment_status");
   const paymentMethod = watch("Payment_method");
   const total = watch("Total");
+  const discount = watch("Discount");
+  const subtotal = watch("Subtotal");
 
   useEffect(() => {
     if (paymentStatus === "paid") {
@@ -80,6 +105,12 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
     }
   }, [paymentMethod, setValue]);
 
+  useEffect(() => {
+    const discountAmount = (subtotal * discount) / 100;
+    const totalDue = subtotal - discountAmount;
+    setValue("Total_due", totalDue);
+  }, [discount, subtotal, setValue]);
+
   function PaymentStatusOptions(): { value: string; label: string }[] {
     return [
       { value: "not_paid", label: "Not Paid" },
@@ -99,17 +130,17 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
   return (
     <>
       <form className="p-4" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col  gap-6">
+        <div className="flex flex-col gap-6">
           <div className="flex justify-between items-center">
             <div className="text-lg">Total Due:</div>
             <div className="font-bold text-lg ">
-              {formatPrice(watch("Total"))}
+              {formatPrice(watch("Total_due"))}
             </div>
           </div>
           <div className="flex justify-between items-center">
             <div className="text-lg">Subtotal:</div>
             <div className="font-bold text-lg ">
-              {formatPrice(watch("Bofore_discount"))}
+              {formatPrice(watch("Subtotal"))}
             </div>
           </div>
           <InputField
@@ -122,9 +153,10 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
           <InputField
             control={control}
             name="Discount"
-            label="Discount"
+            label="Discount (%)"
             type="number"
             errors={errors}
+            onChange={(e) => setValue("Discount", Number(e.target.value))}
           />
 
           <div className="my-1">
@@ -158,7 +190,6 @@ const PaymentForm: React.FC<OrderDataProps> = ({ orderData }) => {
             name="Paid"
             label="Paid"
             type="number"
-            isIQD={true}
             startContent={"IQD"}
             errors={errors}
             disabled={paymentStatus !== "part_paid"}

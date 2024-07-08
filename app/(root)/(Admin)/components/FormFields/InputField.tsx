@@ -10,11 +10,12 @@ interface IInputField {
   label?: string;
   errors: any;
   type: string;
-  icon?: React.ReactNode; // Add this prop
+  icon?: React.ReactNode;
   disabled?: boolean;
   startContent?: any;
   className?: React.ReactNode | any;
   defaultValue?: any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputField: React.FC<IInputField> = ({
@@ -29,10 +30,10 @@ const InputField: React.FC<IInputField> = ({
   startContent,
   className,
   defaultValue,
+  onChange,
 }) => {
   return (
     <div className="flex w-full flex-col">
-      {/* <Label htmlFor="name">{label}</Label> */}
       <Controller
         name={name}
         control={control}
@@ -49,10 +50,13 @@ const InputField: React.FC<IInputField> = ({
                 {icon}
                 {label}
               </div>
-            } // Include the icon in the label here
+            }
             type={type}
             {...field}
-            // startContent={icon} // Use the icon prop here
+            onChange={(e) => {
+              field.onChange(e);
+              if (onChange) onChange(e);
+            }}
           />
         )}
       />

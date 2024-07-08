@@ -41,7 +41,8 @@ const SubTestForm = () => {
       SubTest: "",
       Unit: "",
       Cost: undefined,
-      Price: undefined,
+      Client_price: undefined,
+      Patient_price: undefined,
       Reference: "",
       Result: undefined,
     },
@@ -109,8 +110,15 @@ const SubTestForm = () => {
                 errors={errors}
                 control={control}
                 type="text"
-                label="Price"
-                name="Price"
+                label="Client Price"
+                name="Client_price"
+              />
+              <InputField
+                errors={errors}
+                control={control}
+                type="text"
+                label="Patient Price"
+                name="Patient_price"
               />
             </div>
             <div className="flex w-full gap-10">
