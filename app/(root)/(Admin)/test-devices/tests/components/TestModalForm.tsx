@@ -41,10 +41,9 @@ export type Test = {
   ID?: string | undefined;
   Test: string;
   Sample_id: { label: string; value: string };
-  OnePrice: boolean;
-  Price: string;
-  OnePage: boolean;
-  Text: boolean;
+
+  OnePage: number;
+  Text: number;
 };
 
 type cellActionProps = {
@@ -85,10 +84,9 @@ const TestModalForm: React.FC<cellActionProps> = ({
     defaultValues: {
       Test: test?.Test || "",
       Sample_id: test?.Sample_id || { label: "", value: "" },
-      OnePrice: test?.OnePrice || false,
-      Price: test?.Price || "",
-      OnePage: test?.OnePage || false,
-      Text: test?.Text || false,
+
+      OnePage: test?.OnePage || 0,
+      Text: test?.Text || 0,
     },
   });
 
@@ -119,10 +117,16 @@ const TestModalForm: React.FC<cellActionProps> = ({
 
   // .log("Test", test?.ID);
   const onSubmit: SubmitHandler<Test> = (values) => {
+    const formattedValues = {
+      ...values,
+      OnePage: values.OnePage ? 1 : 0,
+      Text: values.Text ? 1 : 0,
+    };
+
     if (test) {
-      TestMutation.mutate({ ...values, ID: test.ID });
+      TestMutation.mutate({ ...formattedValues, ID: test.ID });
     } else {
-      TestMutation.mutate(values);
+      TestMutation.mutate(formattedValues);
     }
   };
 
@@ -132,10 +136,9 @@ const TestModalForm: React.FC<cellActionProps> = ({
       reset({
         Test: test.Test,
         Sample_id: test.Sample_id,
-        OnePrice: test.OnePrice,
-        Price: test.Price,
-        OnePage: test.OnePage,
-        Text: test.Text,
+
+        OnePage: test.OnePage ? 1 : 0,
+        Text: test.Text ? 1 : 0,
       });
     }
   }, [test, reset]);
@@ -170,23 +173,10 @@ const TestModalForm: React.FC<cellActionProps> = ({
                 <div className="flex  gap-4">
                   <Controller
                     control={control}
-                    name="OnePrice"
-                    render={({ field }) => (
-                      <Checkbox
-                        checked={field.value} // set checked status
-                        onChange={(e) => field.onChange(e.target.checked)} // update field value on change
-                      >
-                        One Price
-                      </Checkbox>
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
                     name="OnePage"
                     render={({ field }) => (
                       <Checkbox
-                        checked={field.value} // set checked status
+                        checked={field.value === 1} // convert number to boolean
                         onChange={(e) => field.onChange(e.target.checked)} // update field value on change
                       >
                         One Page
@@ -199,26 +189,13 @@ const TestModalForm: React.FC<cellActionProps> = ({
                     name="Text"
                     render={({ field }) => (
                       <Checkbox
-                        checked={field.value} // set checked status
+                        checked={field.value === 1} // convert number to boolean
                         onChange={(e) => field.onChange(e.target.checked)} // update field value on change
                       >
                         Text
                       </Checkbox>
                     )}
                   />
-
-                  {errors.OnePrice && <span>{errors.OnePrice.message}</span>}
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <TextField
-                    label="Price"
-                    type="number"
-                    control={control}
-                    errors={errors}
-                    name="Price"
-                  />
-                  {/* {errors.Price && <span>{errors.Price.message}</span>} */}
                 </div>
               </>
             </ModalBody>

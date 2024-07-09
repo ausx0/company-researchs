@@ -18,12 +18,14 @@ import {
 import {
   ArchiveIcon,
   BadgeDollarSign,
+  DollarSign,
   FileText,
   HomeIcon,
   MailCheck,
   MessageCircleWarning,
   SendToBack,
   Settings,
+  ShoppingCart,
   TestTubes,
   Users,
 } from "lucide-react";
@@ -74,6 +76,7 @@ const sidebarItems: SidebarItem[] = [
       { text: "Check Order", link: "/check-order", roles: ["reception"] },
     ],
   },
+
   {
     icon: <FileText className="w-6 opacity-50 mr-2" />,
     title: "Results",
@@ -91,8 +94,8 @@ const sidebarItems: SidebarItem[] = [
     title: "Samples & Tests",
     roles: ["Admin", "lab-tech"], // Only admin and lab-tech can see this
     subItems: [
-      { text: "Tests", link: "/test-devices/tests", roles: ["Admin"] },
       { text: "Samples", link: "/test-devices/samples", roles: ["Admin"] },
+      { text: "Tests", link: "/test-devices/tests", roles: ["Admin"] },
       { text: "Sub Tests", link: "/test-devices/subTests", roles: ["Admin"] },
     ],
   },
@@ -127,39 +130,35 @@ const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    icon: <ShoppingCart className="w-6 opacity-50 mr-2" />,
+    title: "Purchases",
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+    subItems: [
+      {
+        text: "Add Purchase",
+        link: "/purchases/add",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "All Purchases",
+        link: "/purchases/all",
+        roles: ["Admin", "lab-tech"],
+      },
+      {
+        text: "Categories",
+        link: "/purchases/categories",
+        roles: ["Admin", "lab-tech"],
+      },
+    ],
+  },
+  {
     icon: <BadgeDollarSign className="w-6 opacity-50 mr-2" />,
     title: "Finance",
     roles: ["Admin", "lab-tech", "reception"], // Only admin, lab-tech, and reception can see this
     subItems: [
       {
-        text: "Purchases",
-        link: "/finance/purchases",
-        roles: ["Admin", "lab-tech"],
-      },
-      {
-        text: "Add Purchase",
-        link: "/finance/purchases/add",
-        roles: ["Admin", "lab-tech"],
-      },
-      {
         text: "Expenses",
         link: "/finance/expenses",
-        roles: ["Admin", "lab-tech"],
-      },
-      {
-        text: "Inbound",
-        link: "/finance/inbound",
-        roles: ["Admin", "lab-tech"],
-      },
-      {
-        text: "Outbound",
-        link: "/finance/outbound",
-        roles: ["Admin", "lab-tech"],
-      },
-      { text: "Prices", link: "/finance/prices", roles: ["Admin", "lab-tech"] },
-      {
-        text: "Categories",
-        link: "/finance/categories",
         roles: ["Admin", "lab-tech"],
       },
     ],

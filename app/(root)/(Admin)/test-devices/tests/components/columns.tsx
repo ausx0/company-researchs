@@ -41,19 +41,7 @@ export const columns: ColumnDef<TestsData>[] = [
       );
     },
   },
-  {
-    accessorKey: "OnePrice",
-    header: "One Price",
-    cell: ({ row }) => {
-      // const value = row.renderValue("In_use") as number;
-      // // .log(value);
-      return row.original.OnePrice === 1 ? (
-        <Check color="green" />
-      ) : (
-        <X color="red" />
-      );
-    },
-  },
+
   {
     accessorKey: "OnePage",
     header: "One Page",
@@ -79,10 +67,6 @@ export const columns: ColumnDef<TestsData>[] = [
         <X color="red" />
       );
     },
-  },
-  {
-    accessorKey: "Price",
-    header: "Price",
   },
 
   {
