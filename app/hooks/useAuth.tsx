@@ -17,12 +17,15 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const initialUserRole = localStorage.getItem("userRole") || "member";
+  const initialUserRole =
+    typeof window !== "undefined"
+      ? localStorage.getItem("userRole") || "member"
+      : "member";
 
   const [user, setUser] = useState<User>({ role: initialUserRole });
 
   useEffect(() => {
-    if (typeof localStorage === "undefined") return; // Skip in non-browser environments
+    if (typeof window === "undefined") return; // Skip in non-browser environments
     const handleStorageChange = () => {
       const updatedRole = localStorage.getItem("userRole") || "member";
       setUser({ role: updatedRole });
@@ -43,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AbilityContext.Provider>
   );
 };
+
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

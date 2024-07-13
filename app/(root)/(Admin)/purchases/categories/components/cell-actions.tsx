@@ -52,7 +52,11 @@ export const CellAction: React.FC<cellActionProps> = ({ data }) => {
   };
   const queryClient = useQueryClient();
 
-  const DeletePurchaseCategoryMutation = useMutation<any>({
+  const DeletePurchaseCategoryMutation = useMutation<
+    any,
+    any,
+    { Category_id: string }
+  >({
     mutationKey: ["DeletePurchaseCategory"],
     mutationFn: apiDeletePurchaseCategory,
     onSuccess: () => {

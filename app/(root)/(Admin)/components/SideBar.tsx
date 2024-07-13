@@ -225,9 +225,12 @@ const SideBar = () => {
   const pathname = usePathname();
 
   const [toggleCollapse, setToggleCollapse] = useState(() => {
-    // Retrieve the collapse state from local storage
-    const savedState = localStorage.getItem("sidebarCollapse");
-    return savedState ? JSON.parse(savedState) : true;
+    if (typeof window !== "undefined") {
+      // Retrieve the collapse state from local storage
+      const savedState = localStorage.getItem("sidebarCollapse");
+      return savedState ? JSON.parse(savedState) : true;
+    }
+    return true; // Default state if not in a browser environment
   });
   const [isCollapsible, setIsCollapsible] = useState(true);
 
@@ -250,7 +253,9 @@ const SideBar = () => {
   const handleSidebarToggle = () => {
     const newToggleState = !toggleCollapse;
     setToggleCollapse(newToggleState);
-    localStorage.setItem("sidebarCollapse", JSON.stringify(newToggleState));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sidebarCollapse", JSON.stringify(newToggleState));
+    }
   };
   const filteredItems = sidebarItems
     .filter((item) => item.roles && item.roles.includes(user.role as Role))

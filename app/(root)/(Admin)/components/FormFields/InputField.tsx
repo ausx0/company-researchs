@@ -16,6 +16,9 @@ interface IInputField {
   className?: React.ReactNode | any;
   defaultValue?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // ... existing props ...
+  min?: number;
+  max?: number;
 }
 
 const InputField: React.FC<IInputField> = ({
@@ -31,6 +34,8 @@ const InputField: React.FC<IInputField> = ({
   className,
   defaultValue,
   onChange,
+  max,
+  min,
 }) => {
   return (
     <div className="flex w-full flex-col">
@@ -51,6 +56,8 @@ const InputField: React.FC<IInputField> = ({
                 {label}
               </div>
             }
+            min={min}
+            max={max}
             type={type}
             {...field}
             onChange={(e) => {

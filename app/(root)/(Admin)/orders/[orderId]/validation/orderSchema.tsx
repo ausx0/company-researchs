@@ -57,7 +57,10 @@ export const OrderPaymentSchema = z.object({
   Order_id: z.coerce.number().optional(),
   Payer: z.string(),
   Bofore_discount: z.coerce.number().optional(),
-  Discount: z.coerce.number().optional(),
+  Discount: z
+    .number()
+    .min(0, "Discount must be at least 0%")
+    .max(100, "Discount cannot exceed 100%"),
   Total: z.coerce.number().optional(),
   Payment_status: z.coerce.string().optional(),
   Payment_method: z.coerce.string().optional(),

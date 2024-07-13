@@ -1,5 +1,5 @@
 "use client";
-import { apiGetLabOrderInvoices } from "@/app/services/api/Orders/OrderPayment";
+import { apiGetLabOrderInvoices } from "@/app/services/api/Orders/LabOrderInvoices";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import Loading from "@/components/ui/loading";

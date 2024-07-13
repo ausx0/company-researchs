@@ -157,8 +157,9 @@ const PaymentForm = () => {
             type="number"
             errors={errors}
             onChange={(e) => setValue("Discount", Number(e.target.value))}
+            min={0}
+            max={100}
           />
-
           <div className="my-1">
             <SelectField
               errors={errors}

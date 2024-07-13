@@ -39,9 +39,14 @@ export const columns: ColumnDef<OrdersData>[] = [
     header: "Date",
   },
   {
-    accessorKey: "Total",
-    header: "Total",
-    cell: ({ row }) => <>{formatPrice(row.getValue("Total"))}</>, // Render the formatted price
+    accessorKey: "Subtotal",
+    header: "Subtotal",
+    cell: ({ row }) => <>{formatPrice(row.getValue("Subtotal"))}</>, // Render the formatted price
+  },
+  {
+    accessorKey: "Total_due",
+    header: "Total Due",
+    cell: ({ row }) => <>{formatPrice(row.getValue("Total_due"))}</>, // Render the formatted price
   },
   {
     accessorKey: "Referred",

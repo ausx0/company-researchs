@@ -4,7 +4,7 @@ export const apiGetPurchaseCategories = () => {
   return apiService.getData(`/PurchaseCategories/All`);
 };
 
-export const apiDeletePurchaseCategory = (id: string) => {
+export const apiDeletePurchaseCategory = (id: any) => {
   return apiService.DestroyData(`/PurchaseCategories`, id);
 };
 
