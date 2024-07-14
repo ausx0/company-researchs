@@ -81,8 +81,9 @@ const PaymentForm = () => {
 
   const paymentStatus = watch("Payment_status");
   const paymentMethod = watch("Payment_method");
-  const total = watch("Total");
+  const total = watch("Total_due");
   const discount = watch("Discount");
+
   const subtotal = watch("Subtotal");
 
   useEffect(() => {
