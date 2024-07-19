@@ -28,6 +28,10 @@ import React, { useEffect, useState } from "react";
 const NavBar = () => {
   const router = useRouter();
   const [badgeCount, setBadgeCount] = useState(0);
+  const [userData, setUserData] = useState<{
+    Username?: string;
+    Scope?: string;
+  } | null>(null);
 
   const { data, isLoading, refetch, isError } = useQuery({
     queryKey: ["Notifications"],
@@ -67,10 +71,32 @@ const NavBar = () => {
     logout();
     router.push("/login");
   };
+  useEffect(() => {
+    const storedBadgeCount = localStorage.getItem("badgeCount");
+    if (storedBadgeCount) {
+      setBadgeCount(parseInt(storedBadgeCount));
+    }
 
-  const userDataString =
-    typeof window !== "undefined" ? localStorage.getItem("userData") : null;
-  const userData = userDataString ? JSON.parse(userDataString) : null;
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+
+    socket.on("notifications", () => {
+      setBadgeCount((prevCount) => prevCount + 1);
+      localStorage.setItem("badgeCount", (badgeCount + 1).toString());
+    });
+
+    socket.on("clear_badge", () => {
+      setBadgeCount(0);
+      localStorage.removeItem("badgeCount");
+    });
+
+    return () => {
+      socket.off("notification");
+      socket.off("clear_badge");
+    };
+  }, []);
 
   return (
     <>

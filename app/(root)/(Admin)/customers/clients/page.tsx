@@ -1,8 +1,10 @@
+"use client";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 import AddNewClient from "./components/AddNewClient";
 import ClientsDataTable from "./components/client";
+import { withAuthorization } from "@/app/Rules/Authorization";
 
 const ClientsPage = () => {
   return (
@@ -24,4 +26,4 @@ const ClientsPage = () => {
   );
 };
 
-export default ClientsPage;
+export default withAuthorization(ClientsPage, ["Admin"]);

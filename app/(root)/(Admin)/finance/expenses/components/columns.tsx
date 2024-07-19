@@ -39,11 +39,7 @@ export const columns: ColumnDef<ExpensesData>[] = [
     header: "Amount",
   },
   {
-    accessorKey: "Gender",
-    header: "Gender",
-  },
-  {
-    accessorKey: "PaidBy",
+    accessorKey: "By",
     header: "Paid By",
   },
   {

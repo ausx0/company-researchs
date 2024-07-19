@@ -4,6 +4,12 @@ export const apiGetAllOrders = () => {
   return apiService.getData(`/LabOrders/All`);
 };
 
+export const apiGetAllOrdersBySearch = (type: any, search: any) => {
+  return apiService.getData(
+    `/LabOrders/Search?Search_type=${type}&Id=${search}`
+  );
+};
+
 export const apiGetOrder = (ID: number | string | undefined) => {
   return apiService.getData(`/LabOrders?Order_id=${ID}`);
 };

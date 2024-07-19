@@ -1,6 +1,6 @@
 "use client";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import fullLogoIcon from "@/public/OreoLogoFullPNG.png";
 import {
   Accordion,
@@ -33,6 +33,7 @@ import CollapsIcon from "@/public/icons/collapseIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
+import { text } from "stream/consumers";
 
 type Role = "Admin" | "lab-tech" | "reception";
 
@@ -73,19 +74,23 @@ const sidebarItems: SidebarItem[] = [
         roles: ["Admin", "lab-tech", "reception"],
       },
       { text: "All Orders", link: "/orders", roles: ["Admin", "lab-tech"] },
-      { text: "Check Order", link: "/check-order", roles: ["reception"] },
+      {
+        text: "Check Order",
+        link: "/orders/check-order",
+        roles: ["reception", "Admin"],
+      },
     ],
   },
 
   {
     icon: <FileText className="w-6 opacity-50 mr-2" />,
     title: "Results",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
     subItems: [
       {
         text: "Submit Result",
         link: "/result",
-        roles: ["Admin", "lab-tech", "reception"],
+        roles: ["Admin", "lab-tech"],
       },
     ],
   },
@@ -102,12 +107,12 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <Users className="w-6 opacity-50 mr-2" />,
     title: "Customers",
-    roles: ["Admin", "lab-tech"], // Only admin and lab -tech can see this
+    roles: ["Admin", "lab-tech", "reception"], // Only admin and lab -tech can see this
     subItems: [
       {
         text: "Patients",
         link: "/customers/patients",
-        roles: ["Admin", "lab-tech"],
+        roles: ["Admin", "lab-tech", "reception"],
       },
       {
         text: "Clients",
@@ -132,7 +137,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <ShoppingCart className="w-6 opacity-50 mr-2" />,
     title: "Purchases",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin and reception can see this
+    roles: ["Admin", "lab-tech"], // Only admin and reception can see this
     subItems: [
       {
         text: "Add Purchase",
@@ -154,12 +159,17 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <BadgeDollarSign className="w-6 opacity-50 mr-2" />,
     title: "Finance",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin, lab-tech, and reception can see this
+    roles: ["Admin", "reception"], // Only admin, lab-tech, and reception can see this
     subItems: [
       {
         text: "Expenses",
         link: "/finance/expenses",
-        roles: ["Admin", "lab-tech"],
+        roles: ["Admin", "reception"],
+      },
+      {
+        text: "Categories",
+        link: "/finance/categories",
+        roles: ["Admin"],
       },
     ],
   },
@@ -200,7 +210,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <Settings className="w-6 opacity-50 mr-2" />,
     title: "Settings",
-    roles: ["Admin", "lab-tech", "reception"], // Only admin, lab-tech, and reception can see this
+    roles: ["Admin"], // Only admin, lab-tech, and reception can see this
     subItems: [
       {
         text: "User Log",
@@ -224,15 +234,15 @@ const SideBar = () => {
 
   const pathname = usePathname();
 
-  const [toggleCollapse, setToggleCollapse] = useState(() => {
-    if (typeof window !== "undefined") {
-      // Retrieve the collapse state from local storage
-      const savedState = localStorage.getItem("sidebarCollapse");
-      return savedState ? JSON.parse(savedState) : true;
-    }
-    return true; // Default state if not in a browser environment
-  });
-  const [isCollapsible, setIsCollapsible] = useState(true);
+  const [toggleCollapse, setToggleCollapse] = useState(true); // Default state
+  const [isInitialized, setIsInitialized] = useState(false); // Track initialization
+
+  useEffect(() => {
+    // This code runs only on the client
+    const savedState = localStorage.getItem("sidebarCollapse");
+    setToggleCollapse(savedState ? JSON.parse(savedState) : true);
+    setIsInitialized(true); // Mark as initialized
+  }, []);
 
   const wrapperClasses = classNames("   p-2 ml-2 ", {
     ["w-[200px]"]: !toggleCollapse,
@@ -253,18 +263,21 @@ const SideBar = () => {
   const handleSidebarToggle = () => {
     const newToggleState = !toggleCollapse;
     setToggleCollapse(newToggleState);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("sidebarCollapse", JSON.stringify(newToggleState));
-    }
+    localStorage.setItem("sidebarCollapse", JSON.stringify(newToggleState));
   };
-  const filteredItems = sidebarItems
-    .filter((item) => item.roles && item.roles.includes(user.role as Role))
-    .map((item) => ({
-      ...item,
-      subItems: item.subItems.filter(
-        (subItem) => subItem.roles && subItem.roles.includes(user.role as Role)
-      ),
-    }));
+
+  // Only filter items if initialized
+  const filteredItems = isInitialized
+    ? sidebarItems
+        .filter((item) => item.roles && item.roles.includes(user.role as Role))
+        .map((item) => ({
+          ...item,
+          subItems: item.subItems.filter(
+            (subItem) =>
+              subItem.roles && subItem.roles.includes(user.role as Role)
+          ),
+        }))
+    : [];
   return (
     <>
       <div

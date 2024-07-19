@@ -10,12 +10,15 @@ import {
   Input,
 } from "@nextui-org/react";
 import {
+  CalendarRange,
+  DollarSign,
   MailIcon,
   MapIcon,
   MapPinIcon,
   PersonStandingIcon,
   PhoneIcon,
   Plus,
+  User,
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,12 +33,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { apiPostExpense } from "@/app/services/api/Finance/Expenses";
 import InputField from "../../../components/FormFields/InputField";
 import { PersonIcon } from "@radix-ui/react-icons";
 import SelectField from "../../../components/FormFields/SelectField";
+import { apiGetExpenseCategories } from "@/app/services/api/Finance/Expenses/Categories";
 
 type cellActionProps = {
   onClose: () => void;
@@ -47,27 +51,14 @@ const ExpenseModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
   const form = useForm<z.infer<typeof ExpenseSchema>>({
     resolver: zodResolver(ExpenseSchema),
     defaultValues: {
-      // Name: "",
-      // Phone: "",
-      // Address: "",
-      // Disease: "",
-      // Age: undefined,
-      // Gender: "",
-      // Notes: "",
-      // Price: "",
+      Amount: undefined,
+      By: "",
+      Category: undefined,
+      Date: "",
+      Description: "",
     },
   });
 
-  const Genders = [
-    {
-      label: "Male",
-      value: "Male",
-    },
-    {
-      label: "Female",
-      value: "Female",
-    },
-  ];
   const queryExpense = useQueryClient();
 
   const ExpenseMutation = useMutation({
@@ -100,6 +91,17 @@ const ExpenseModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
     }
   }, [form.formState.isSubmitSuccessful, onClose]);
 
+  const { data, isLoading, isSuccess, error, isError } = useQuery<any>({
+    queryKey: ["expense-categories"],
+    queryFn: apiGetExpenseCategories,
+  });
+
+  if (isError) {
+    console.error("Error fetching expense categories:", error);
+  }
+
+  if (isSuccess) console.log({ data, isLoading });
+
   return (
     <>
       <Modal backdrop="blur" size="xl" isOpen={isOpen} onClose={onClose}>
@@ -113,28 +115,19 @@ const ExpenseModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
                   </ModalHeader>
                   <ModalBody className="m-4">
                     <div className="flex flex-col gap-6">
-                      <div>
-                        <InputField
-                          name="Name"
-                          control={form.control}
-                          errors={form.formState.errors}
-                          label="Name"
-                          type="text"
-                        />
-                      </div>
                       <div className="flex w-full gap-8">
                         <div className="w-full">
                           <SelectField
-                            isLoading={false}
+                            isLoading={isLoading}
                             control={form.control}
-                            name="Gender"
-                            label="Gender"
+                            name="Category"
+                            label="Category"
                             errors={form.formState.errors}
                             options={
-                              Genders
-                                ? Genders.map((item: any) => ({
-                                    value: item.value,
-                                    label: item.label,
+                              data
+                                ? data.map((item: any) => ({
+                                    value: item.ID,
+                                    label: item.Category,
                                   }))
                                 : []
                             }
@@ -142,54 +135,47 @@ const ExpenseModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
                         </div>
                         <div className="w-full">
                           <InputField
-                            name="Phone"
+                            name="Amount"
                             control={form.control}
                             errors={form.formState.errors}
-                            label="Phone No."
-                            type="text"
-                            icon={<PhoneIcon />}
+                            label="Amount"
+                            type="number"
+                            startContent={<div>IQD</div>}
+                            icon={<DollarSign />}
                           />
                         </div>
                       </div>
                       <div className="flex w-full gap-8">
                         <div className="w-full">
                           <InputField
-                            name="Address"
+                            name="By"
                             control={form.control}
                             errors={form.formState.errors}
-                            label="Address"
+                            label="Paid By"
                             type="text"
-                            icon={<MapPinIcon />}
+                            icon={<User />}
                           />
                         </div>
                         <div className="w-full">
                           <InputField
-                            name="Age"
+                            name="Date"
                             control={form.control}
                             errors={form.formState.errors}
-                            label="Age"
-                            type="text"
-                            icon={<PersonIcon />}
+                            label="Date"
+                            type="date"
+                            startContent={<div></div>}
+                            icon={<CalendarRange />}
                           />
                         </div>
                       </div>
                       <div className="flex w-full gap-8">
                         <div className="w-full">
                           <InputField
-                            name="Notes"
+                            name="Description"
                             control={form.control}
                             errors={form.formState.errors}
-                            label="Notes"
+                            label="Description"
                             type="Text"
-                          />
-                        </div>
-                        <div className="w-full">
-                          <InputField
-                            name="Disease"
-                            control={form.control}
-                            errors={form.formState.errors}
-                            label="Disease"
-                            type="text"
                           />
                         </div>
                       </div>
