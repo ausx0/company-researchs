@@ -106,6 +106,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
     // ...
   };
 
+  console.log(ID);
+
   const {
     data: patientsData,
     isLoading: patientsLoading,
@@ -175,6 +177,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ ID }) => {
         <div className="flex flex-col gap-10 m-6">
           <div>
             <SelectField
+              isDisabled={ID === undefined ? false : true}
               control={control}
               name="Type"
               label="Order Type"

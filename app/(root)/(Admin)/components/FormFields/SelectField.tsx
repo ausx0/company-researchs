@@ -13,6 +13,7 @@ interface ISelectField {
   isMulti?: boolean;
   key?: any;
   onChange?: (value: any) => void; // Add this prop for the change handler
+  isDisabled?: boolean;
 }
 
 const SelectField: React.FC<ISelectField> = ({
@@ -24,7 +25,7 @@ const SelectField: React.FC<ISelectField> = ({
   isLoading, // Add this prop for the loading state
   isMulti,
   onChange, // Add this prop for the change handler
-
+  isDisabled,
   key,
 }) => {
   return (
@@ -38,6 +39,7 @@ const SelectField: React.FC<ISelectField> = ({
           defaultValue={isMulti ? [] : ""}
           render={({ field }) => (
             <Select
+              isDisabled={isDisabled}
               isMulti={isMulti}
               options={isLoading ? [] : options} // pass an empty array as options when data is being loaded
               value={

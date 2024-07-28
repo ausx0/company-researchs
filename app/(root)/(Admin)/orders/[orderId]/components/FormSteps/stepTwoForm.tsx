@@ -212,11 +212,18 @@ const StepTwoForm = (
       //   queryKey: ["LabOrders"],
       // }); // Invalidate the 'Orders' query
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
       // Extract the error message from the error object
       const errorMessage = "Subtest already exsists";
 
       toast.error(errorMessage);
+
+      await queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders-Invoices"],
+      });
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({

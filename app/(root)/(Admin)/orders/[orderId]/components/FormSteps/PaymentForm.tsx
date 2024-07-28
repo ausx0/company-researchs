@@ -96,7 +96,8 @@ const PaymentForm = () => {
   }, [paymentStatus, setValue, total]);
 
   useEffect(() => {
-    setValue("Total", orderData?.Total);
+    setValue("Total_due", orderData?.Total_due || 0);
+    setValue("Subtotal", orderData?.Subtotal || 0);
   }, [orderData, setValue]);
 
   useEffect(() => {
@@ -127,6 +128,8 @@ const PaymentForm = () => {
       { value: "2", label: "Credit Card" },
     ];
   }
+
+  if (orderLoading) return <Loading />;
 
   return (
     <>

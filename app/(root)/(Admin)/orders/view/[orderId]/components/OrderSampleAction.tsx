@@ -1,6 +1,15 @@
 "use client";
 
-import { Copy, Delete, Edit, MoreHorizontal, Trash, View } from "lucide-react";
+import {
+  Barcode,
+  Copy,
+  Delete,
+  Edit,
+  Edit2,
+  MoreHorizontal,
+  Trash,
+  View,
+} from "lucide-react";
 
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -18,13 +27,16 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export interface cellActionProps {
   data: OrderSamplesData;
 }
 
 export const OrderSampleCellAction: React.FC<cellActionProps> = ({ data }) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const queryClient = useQueryClient();
@@ -54,6 +66,17 @@ export const OrderSampleCellAction: React.FC<cellActionProps> = ({ data }) => {
     onError: () => {
       setLoading(false);
       toast.error("Something Wrong Happened ");
+      queryClient.invalidateQueries({
+        queryKey: ["order-samples"],
+      });
+      // Invalidate the 'order-info' query
+      queryClient.invalidateQueries({
+        queryKey: ["order-info"],
+      });
+      // Invalidate the 'order-info' query
+      queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders"],
+      });
     },
   });
   const onDelete = async () => {
@@ -62,6 +85,17 @@ export const OrderSampleCellAction: React.FC<cellActionProps> = ({ data }) => {
     onOpenChange();
   };
 
+  const handleClick = () => {
+    // Show the loading toast and get its ID
+    const toastId = toast.loading("Barcode Loading...");
+
+    // After 5 seconds, update the toast to success
+    setTimeout(() => {
+      toast.success("Success!", {
+        id: toastId,
+      });
+    }, 3000); // 5 seconds
+  };
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -87,9 +121,23 @@ export const OrderSampleCellAction: React.FC<cellActionProps> = ({ data }) => {
 
       {/* Pass the ID as a prop */}
       {/* <Can I={"read"}> */}
-      <Button className="bg-danger hover:bg-red-700" onPress={onOpen}>
-        <Trash color="white" />
-      </Button>
+      <div className="flex gap-2 p-2">
+        <Button
+          color="primary"
+          onPress={() => router.push(`/result/${data.Sample_id}`)}
+        >
+          <Edit2 color="white" />
+        </Button>
+        <Button
+          className="bg-slate-600 hover:bg-slate-500"
+          onPress={handleClick}
+        >
+          <Barcode color="white" />
+        </Button>
+        <Button className="bg-danger hover:bg-red-700" onPress={onOpen}>
+          <Trash color="white" />
+        </Button>
+      </div>
       {/* </Can> */}
     </>
   );

@@ -31,6 +31,8 @@ import Loading from "@/components/ui/loading";
 import { CurrentCellAction } from "./components/currentCellActions";
 import { useRouter } from "next/navigation";
 import { apiGetAllPendingPayments } from "@/app/services/api/Home/PendingPayments";
+import { apiGetAllPendingOrders } from "@/app/services/api/Home/PendingOrders";
+import { apiGetAllAppointments } from "@/app/services/api/Home/Appoinments";
 
 const HoemPage = () => {
   // const ability = useContext(AbilityContext);
@@ -63,10 +65,30 @@ const HoemPage = () => {
     queryFn: apiGetAllCompletedOrders,
   });
 
+  const {
+    data: PendingOrders,
+    isLoading: PendingOrdersLoading,
+    error: PendingOrdersError,
+  } = useQuery({
+    queryKey: ["pending-orders"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetAllPendingOrders,
+  });
+
+  const {
+    data: Appointments,
+    isLoading: AppointmentsLoading,
+    error: AppointmentsError,
+  } = useQuery({
+    queryKey: ["appointments"], // Fix: Pass the queryKey as an array
+    queryFn: apiGetAllAppointments,
+  });
+
   if (
     CurrentOrdersLoading ||
     CompletedOrdersLoading ||
-    PendingPaymentsLoading
+    PendingPaymentsLoading ||
+    PendingOrdersLoading ||
+    AppointmentsLoading
   ) {
     return <Spinner />;
   }
@@ -74,10 +96,12 @@ const HoemPage = () => {
   const currentOrdersLength = CurrentOrders ? CurrentOrders.length : 0;
   const completedOrdersLength = CompletedOrders ? CompletedOrders.length : 0;
   const pendingPaymentsLength = PendingPayments ? PendingPayments.length : 0;
+  const PendingOrdersLength = PendingOrders ? PendingOrders.length : 0;
+  const AppointmentsLength = Appointments ? Appointments.length : 0;
 
   return (
     <>
-      <div className="grid gap-4 grid-cols-4 grid-rows-12  bg-slate-100 p-4">
+      <div className="grid gap-4 grid-cols-4 grid-rows-8  bg-slate-100 p-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
@@ -110,14 +134,14 @@ const HoemPage = () => {
         <Card className="bg-white">
           <CardHeader className="flex flex-row justify-between items-center ">
             <CardTitle className="text-sm text-mutedsh-foreground ">
-              Appointments
+              Pending Orders
             </CardTitle>
             <UserRoundSearch className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <h1 className="text-2xl font-bold">200</h1>
+            <h1 className="text-2xl font-bold">{PendingOrdersLength}</h1>
             <p className="text-xs text-mutedsh-foreground">
-              The Amount Of Appointments
+              The Amount Of Pending Orders
             </p>
           </CardContent>
         </Card>
@@ -130,7 +154,7 @@ const HoemPage = () => {
             <UserRoundSearch className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <h1 className="text-2xl font-bold">200</h1>
+            <h1 className="text-2xl font-bold">{AppointmentsLength}</h1>
             <p className="text-xs text-mutedsh-foreground">
               The Amount Of Appointments
             </p>
@@ -189,7 +213,41 @@ const HoemPage = () => {
           </CardHeader>
           <Separator className="my-4" />
           <CardContent>
-            <h1 className="text-md font-bold">No Appointments Found</h1>
+            {CurrentOrdersLoading ? (
+              <Loading />
+            ) : (
+              <>
+                {Appointments.length === 0 ? (
+                  <h1 className="text-md font-bold">No Appointments Found</h1>
+                ) : (
+                  <ul className="divide-y divide-gray-200">
+                    {Appointments.map((order: any) => (
+                      <li
+                        key={order.ID}
+                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 rounded-md cursor-pointer transition"
+                        // onClick={() => router.push(`/orders/view/${order.ID}`)}
+                      >
+                        <div>
+                          <p className="text-lg font-semibold">
+                            {order.Order_identifier}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {order.Client_name}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Date: {order.Date}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Samples: {order.Samples}
+                          </p>
+                        </div>
+                        <CurrentCellAction data={order} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}{" "}
           </CardContent>
         </Card>
 
@@ -225,7 +283,7 @@ const HoemPage = () => {
                       <li
                         key={order.ID}
                         className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 rounded-md cursor-pointer transition"
-                        // onClick={() => router.push(`/orders/view/${order.ID}`)}
+                        onClick={() => router.push(`/orders/view/${order.ID}`)}
                       >
                         <div>
                           <p className="text-lg font-semibold">
@@ -253,12 +311,46 @@ const HoemPage = () => {
 
         <Card className="bg-white col-span-2 row-span-2 p-4">
           <CardHeader className="flex flex-row justify-between items-center p-2 ">
-            <CardTitle className="text-xl ">Pending Review</CardTitle>
+            <CardTitle className="text-xl ">Pending Orders</CardTitle>
             <CreditCard className="" />
           </CardHeader>
           <Separator className="my-4" />
           <CardContent>
-            <h1 className="text-md font-bold">No Pending Review Found</h1>
+            {PendingOrdersLoading ? (
+              <Loading />
+            ) : (
+              <>
+                {PendingOrdersLength.length === 0 ? (
+                  <h1 className="text-md font-bold">No Pending Orders Found</h1>
+                ) : (
+                  <ul className="divide-y divide-gray-200">
+                    {PendingOrders.map((order: any) => (
+                      <li
+                        key={order.ID}
+                        className="py-4 px-2 flex justify-between items-center hover:bg-slate-100 rounded-md cursor-pointer transition"
+                        onClick={() => router.push(`/orders/view/${order.ID}`)}
+                      >
+                        <div>
+                          <p className="text-lg font-semibold">
+                            {order.Order_identifier}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {order.Client_name}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Date: {order.Date}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Samples: {order.Samples}
+                          </p>
+                        </div>
+                        <CurrentCellAction data={order} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}{" "}
           </CardContent>
         </Card>
       </div>

@@ -1,9 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowDown, ArrowRight, ArrowRightCircle } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowRightCircle,
+  Check,
+  X,
+} from "lucide-react";
 import React, { HTMLProps } from "react";
 import { OrderSampleCellAction } from "./OrderSampleAction";
 import { OrderSampleTestCellAction } from "./SampleTestActions";
 import { OrderSampleSubTestCellAction } from "./SampleSubtestAction";
+import { OrderSampleSubTestLongText } from "./SubTestLongText";
 
 export interface SubTest {
   Sub_test: string;
@@ -22,6 +29,10 @@ export type OrderSamplesData = {
   Tests: any[];
   SubTests: any;
   Sample_id?: number;
+  Patient: any;
+  Received: any;
+  Test_state: any;
+  Sample_state: any;
 };
 
 export const OrderSampleColumns: ColumnDef<OrderSamplesData>[] = [
@@ -68,6 +79,36 @@ export const OrderSampleColumns: ColumnDef<OrderSamplesData>[] = [
   {
     accessorKey: "Sample",
     header: "Sample",
+  },
+  {
+    accessorKey: "Patient",
+    header: "Patient",
+  },
+  {
+    accessorKey: "Received",
+    header: "Received",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // // .log(value);
+      return row.original.Received === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
+  },
+  {
+    accessorKey: "Sample_state",
+    header: "Complete",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // // .log(value);
+      return row.original.Sample_state === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
   },
   {
     header: "Actions",
@@ -121,13 +162,28 @@ export const OrderTestColumns: ColumnDef<OrderSamplesData>[] = [
     accessorKey: "Test",
     header: "Test",
   },
+
+  {
+    accessorKey: "Test_state",
+    header: "Complete",
+    cell: ({ row }) => {
+      // const value = row.renderValue("In_use") as number;
+      // // .log(value);
+      return row.original.Test_state === 1 ? (
+        <Check color="green" />
+      ) : (
+        <X color="red" />
+      );
+    },
+  },
+
   {
     header: "Actions",
     cell: ({ row }) => <OrderSampleTestCellAction data={row.original} />,
   },
 ];
 
-export const OrderSubTestsColumns: ColumnDef<OrderSamplesData>[] = [
+export const OrderSubTestsColumns: ColumnDef<any>[] = [
   // ... existing columns ...
   {
     accessorKey: "Sub_test_identifier",
@@ -178,9 +234,14 @@ export const OrderSubTestsColumns: ColumnDef<OrderSamplesData>[] = [
     header: "Subtest Result",
     cell: ({ row }) => {
       // Check if Sub_test_type is 2, and if so, render null for Sub_test_result
-      const subTestType = row.original.SubTests?.Sub_test_type;
-      const subTestResult = row.original.SubTests?.Sub_test_result;
-      return subTestType === 2 ? null : subTestResult;
+      const subTestType = row.original.Sub_test_type;
+      const subTestResult = row.original.Sub_test_result;
+      console.log(subTestResult, subTestType);
+      return subTestType === 2 ? (
+        <OrderSampleSubTestLongText data={row.original.Sub_test_result} />
+      ) : (
+        subTestResult
+      );
     },
   },
   {

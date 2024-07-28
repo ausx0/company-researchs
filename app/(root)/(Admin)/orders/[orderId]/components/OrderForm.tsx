@@ -63,21 +63,6 @@ const OrderFormDynamic = () => {
             {currentStep === 1 && <OrderForm ID={id} />}
             {currentStep === 2 && <StepTwoForm />}
           </div>
-          <div
-            className="m-10"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              backgroundColor: "#f5f5f5",
-              padding: "10px",
-            }}
-          >
-            <button type="button" onClick={handlePrev} disabled={isFirstStep}>
-              Previous
-            </button>
-            {!isLastStep && <button type="submit">Next</button>}
-            {isLastStep && <button type="submit">Submit</button>}
-          </div>
         </div>
       </div>
     </>

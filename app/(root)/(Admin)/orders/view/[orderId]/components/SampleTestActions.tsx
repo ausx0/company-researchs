@@ -40,10 +40,25 @@ export const OrderSampleTestCellAction: React.FC<cellActionProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["order-info"],
       });
+      // Invalidate the 'order-info' query
+      queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders"],
+      });
     },
     onError: () => {
       setLoading(false);
       toast.error("Something Wrong Happened ");
+      queryClient.invalidateQueries({
+        queryKey: ["order-samples"],
+      });
+      // Invalidate the 'order-info' query
+      queryClient.invalidateQueries({
+        queryKey: ["order-info"],
+      });
+      // Invalidate the 'order-info' query
+      queryClient.invalidateQueries({
+        queryKey: ["Lab-Orders"],
+      });
     },
   });
   const onDelete = async () => {
