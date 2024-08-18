@@ -202,7 +202,7 @@ const TestModalForm: React.FC<cellActionProps> = ({
 
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>
-                Cancle
+                Cancel
               </Button>
               <Button variant="shadow" type="submit">
                 Add

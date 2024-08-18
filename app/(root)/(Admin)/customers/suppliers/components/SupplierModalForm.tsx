@@ -1,4 +1,4 @@
-"use client";
+"use Suppliers";
 import React, { useEffect } from "react";
 import {
   Modal,
@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ClientSchema } from "../validation/ClientSchema";
+import { SuppliersSchema } from "../validation/SuppliersSchema";
 import { z } from "zod";
 import {
   Form,
@@ -32,19 +32,19 @@ import {
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { apiPostClient } from "@/app/services/api/Customers/Clients";
 import InputField from "../../../components/FormFields/InputField";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { apiPostSupplier } from "@/app/services/api/Customers/Suppliers";
 
 type cellActionProps = {
   onClose: () => void;
   isOpen: boolean;
 };
 
-const ClientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
+const SuppliersModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
   // 1. Define your form.
-  const form = useForm<z.infer<typeof ClientSchema>>({
-    resolver: zodResolver(ClientSchema),
+  const form = useForm<z.infer<typeof SuppliersSchema>>({
+    resolver: zodResolver(SuppliersSchema),
     defaultValues: {
       Name: "",
       Email: "",
@@ -55,27 +55,27 @@ const ClientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
       // Price: "",
     },
   });
-  const queryClient = useQueryClient();
+  const querySuppliers = useQueryClient();
 
-  const ClientMutation = useMutation({
-    mutationKey: ["Post-CLient"],
-    mutationFn: apiPostClient,
+  const SuppliersMutation = useMutation({
+    mutationKey: ["Post-Suppliers"],
+    mutationFn: apiPostSupplier,
     onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["Lab-Clients"],
-      }); // Invalidate the 'Clients' query
+      await querySuppliers.invalidateQueries({
+        queryKey: ["Lab-Suppliers"],
+      }); // Invalidate the 'Suppliers' query
     },
     onSuccess: () => {
-      toast.success("Client added successfully");
+      toast.success("Suppliers added successfully");
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof ClientSchema>) {
+  function onSubmit(values: z.infer<typeof SuppliersSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     // .log(values);
-    ClientMutation.mutate(values);
+    SuppliersMutation.mutate(values);
 
     // 3. Clear the form after submission.
     form.reset();
@@ -96,7 +96,7 @@ const ClientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col gap-1">
-                    Add Client
+                    Add Suppliers
                   </ModalHeader>
                   <ModalBody className="m-4">
                     <div className="flex flex-col gap-6">
@@ -173,4 +173,4 @@ const ClientModalForm: React.FC<cellActionProps> = ({ onClose, isOpen }) => {
   );
 };
 
-export default ClientModalForm;
+export default SuppliersModalForm;

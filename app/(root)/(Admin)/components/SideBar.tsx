@@ -119,6 +119,11 @@ const sidebarItems: SidebarItem[] = [
         link: "/customers/clients",
         roles: ["Admin", "lab-tech"],
       },
+      {
+        text: "Suppliers",
+        link: "/customers/suppliers",
+        roles: ["Admin", "lab-tech"],
+      },
     ],
   },
   {

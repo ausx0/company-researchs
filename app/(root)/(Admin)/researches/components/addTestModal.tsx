@@ -29,7 +29,7 @@ const AddTestModal = () => {
               <ModalBody></ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Cancle
+                  Cancel
                 </Button>
                 <Button variant="shadow" onPress={onClose}>
                   Add

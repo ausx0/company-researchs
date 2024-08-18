@@ -147,7 +147,7 @@ const SampleModalForm: React.FC<cellActionProps> = ({
                   </ModalBody>
                   <ModalFooter>
                     <Button color="danger" variant="light" onPress={onClose}>
-                      Cancle
+                      Cancel
                     </Button>
                     <Button variant="shadow" type="submit" disabled={loading}>
                       {loading ? <Spinner /> : <>{sample ? "Update" : "Add"}</>}
