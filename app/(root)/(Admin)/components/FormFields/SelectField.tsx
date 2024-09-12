@@ -6,7 +6,7 @@ import Select from "react-select";
 interface ISelectField {
   control: any;
   name: string;
-  label: string;
+  label?: string;
   errors: any;
   options: { value: string | number; label: string }[]; // Add this prop for the options
   isLoading?: boolean; // Add this prop for the loading state
@@ -30,7 +30,7 @@ const SelectField: React.FC<ISelectField> = ({
 }) => {
   return (
     <>
-      <div className="">
+      <div className="w-full">
         <Label>{label}</Label>
         <Controller
           key={name} // Add key prop here

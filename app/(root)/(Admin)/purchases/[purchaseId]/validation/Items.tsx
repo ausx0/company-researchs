@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 
-export const ItemsSchema = z.object({
+export const PurchaseItemsSchema = z.object({
   Cost: z.string().min(1).max(50),
   Discount: z.string().min(1).max(50),
   BeforeDiscount: z.string().min(1).max(50),

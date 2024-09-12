@@ -151,7 +151,7 @@ const sidebarItems: SidebarItem[] = [
       },
       {
         text: "All Purchases",
-        link: "/purchases/all",
+        link: "/purchases",
         roles: ["Admin", "lab-tech"],
       },
       {
