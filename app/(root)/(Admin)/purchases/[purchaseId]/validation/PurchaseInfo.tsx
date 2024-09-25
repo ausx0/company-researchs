@@ -26,5 +26,6 @@ export const PurchaseDetailsSchema = z.object({
   Cost: z.coerce.number().nonnegative(),
   Total: z.number().nonnegative(),
   TotalQuantity: z.number().nonnegative(),
+  lotNo: z.string().optional(),
   Purchase_id: z.number(),
 });
